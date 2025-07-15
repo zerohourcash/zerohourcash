@@ -56,6 +56,8 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/thread.hpp>
 
+#include <string>
+
 #if defined(NDEBUG)
 # error "ZHCASH cannot be compiled without assertions."
 #endif
@@ -262,7 +264,7 @@ std::atomic_bool fReindex(false);
 #ifdef ENABLE_BITCORE_RPC
 bool fAddressIndex = false; // zerohour
 #endif
-bool fLogEvents = false;
+bool fLogEvents = true;
 bool fHavePruned = false;
 bool fPruneMode = false;
 bool fIsBareMultisigStd = DEFAULT_PERMIT_BAREMULTISIG;
@@ -6732,6 +6734,7 @@ double GuessVerificationProgress(const ChainTxData& data, const CBlockIndex *pin
     }
 
     return pindex->nChainTx / fTxTotal;
+
 }
 
 std::string exceptedMessage(const dev::eth::TransactionException& excepted, const dev::bytes& output)

@@ -40,7 +40,9 @@ QT_FORMS_UI = \
   qt/forms/signverifymessagedialog.ui \
   qt/forms/titlebar.ui \
   qt/forms/tokendescdialog.ui \
-  qt/forms/transactiondescdialog.ui
+  qt/forms/transactiondescdialog.ui \
+  qt/forms/tokenlistshowdialog.ui \
+  qt/forms/tokenshowdetails.ui
 
 QT_MOC_CPP = \
   qt/moc_abifunctionfield.cpp \
@@ -110,6 +112,8 @@ QT_MOC_CPP = \
   qt/moc_trafficgraphwidget.cpp \
   qt/moc_transactiondesc.cpp \
   qt/moc_transactiondescdialog.cpp \
+  qt/moc_tokenlistshowdialog.cpp \
+  qt/moc_tokenshowdetails.cpp \
   qt/moc_transactionfilterproxy.cpp \
   qt/moc_transactiontablemodel.cpp \
   qt/moc_transactionview.cpp \
@@ -228,6 +232,8 @@ BITCOIN_QT_H = \
   qt/trafficgraphwidget.h \
   qt/transactiondesc.h \
   qt/transactiondescdialog.h \
+  qt/tokenlistshowdialog.h \
+  qt/tokenshowdetails.h \
   qt/transactionfilterproxy.h \
   qt/transactionrecord.h \
   qt/transactiontablemodel.h \
@@ -396,6 +402,8 @@ BITCOIN_QT_WALLET_CPP = \
   qt/tokentransactiondesc.cpp \
   qt/transactiondesc.cpp \
   qt/transactiondescdialog.cpp \
+  qt/tokenlistshowdialog.cpp \
+  qt/tokenshowdetails.cpp \
   qt/transactionfilterproxy.cpp \
   qt/transactionrecord.cpp \
   qt/transactiontablemodel.cpp \

@@ -7,6 +7,7 @@
 #include <config/bitcoin-config.h>
 #endif
 
+#define _POSIX_C_SOURCE 200809L
 #include <util/time.h>
 
 #include <atomic>

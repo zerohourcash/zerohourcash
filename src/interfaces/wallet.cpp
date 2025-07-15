@@ -178,6 +178,8 @@ TokenInfo MakeWalletTokenInfo(const CTokenInfo& token)
     result.block_hash = token.blockHash;
     result.block_number = token.blockNumber;
     result.hash = token.GetHash();
+    result.contractType = token.contractType;
+    result.tokenURI = token.tokenURI;
     return result;
 }
 
@@ -194,6 +196,8 @@ CTokenTx MakeTokenTx(const TokenTx& tokenTx)
     result.blockHash = tokenTx.block_hash;
     result.blockNumber = tokenTx.block_number;
     result.strLabel = tokenTx.label;
+    result.contractType = tokenTx.contractType;
+    result.tokenURI = tokenTx.tokenURI;
     return result;
 }
 
@@ -211,6 +215,8 @@ TokenTx MakeWalletTokenTx(const CTokenTx& tokenTx)
     result.block_number = tokenTx.blockNumber;
     result.label = tokenTx.strLabel;
     result.hash = tokenTx.GetHash();
+    result.contractType = tokenTx.contractType;
+    result.tokenURI = tokenTx.tokenURI;
     return result;
 }
 

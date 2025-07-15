@@ -170,6 +170,8 @@ public:
         // This is fine at runtime as we'll fall back to using them as a oneshot if they don't support the
         // service bits we want, but we should get them updated to support all service bits wanted by any
         // release ASAP to avoid it where possible.
+
+
         vSeeds.emplace_back("hub1.zh.cash"); // ZHCASH mainnet
         vSeeds.emplace_back("hub2.zh.cash"); // ZHCASH mainnet
         vSeeds.emplace_back("hub3.zh.cash"); // ZHCASH mainnet
@@ -184,7 +186,37 @@ public:
         vSeeds.emplace_back("hub12.zh.cash"); // ZHCASH mainnet
         vSeeds.emplace_back("hub13.zh.cash"); // ZHCASH mainnet
         vSeeds.emplace_back("hub14.zh.cash"); // ZHCASH mainnet
-                                        
+
+        vSeeds.emplace_back("hub1.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub2.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub3.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub4.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub5.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub6.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub7.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub8.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub9.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub10.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub11.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub12.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub13.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub14.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub15.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub16.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub17.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub18.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub19.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub20.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub21.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub22.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub23.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub24.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub25.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub26.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub27.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub28.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub29.zhchain.sbs"); // ZHCASH mainnet
+        vSeeds.emplace_back("hub30.zhchain.sbs"); // ZHCASH mainnet
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,80);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,50);
@@ -212,15 +244,36 @@ public:
 		{ 150000, uint256S("0x833b342e5693bf7aca589ca83633c30e3d837677c04f94a42613608677c78e23")},
 		{ 200000, uint256S("0xc3f4826a31bb6bff68d30ff970c6e3b6d26f2996cf5e57ec34d624de6ce2f300")},
 		{ 250000, uint256S("0xe297aaeee42787f9a6514fcb84b27429aebfd5f1ae3a4f57631a9014897cfa8b")},
-		{ 300000, uint256S("d20bcc9919dda2c8babcb1a62d6c1692c6be8f59ca47bfd0b0c47ed8d10e830e")},
-		{ 350000, uint256S("1ffa5a74005e5b72541667d8ef656239d0add3d782baecd8de5d773a8762e3b5")}
+		{ 300000, uint256S("0xd20bcc9919dda2c8babcb1a62d6c1692c6be8f59ca47bfd0b0c47ed8d10e830e")},
+		{ 350000, uint256S("0x1ffa5a74005e5b72541667d8ef656239d0add3d782baecd8de5d773a8762e3b5")},
+		{ 400000, uint256S("0xd23b55cdbc0df3c50bd9b29117ccac66e0821ef0d401257ee67fa84e37395ad3")},
+		{ 450000, uint256S("0x9f69ad1261d60354136c7d09e7be4c1d6efc284384cfbd9998e64ab57ea87f33")},
+		{ 500000, uint256S("0xd92d9a9f8d4b53572e04fbae4a26af70e47afb94186db8dffabd083f8b99d099")},
+		{ 550000, uint256S("0xe3b3e1da01dfb41cccfc2a21262c84808fe27c3ef97d269335e399eb8eb2be07")},
+		{ 600000, uint256S("0xc4d8400a5e2d7af03f081daa5236c68848ce58311a5ef0f82cf62e5b2d29d92f")},
+		{ 630000, uint256S("0xdfebee56db92db6d3384738855489c4d4794cd4df1f83c1205aeddb11fb159f0")},
+		{ 650000, uint256S("0x74ea8be47ee61d1755655016ba2c39b70912ed2b56e981fbbf29316091fa9cc0")},
+		{ 700000, uint256S("0xe3a193c62ac43ce013e7ff9cb9bb7a600d312ad296b5c11c9b44623aca82c250")},
+		{ 750000, uint256S("0xa1cf315d524b759bfecc489d9cc66556034ed8406f1bb2323de5ddb0e571569f")},
+		{ 800000, uint256S("0x1aa33e90b87ba748e86a736cfa1148ceb9ff85df571fdf99e0efb6df457d8341")},
+		{ 840000, uint256S("0x8472e70af680a3b0a940b5302b80de898c30ffb2ce635dfd91c5a019757c638f")},
+		{ 900000, uint256S("0x15d8aefe5fb1ab5e5f529d77aa3e1e4454cc998b8442bf8aa7b236c8d3b675d3")},
+		{ 940000, uint256S("0x7262afbb11a1bc3e08b42ad8dd94ad61d2bb0ec936df4140c4a9c8c5c5ee0ac6")},
+		{ 1000000, uint256S("0x4b8db66d0de8136414f547ea3a1355bd840a01ec5b1c4ef2dae0f05a128fcaf9")},
+		{ 1050000, uint256S("0x22e83b481953b376f891e126b5914a105ff28dae8987bd35bb51f4d099f66c45")},
+		{ 1100000, uint256S("0x54a58516606476e7ef23d3369568081bd0d56d273fd9abe5fcdeebf03023354b")},
+		{ 1150000, uint256S("0xae3e7c1078055dda3d905a97203505def7561a524b042377325478b91fcf1169")},
+		{ 1200000, uint256S("0x60fa9791b04bd1f25a98f0bdd9ab265c550a78c1a9e74ddb2ef928ca8ea78b4e")},
+		{ 1220000, uint256S("0x389fdec55ef9af23b051e8fc63e71835327c956e24b3cda0787bbfd4dc5ec678")},
+		{ 1300000, uint256S("0x2062d80d2b65805f5e1af47b417c3e4ec6a9e884c02a0ae807a528a548b3b044")},
+		{ 1400000, uint256S("0x51424ffb22ef99ee2400187ecd3a1ec3f969805462dec46fffe1e6fc643e1084")}
             }
         };
 
         chainTxData = ChainTxData{
-            1575408600, // * UNIX timestamp of last known number of transactions
-            0, // * total number of transactions between genesis and that timestamp
-            0 // * estimated number of transactions per second after that timestamp
+            1692795424, // * UNIX timestamp of last known number of transactions
+            2421511, // * total number of transactions between genesis and that timestamp
+            0.02 // * estimated number of transactions per second after that timestamp
         };
 
         /* disable fallback fee on mainnet */
@@ -245,9 +298,9 @@ public:
     CTestNetParams() {
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = 5256000; // zerohour halving every 20 years
-        consensus.BIP16Exception = uint256S("0x0000c280b33be4379676adadf4ce3c644839a048ab9c5adf3d56c125d7413114");
+        consensus.BIP16Exception = uint256S("0x0000387e3beaaeb366ef82c91be85c666aac71bcb9ea933878355c1f682fd42c");
         consensus.BIP34Height = 0;
-        consensus.BIP34Hash = uint256S("0x0000c280b33be4379676adadf4ce3c644839a048ab9c5adf3d56c125d7413114");
+        consensus.BIP34Hash = uint256S("0x0000387e3beaaeb366ef82c91be85c666aac71bcb9ea933878355c1f682fd42c");
         consensus.BIP65Height = 0;
         consensus.BIP66Height = 0;
         consensus.QIP5Height = 0;
@@ -283,7 +336,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0x00000");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0000c280b33be4379676adadf4ce3c644839a048ab9c5adf3d56c125d7413114");
+        consensus.defaultAssumeValid = uint256S("0x0000387e3beaaeb366ef82c91be85c666aac71bcb9ea933878355c1f682fd42c");
 
         pchMessageStart[0] = 0x0d;
         pchMessageStart[1] = 0x22;
@@ -294,18 +347,24 @@ public:
         m_assumed_blockchain_size = 6;
         m_assumed_chain_state_size = 2;
 
-        genesis = CreateGenesisBlock(1575408500, 41557, 0x1f00ffff, 1, 0 * COIN);
+        genesis = CreateGenesisBlock(1710871500, 38154, 0x1f00ffff, 1, 0 * COIN);
         
         //MineGenesis(genesis, consensus.powLimit);
         
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0000c280b33be4379676adadf4ce3c644839a048ab9c5adf3d56c125d7413114"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0000387e3beaaeb366ef82c91be85c666aac71bcb9ea933878355c1f682fd42c"));
         assert(genesis.hashMerkleRoot == uint256S("0xfe63fd973a2423dab77a08e75e640b0dba49925d7d167af6cb8a1774f8b3ea13"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.emplace_back("hub4.zh.cash"); // ZHCASH testnet
+        vSeeds.emplace_back("tn1.zhchain.sbs"); // ZHCASH testnet
+        vSeeds.emplace_back("tn2.zhchain.sbs"); // ZHCASH testnet
+        vSeeds.emplace_back("tn3.zhchain.sbs"); // ZHCASH testnet
+        vSeeds.emplace_back("tn4.zhchain.sbs"); // ZHCASH testnet
+        vSeeds.emplace_back("tn5.zhchain.sbs"); // ZHCASH testnet
+        vSeeds.emplace_back("tn6.zhchain.sbs"); // ZHCASH testnet
+        vSeeds.emplace_back("tn7.zhchain.sbs"); // ZHCASH testnet
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,142);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,110);
@@ -324,12 +383,12 @@ public:
 
         checkpointData = {
             {
-                {0, uint256S("0x0000c280b33be4379676adadf4ce3c644839a048ab9c5adf3d56c125d7413114")}
+                {0, uint256S("0x0000387e3beaaeb366ef82c91be85c666aac71bcb9ea933878355c1f682fd42c")}
             }
         };
 
         chainTxData = ChainTxData{
-            1575408500,
+            1710871500,
             0,
             0
         };

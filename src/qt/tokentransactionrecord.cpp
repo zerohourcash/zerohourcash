@@ -8,6 +8,7 @@
 #include <interfaces/wallet.h>
 
 #include <stdint.h>
+#include <QDebug>
 
 /*
  * Decompose CWallet transaction to model transaction records.
@@ -20,6 +21,13 @@ QList<TokenTransactionRecord> TokenTransactionRecord::decomposeTransaction(inter
     uint256 debit;
     std::string tokenSymbol;
     uint8_t decimals = 18;
+    std::string contractAddress;
+    std::string contractType;
+    std::string tokenURI;
+
+    std::string senderWallet;
+    std::string receiverWallet;
+
     if(!wtx.value.IsNull() && wallet.getTokenTxDetails(wtx, credit, debit, tokenSymbol, decimals))
     {
         // Get token transaction data
@@ -33,6 +41,13 @@ QList<TokenTransactionRecord> TokenTransactionRecord::decomposeTransaction(inter
         rec.decimals = decimals;
         rec.label = wtx.label;
         dev::s256 net = rec.credit + rec.debit;
+	rec.contractType = wtx.contractType;
+	rec.contractAddress = wtx.contract_address;
+	rec.tokenURI = wtx.tokenURI;
+
+	rec.senderWallet = wtx.sender_address;
+	rec.receiverWallet = wtx.receiver_address;
+
 
         // Determine type
         if(net == 0)

@@ -4985,7 +4985,9 @@ bool CWallet::AddTokenEntry(const CTokenInfo &token, bool fFlushOnClose)
     }
 
     if (!batch.WriteToken(wtoken))
+    {
         return false;
+    }
 
     mapToken[hash] = wtoken;
 
@@ -5032,7 +5034,9 @@ bool CWallet::AddTokenTxEntry(const CTokenTx &tokenTx, bool fFlushOnClose)
     wtokenTx.nCreateTime = pIndex ? pIndex->GetBlockTime() : GetAdjustedTime();
 
     if (!batch.WriteTokenTx(wtokenTx))
+    {
         return false;
+    }
 
     mapTokenTx[hash] = wtokenTx;
 
@@ -5340,6 +5344,7 @@ bool CWallet::CleanTokenTxEntries(bool fFlushOnClose)
             if(tokenTxI.blockHash != tokenTxJ.blockHash) continue;
             if(tokenTxI.blockNumber != tokenTxJ.blockNumber) continue;
             if(tokenTxI.transactionHash != tokenTxJ.transactionHash) continue;
+            if(tokenTxI.contractType != tokenTxJ.contractType) continue;
 
             // Delete the lower entry from disk
             size_t nLower = uintTou256(tokenTxI.nValue) < uintTou256(tokenTxJ.nValue) ? i : j;

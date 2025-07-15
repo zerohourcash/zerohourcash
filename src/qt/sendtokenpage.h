@@ -1,6 +1,8 @@
 #ifndef SENDTOKENPAGE_H
 #define SENDTOKENPAGE_H
 
+#include <qt/tokentransactionrecord.h>
+
 #include <QWidget>
 
 class WalletModel;
@@ -19,6 +21,9 @@ class SendTokenPage : public QWidget
 public:
     explicit SendTokenPage(QWidget *parent = 0);
     ~SendTokenPage();
+    
+    QList<TokenTransactionRecord> *t_records;
+    void setNftSelect(QString contractAddress, QString senderAddress);
 
     void setModel(WalletModel *_model);
     void setClientModel(ClientModel *clientModel);
@@ -26,7 +31,7 @@ public:
     bool isValidAddress();
     bool isDataValid();
 
-    void setTokenData(std::string address, std::string sender, std::string symbol, int8_t decimals, std::string balance);
+    void setTokenData(std::string address, std::string sender, std::string symbol, int8_t decimals, std::string balance, int type);
 
 private Q_SLOTS:
     void on_clearButton_clicked();
@@ -34,6 +39,7 @@ private Q_SLOTS:
     void on_updateConfirmButton();
     void on_confirmClicked();
     void updateDisplayUnit();
+    void on_selectNft_currentIndexChanged(int index);
 
 private:
     Ui::SendTokenPage *ui;

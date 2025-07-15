@@ -439,6 +439,10 @@ QString TokenTransactionTableModel::formatTxAmount(const TokenTransactionRecord 
         {
             str = QString("[") + str + QString("]");
         }
+	if(wtx->contractType == "1")
+	{
+	    str = QString("Token ID ") + str;
+	}
     }
     return QString(str);
 }
@@ -512,7 +516,9 @@ QVariant TokenTransactionTableModel::data(const QModelIndex &index, int role) co
         case Name:
             return formatTxTokenSymbol(rec);
         case Amount:
-            return formatTxAmount(rec, true, BitcoinUnits::separatorAlways);
+	    {
+        	return formatTxAmount(rec, true, BitcoinUnits::separatorAlways);
+	    }
         }
         break;
     case Qt::EditRole:
@@ -530,7 +536,10 @@ QVariant TokenTransactionTableModel::data(const QModelIndex &index, int role) co
         case Name:
             return formatTxTokenSymbol(rec);
         case Amount:
-            return QString::fromStdString((rec->credit + rec->debit).str());
+	    {
+
+        	return QString::fromStdString((rec->credit + rec->debit).str());
+	    }
         }
         break;
     case Qt::ToolTipRole:

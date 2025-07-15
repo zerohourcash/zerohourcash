@@ -71,14 +71,35 @@ QString TokenTransactionDesc::toHTML(interfaces::Wallet &wallet, interfaces::Tok
 
     if(nCredit > 0)
     {
-         strHTML += "<b>" + tr("Credit") + ":</b> " + BitcoinUnits::formatTokenWithUnit(unit, rec->decimals, nCredit, true) + "<br>";
+	 if(wtx.contractType == "1")
+	 {
+           strHTML += "<b>" + tr("Credit") + ":</b> " + BitcoinUnits::formatTokenWithUnit("ID", rec->decimals, nCredit, true) + "<br>";
+           strHTML += "<b>" + tr("Token ID") + ":</b> " + BitcoinUnits::formatTokenWithUnit("", rec->decimals, abs(nCredit), false) + "<br>";
+	 }
+	 else
+	 {
+           strHTML += "<b>" + tr("Credit") + ":</b> " + BitcoinUnits::formatTokenWithUnit(unit, rec->decimals, nCredit, true) + "<br>";
+	 }
+
     }
     if(nDebit < 0)
     {
-         strHTML += "<b>" + tr("Debit") + ":</b> " + BitcoinUnits::formatTokenWithUnit(unit, rec->decimals, nDebit, true) + "<br>";
+	 if(wtx.contractType == "1")
+	 {
+	    strHTML += "<b>" + tr("Debit") + ":</b> " + BitcoinUnits::formatTokenWithUnit("ID", rec->decimals, nDebit, true) + "<br>";
+	    strHTML += "<b>" + tr("Token ID") + ":</b> " + BitcoinUnits::formatTokenWithUnit("", rec->decimals, abs(nDebit), false) + "<br>";
+	 }
+	 else
+	 {
+	    strHTML += "<b>" + tr("Debit") + ":</b> " + BitcoinUnits::formatTokenWithUnit(unit, rec->decimals, nDebit, true) + "<br>";
+	 }
+         
     }
-    strHTML += "<b>" + tr("Net Amount") + ":</b> " + BitcoinUnits::formatTokenWithUnit(unit, rec->decimals, nNet, true) + "<br>";
 
+    if(wtx.contractType == "0")
+    {
+        strHTML += "<b>" + tr("Net Amount") + ":</b> " + BitcoinUnits::formatTokenWithUnit(unit, rec->decimals, nNet, true) + "<br>";
+    }
 
     strHTML += "</font></html>";
     return strHTML;

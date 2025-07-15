@@ -3,8 +3,10 @@
 #include <qt/tokenitemmodel.h>
 #include <qt/walletmodel.h>
 #include <qt/tokentransactionview.h>
+#include <qt/tokentransactionrecord.h>
 #include <qt/platformstyle.h>
 #include <qt/styleSheet.h>
+#include <qt/tokenlistshowdialog.h>
 
 #include <QPainter>
 #include <QAbstractItemDelegate>
@@ -13,9 +15,10 @@
 #include <QSortFilterProxyModel>
 #include <QSizePolicy>
 #include <QMenu>
+#include <QDebug>
 
 #define TOKEN_SIZE 54
-#define SYMBOL_WIDTH 60
+#define SYMBOL_WIDTH 220
 #define MARGIN 5
 
 class TokenViewDelegate : public QAbstractItemDelegate
@@ -34,8 +37,27 @@ public:
 
         QString tokenSymbol = index.data(TokenItemModel::SymbolRole).toString();
         QString tokenBalance = index.data(TokenItemModel::BalanceRole).toString();
-        QString receiveAddress = index.data(TokenItemModel::SenderRole).toString();
+	QString receiveAddress = index.data(TokenItemModel::SenderRole).toString();
+        QString tokenType = index.data(TokenItemModel::TypeRole).toString();
+        QString tokenTypeError = index.data(TokenItemModel::TypeRoleError).toString();
 
+	QString labelTypeText;
+	if(tokenTypeError == "1")
+	{
+	    labelTypeText = " ( loading... )";
+	}
+	else
+	{
+	    if(tokenType == "")
+	    {
+		labelTypeText = " ( ZRC20 )";
+	    }
+	    else
+	    {
+		labelTypeText = " ( ZRC721 )";
+	    }
+	}
+	
         QRect mainRect = option.rect;
 
         bool selected = option.state & QStyle::State_Selected;
@@ -62,7 +84,8 @@ public:
         painter->setPen(amountColor);
 
         QFontMetrics fmName(option.font);
-        QString clippedSymbol = fmName.elidedText(tokenSymbol, Qt::ElideRight, SYMBOL_WIDTH);
+
+        QString clippedSymbol = fmName.elidedText(tokenSymbol + labelTypeText, Qt::ElideRight, SYMBOL_WIDTH);
         QRect tokenSymbolRect(mainRect.left() + MARGIN, mainRect.top() + MARGIN, SYMBOL_WIDTH, mainRect.height() / 2 - MARGIN);
         painter->drawText(tokenSymbolRect, Qt::AlignLeft|Qt::AlignVCenter, clippedSymbol);
 
@@ -143,9 +166,42 @@ ZRCToken::ZRCToken(const PlatformStyle *platformStyle, QWidget *parent) :
     connect(removeTokenAction, &QAction::triggered, this, &ZRCToken::removeToken);
 
     connect(ui->tokensList, &QListView::clicked, this, &ZRCToken::on_currentTokenChanged);
+
+    connect(ui->tokensList, &QListView::doubleClicked, this, &ZRCToken::on_tokenDoubleClicked);
+
     connect(ui->tokensList, &QListView::customContextMenuRequested, this, &ZRCToken::contextualMenu);
 
     on_goToSendTokenPage();
+
+}
+
+void ZRCToken::on_tokenDoubleClicked(QModelIndex index)
+{
+    if(m_tokenModel)
+    {
+        if(index.isValid())
+        {
+            QString contractAddress;
+	    contractAddress = m_tokenModel->data(index, TokenItemModel::AddressRole).toString();
+
+    	    QString contractType;
+    	    contractType = m_tokenModel->data(index, TokenItemModel::TypeRole).toString();
+
+	    QString wallet;
+    	    wallet = m_tokenModel->data(index, TokenItemModel::SenderRole).toString();
+
+    	    if(contractType.size() != 0)
+	    {
+		QList<TokenTransactionRecord> cachedRecords;
+    		for(interfaces::TokenTx wtokenTx : m_model->wallet().getTokenTxs())
+    		{
+    		    cachedRecords.append(TokenTransactionRecord::decomposeTransaction(m_model->wallet(), wtokenTx));
+    		}
+		TokenListShowDialog *listShow = new TokenListShowDialog(this, &cachedRecords, contractAddress, contractType, wallet);
+		listShow->show();
+	    }
+	}
+    }
 }
 
 ZRCToken::~ZRCToken()
@@ -216,9 +272,19 @@ void ZRCToken::on_currentTokenChanged(QModelIndex index)
             std::string address = m_tokenModel->data(index, TokenItemModel::AddressRole).toString().toStdString();
             std::string symbol = m_tokenModel->data(index, TokenItemModel::SymbolRole).toString().toStdString();
             std::string sender = m_tokenModel->data(index, TokenItemModel::SenderRole).toString().toStdString();
+	    int type;
+	    QString role = m_tokenModel->data(index, TokenItemModel::TypeRole).toString();
+	    if(role.size() == 0)
+	    {
+		type = 0;
+	    }
+	    else
+	    {
+		type = 1;
+	    }
             int8_t decimals = m_tokenModel->data(index, TokenItemModel::DecimalsRole).toInt();
             std::string balance = m_tokenModel->data(index, TokenItemModel::RawBalanceRole).toString().toStdString();
-            m_sendTokenPage->setTokenData(address, sender, symbol, decimals, balance);
+            m_sendTokenPage->setTokenData(address, sender, symbol, decimals, balance, type);
             m_receiveTokenPage->setAddress(QString::fromStdString(sender));
             m_receiveTokenPage->setSymbol(QString::fromStdString(symbol));
 

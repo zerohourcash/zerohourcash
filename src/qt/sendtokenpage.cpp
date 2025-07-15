@@ -18,12 +18,15 @@
 #include <qt/styleSheet.h>
 #include <interfaces/node.h>
 
+#include <QDebug>
+
 static const CAmount SINGLE_STEP = 0.00000001*COIN;
 
 struct SelectedToken{
     std::string address;
     std::string sender;
     std::string symbol;
+    int type;
     int8_t decimals;
     std::string balance;
     SelectedToken():
@@ -44,13 +47,11 @@ SendTokenPage::SendTokenPage(QWidget *parent) :
 
     // Set stylesheet
     SetObjectStyleSheet(ui->clearButton, StyleSheetNames::ButtonBlack);
-
     ui->labelPayTo->setToolTip(tr("The address that will receive the tokens."));
     ui->labelAmount->setToolTip(tr("The amount in Token to send."));
     ui->labelDescription->setToolTip(tr("Optional description for transaction."));
     m_tokenABI = new Token();
     m_selectedToken = new SelectedToken();
-
     // Set defaults
     ui->lineEditGasPrice->setValue(DEFAULT_GAS_PRICE);
     ui->lineEditGasPrice->setSingleStep(SINGLE_STEP);
@@ -64,6 +65,7 @@ SendTokenPage::SendTokenPage(QWidget *parent) :
     connect(ui->confirmButton, &QPushButton::clicked, this, &SendTokenPage::on_confirmClicked);
 
     ui->lineEditPayTo->setCheckValidator(new BitcoinAddressCheckValidator(parent, true));
+
 }
 
 SendTokenPage::~SendTokenPage()
@@ -73,6 +75,104 @@ SendTokenPage::~SendTokenPage()
     if(m_tokenABI)
         delete m_tokenABI;
     m_tokenABI = 0;
+}
+
+void SendTokenPage::setNftSelect(QString contractAddress, QString senderAddress)
+{
+
+    ui->selectNft->clear();
+
+    QList<TokenTransactionRecord> t_records;
+    for(interfaces::TokenTx wtokenTx : m_model->wallet().getTokenTxs())
+    {
+        t_records.append(TokenTransactionRecord::decomposeTransaction(m_model->wallet(), wtokenTx));
+    }
+
+    if(!t_records.isEmpty())
+	{
+
+	QList<int> *intResult = new QList<int>();
+	QList<TokenTransactionRecord> *listResult = new QList<TokenTransactionRecord>();
+
+	for(int i = 0; i < t_records.size(); i++)
+	{
+    	    TokenTransactionRecord record = t_records.at(i);
+
+    	    if(record.contractType != "1")
+    	    {
+		continue;
+    	    }
+
+	    if(QString::fromStdString(record.contractAddress) == contractAddress)
+	    {
+
+    		QString tempIdCredit = BitcoinUnits::formatTokenWithUnit("", record.decimals, record.credit, false);
+    		QString tempIdDebit = BitcoinUnits::formatTokenWithUnit("", record.decimals, record.debit, false);
+
+    		int temp = 0;
+		int tempCredit = tempIdCredit.toInt();
+		int tempDebit = tempIdDebit.toInt();
+
+		if(QString::fromStdString(record.receiverWallet) == senderAddress)
+		{
+    		    if(tempCredit > 0 && tempDebit == 0)
+    		    {
+			temp = tempCredit;
+    		    }
+		}
+        
+		if(QString::fromStdString(record.senderWallet) == senderAddress)
+		{
+    		    if(tempCredit == 0 && tempDebit < 0)
+    		    {
+			temp = tempDebit;
+    		    }
+		}
+
+		if(temp > 0)
+		{
+    		    listResult->push_back(record);
+		    intResult->push_back(temp);
+		}
+		else
+		{
+    		    int del = intResult->indexOf(abs(temp));
+    		    if(del != -1)
+    		    {
+        		listResult->removeAt(del);
+        		intResult->removeAt(del);
+    		    }
+		}
+	    }
+	}
+
+	for(int i = 0; i < listResult->size(); i++)
+	{
+	    TokenTransactionRecord record = listResult->at(i);
+	    QString tokenId = BitcoinUnits::formatTokenWithUnit("", record.decimals, record.credit, false);
+	    ui->selectNft->addItem(QString::fromStdString(record.tokenSymbol) + " ID:" + tokenId, tokenId.toInt());
+	}
+
+
+	if(!listResult->isEmpty())
+	{
+	    TokenTransactionRecord lastRecord = listResult->first();
+	    QString tokenIdLast = BitcoinUnits::formatTokenWithUnit("", lastRecord.decimals, lastRecord.credit, false);
+	    ui->lineEditAmount->setValue(tokenIdLast.toInt());
+	}
+	else
+	{
+	    ui->selectNft->clear();
+	}
+
+    }
+
+}
+
+void SendTokenPage::on_selectNft_currentIndexChanged(int index)
+{
+    int currentValue = ui->selectNft->currentData().toInt();
+    ui->lineEditAmount->setValue(currentValue);
 }
 
 void SendTokenPage::setModel(WalletModel *_model)
@@ -221,7 +321,7 @@ void SendTokenPage::updateDisplayUnit()
     }
 }
 
-void SendTokenPage::setTokenData(std::string address, std::string sender, std::string symbol, int8_t decimals, std::string balance)
+void SendTokenPage::setTokenData(std::string address, std::string sender, std::string symbol, int8_t decimals, std::string balance, int type)
 {
     // Update data with the current token
     int decimalDiff = decimals - m_selectedToken->decimals;
@@ -230,9 +330,30 @@ void SendTokenPage::setTokenData(std::string address, std::string sender, std::s
     m_selectedToken->symbol = symbol;
     m_selectedToken->decimals = decimals;
     m_selectedToken->balance = balance;
+    m_selectedToken->type = type;
+
+    if(m_selectedToken->type == 0)
+    {
+	ui->labelAmount->setVisible(true);
+	ui->lineEditAmount->setVisible(true);
+
+	ui->labelNft->setVisible(false);
+	ui->selectNft->setVisible(false);
+    }
+    else
+    {
+	setNftSelect(QString::fromStdString(m_selectedToken->address), QString::fromStdString(m_selectedToken->sender));
+
+	ui->labelAmount->setVisible(false);
+	ui->lineEditAmount->setVisible(false);
+
+	ui->labelNft->setVisible(true);
+	ui->selectNft->setVisible(true);
+    }
 
     // Convert values for different number of decimals
     int256_t totalSupply(balance);
+    int tokenType = m_selectedToken->type;
     int256_t value(ui->lineEditAmount->value());
     if(value != 0)
     {
@@ -245,6 +366,7 @@ void SendTokenPage::setTokenData(std::string address, std::string sender, std::s
             value /= 10;
         }
     }
+
     if(value > totalSupply)
     {
         value = totalSupply;
@@ -254,6 +376,8 @@ void SendTokenPage::setTokenData(std::string address, std::string sender, std::s
     ui->lineEditAmount->clear();
     ui->lineEditAmount->setDecimalUnits(decimals);
     ui->lineEditAmount->setTotalSupply(totalSupply);
+    ui->lineEditAmount->setType(tokenType);
+
     if(value != 0)
     {
         ui->lineEditAmount->setValue(value);

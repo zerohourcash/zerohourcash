@@ -3,6 +3,9 @@
 #include <libethcore/ABI.h>
 #include <math.h>
 
+#include <QDebug>
+
+
 namespace ContractABI_NS
 {
 // Defining json preprocessor functions in order to avoid repetitive code with slight difference
@@ -67,6 +70,7 @@ bool ContractABI::loads(const std::string &json_data)
             FunctionABI function;
             ReadJsonString(json_function, name, function);
             ReadJsonString(json_function, type, function);
+            ReadJsonString(json_function, stateMutability, function);
             ReadJsonBool(json_function, payable, function);
             ReadJsonBool(json_function, constant, function);
             ReadJsonBool(json_function, anonymous, function);
@@ -115,31 +119,36 @@ FunctionABI::FunctionABI(const std::string &_name,
                          const std::string &_type,
                          const std::vector<ParameterABI> &_inputs,
                          const std::vector<ParameterABI> &_outputs,
-                         bool _payable, bool _constant, bool _anonymous):
+                         bool _payable, bool _constant, bool _anonymous, const std::string &_stateMutability):
     name(_name),
     type(_type),
     inputs(_inputs),
     outputs(_outputs),
     payable(_payable),
     constant(_constant),
+    stateMutability(_stateMutability),
     anonymous(_anonymous)
 {}
 
 bool FunctionABI::abiIn(const std::vector<std::vector<std::string>> &values, std::string &data, std::vector<ParameterABI::ErrorType>& errors) const
 {
     bool ret = inputs.size() == values.size();
+
     std::string params;
     std::map<int, std::string> mapDynamic;
+
     for(size_t i = 0; i < inputs.size(); i++)
     {
         ret &= inputs[i].abiIn(values[i], params, mapDynamic);
         errors.push_back(inputs[i].lastError());
     }
+
     if(ret)
     {
         processDynamicParams(mapDynamic, params);
         data = selector() + params;
     }
+
     return ret;
 }
 

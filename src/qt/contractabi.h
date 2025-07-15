@@ -165,7 +165,8 @@ public:
                 const std::vector<ParameterABI>& _outputs = std::vector<ParameterABI>(),
                 bool _payable = false,
                 bool _constant = false,
-                bool _anonymous = false);
+                bool _anonymous = false,
+		const std::string& _stateMutability = "");
 
     bool abiIn(const std::vector<std::vector<std::string>>& values, std::string& data, std::vector<ParameterABI::ErrorType>& errors) const;
 
@@ -184,6 +185,7 @@ public:
     bool payable; // True if function accepts ether, defaults to false.
     bool constant; // True if function is specified to not modify blockchain state.
     bool anonymous; // True if the event was declared as anonymous.
+    std::string stateMutability;
 
     // Constructor and fallback function never have name or outputs.
     // Fallback function doesn't have inputs either.

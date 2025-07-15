@@ -5,6 +5,8 @@
 #include <QJsonDocument>
 #include <uint256.h>
 
+#include <QDebug>
+
 namespace EventLog_NS
 {
 static const QString RPC_SERACH_LOGS = "searchlogs";
@@ -64,9 +66,9 @@ bool EventLog::searchTokenTx(interfaces::Node& node, const WalletModel* wallet_m
     // Skip the event type check
     static std::string nullRecord = uint256().ToString();
     topics.push_back(nullRecord);
-    // Match the log with sender address
-    topics.push_back(strSenderAddress);
     // Match the log with receiver address
+    topics.push_back(strSenderAddress);
+    // Match the log with sender address
     topics.push_back(strSenderAddress);
 
     return search(node, wallet_model, fromBlock, toBlock, addresses, topics, result);
@@ -82,7 +84,10 @@ bool EventLog::search(interfaces::Node& node, const WalletModel* wallet_model, i
     QString resultJson;
     QString errorMessage;
     if(!m_RPCCommand->exec(node, wallet_model, m_lstParams, result, resultJson, errorMessage))
+    {
         return false;
+    }
+
     return true;
 }
 

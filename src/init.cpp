@@ -412,7 +412,6 @@ void SetupServerArgs()
     hidden_args.emplace_back("-sysperms");
 #endif
     gArgs.AddArg("-txindex", strprintf("Maintain a full transaction index, used by the getrawtransaction rpc call (default: %u)", DEFAULT_TXINDEX), false, OptionsCategory::OPTIONS);
-    gArgs.AddArg("-logevents", strprintf("Maintain a full EVM log index, used by searchlogs and gettransactionreceipt rpc calls (default: %u)", DEFAULT_LOGEVENTS), false, OptionsCategory::OPTIONS);
 #ifdef ENABLE_BITCORE_RPC
     gArgs.AddArg("-addrindex", strprintf("Maintain a full address index (default: %u)", DEFAULT_ADDRINDEX), false, OptionsCategory::OPTIONS);
 #endif
@@ -1730,20 +1729,6 @@ bool AppInitMain(InitInterfaces& interfaces)
                 }
                 ///////////////////////////////////////////////////////////////
 #endif
-                // Check for changed -logevents state
-                if (fLogEvents != gArgs.GetBoolArg("-logevents", DEFAULT_LOGEVENTS) && !fLogEvents) {
-                    strLoadError = _("You need to rebuild the database using -reindex to enable -logevents");
-                    break;
-                }
-
-                if (!gArgs.GetBoolArg("-logevents", DEFAULT_LOGEVENTS))
-                {
-                    pstorageresult->wipeResults();
-                    pblocktree->WipeHeightIndex();
-                    fLogEvents = false;
-                    pblocktree->WriteFlag("logevents", fLogEvents);
-                }
-
             if (!fReset) {
                 // Note that RewindBlockIndex MUST run even if we're about to -reindex-chainstate.
                 // It both disconnects blocks based on chainActive, and drops block data in

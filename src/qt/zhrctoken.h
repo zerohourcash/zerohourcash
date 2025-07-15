@@ -4,6 +4,7 @@
 #include <qt/sendtokenpage.h>
 #include <qt/receivetokenpage.h>
 #include <qt/addtokenpage.h>
+#include <qt/tokentransactionrecord.h>
 
 #include <QWidget>
 #include <QModelIndex>
@@ -34,6 +35,7 @@ public:
 Q_SIGNALS:
 
 public Q_SLOTS:
+    void on_tokenDoubleClicked(QModelIndex index);
     void on_goToSendTokenPage();
     void on_goToReceiveTokenPage();
     void on_goToAddTokenPage();

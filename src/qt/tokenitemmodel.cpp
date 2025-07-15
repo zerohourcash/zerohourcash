@@ -1,4 +1,4 @@
-﻿#include <qt/tokenitemmodel.h>
+#include <qt/tokenitemmodel.h>
 #include <qt/token.h>
 #include <qt/walletmodel.h>
 #include <interfaces/wallet.h>
@@ -12,6 +12,10 @@
 #include <QFont>
 #include <QDebug>
 #include <QThread>
+
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonParseError>
 
 class TokenItemEntry
 {
@@ -30,7 +34,7 @@ public:
         senderAddress = QString::fromStdString(tokenInfo.sender_address);
     }
 
-    TokenItemEntry( const TokenItemEntry &obj)
+    TokenItemEntry(const TokenItemEntry &obj)
     {
         hash = obj.hash;
         createTime = obj.createTime;
@@ -40,6 +44,8 @@ public:
         decimals = obj.decimals;
         senderAddress = obj.senderAddress;
         balance = obj.balance;
+        contractType = obj.contractType;
+        contractTypeError = obj.contractTypeError;
     }
 
     ~TokenItemEntry()
@@ -53,6 +59,8 @@ public:
     quint8 decimals;
     QString senderAddress;
     int256_t balance;
+    QString contractType;
+    int contractTypeError;
 };
 
 class TokenTxWorker : public QObject
@@ -66,6 +74,21 @@ public:
         walletModel(_walletModel), first(true) {}
     
 private Q_SLOTS:
+
+    std::string getTokenURI(std::string contractAddress, std::string tokenId)
+    {
+        tokenAbi.setAddress(contractAddress);
+        std::string strResult;
+	QString resultJson;
+        if(tokenAbi.tokenURI(strResult, resultJson, tokenId))
+        {
+	    return strResult;
+        }
+
+	return "ERROR";
+    }
+
+
     void updateTokenTx(const QString &hash)
     {
         // Initialize variables
@@ -87,12 +110,14 @@ private Q_SLOTS:
         {
             // Find the token tx in the wallet
             tokenInfo = walletModel->wallet().getToken(tokenHash);
+
             found = tokenInfo.hash == tokenHash;
             if(found)
             {
                 // Get the start location for search the event log
                 if(tokenInfo.block_number < toBlock)
                 {
+
                     if(walletModel->node().getBlockHash(tokenInfo.block_number) == tokenInfo.block_hash)
                     {
                         fromBlock = tokenInfo.block_number;
@@ -116,10 +141,11 @@ private Q_SLOTS:
 
         if(found)
         {
-            // List the events and update the token tx
+	    // List the events and update the token tx
             std::vector<TokenEvent> tokenEvents;
             tokenAbi.setAddress(tokenInfo.contract_address);
             tokenAbi.setSender(tokenInfo.sender_address);
+            tokenAbi.setReceiver(tokenInfo.sender_address);
             tokenAbi.transferEvents(tokenEvents, fromBlock, toBlock);
             for(size_t i = 0; i < tokenEvents.size(); i++)
             {
@@ -132,9 +158,18 @@ private Q_SLOTS:
                 tokenTx.tx_hash = event.transactionHash;
                 tokenTx.block_hash = event.blockHash;
                 tokenTx.block_number = event.blockNumber;
+                tokenTx.contractType = event.contractType;
+
+		QString tokenId = BitcoinUnits::formatTokenWithUnit("", 0, dev::u2s(uintTou256(event.value)), false);
+		std::string result = getTokenURI(event.address, std::to_string(tokenId.toInt()));
+		if(result != "ERROR")
+		{
+		    tokenTx.tokenURI = result;
+		}
+
                 walletModel->wallet().addTokenTxEntry(tokenTx, false);
             }
-
+	    tokenInfo.contractType = "1";
             walletModel->wallet().addTokenEntry(tokenInfo);
         }
     }
@@ -143,6 +178,8 @@ private Q_SLOTS:
     {
         if(walletModel) walletModel->wallet().cleanTokenTxEntries();
     }
+
+
 
     void updateBalance(QString hash, QString contractAddress, QString senderAddress)
     {
@@ -156,9 +193,51 @@ private Q_SLOTS:
         }
     }
 
+    void updateType(QString hash, QString contractAddress)
+    {
+        tokenAbi.setAddress(contractAddress.toStdString());
+        std::string strType;
+	int error;
+	QString resultJson;
+        if(tokenAbi.tokenURI(strType, resultJson))
+        {
+	    if(resultJson.size() != 0)
+	    {
+		QJsonParseError errorPtr;
+		QJsonDocument jsonDoc = QJsonDocument::fromJson(resultJson.toUtf8(), &errorPtr);
+		QJsonObject jsonObject = jsonDoc.object();
+		QJsonValue executionResult = jsonObject["executionResult"];
+		QJsonObject exceptedObject = executionResult.toObject();
+		QJsonValue excepted = exceptedObject["excepted"];
+		QJsonValue exceptedMessage = exceptedObject["exceptedMessage"];
+
+		if(excepted.toString() == "BadInstruction")
+		{
+		    error = 1;
+		}
+		else if(exceptedMessage.toString().size() > 0)
+		{
+		    error = 1;
+		}
+		else
+		{
+		    error = 0;
+		}
+	    }
+	    else
+	    {
+		error = 1;
+	    }
+
+            QString contractType = QString::fromStdString(strType);
+            Q_EMIT typeChanged(hash, contractType, error);
+        }
+    }
+
 Q_SIGNALS:
     // Signal that balance in token changed
     void balanceChanged(QString hash, QString balance);
+    void typeChanged(QString hash, QString balance, int error);
 };
 
 #include "tokenitemmodel.moc"
@@ -276,6 +355,27 @@ public:
         return -1;
     }
 
+
+    int updateType(QString hash, QString contractType, int error)
+    {
+        uint256 updated;
+        updated.SetHex(hash.toStdString());
+
+        for(int i = 0; i < cachedTokenItem.size(); i++)
+        {
+            TokenItemEntry item = cachedTokenItem[i];
+            if(item.hash == updated)
+            {
+                item.contractType = contractType;
+		item.contractTypeError = error;
+                cachedTokenItem[i] = item;
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     int size()
     {
         return cachedTokenItem.size();
@@ -310,6 +410,7 @@ TokenItemModel::TokenItemModel(WalletModel *parent):
     worker->tokenAbi.setModel(walletModel);
     worker->moveToThread(&(t));
     connect(worker, &TokenTxWorker::balanceChanged, this, &TokenItemModel::balanceChanged);
+    connect(worker, &TokenTxWorker::typeChanged, this, &TokenItemModel::typeChanged);
 
     t.start();
 
@@ -329,6 +430,7 @@ TokenItemModel::~TokenItemModel()
         priv = 0;
     }
 }
+
 
 QModelIndex TokenItemModel::index(int row, int column, const QModelIndex &parent) const
 {
@@ -365,6 +467,8 @@ QVariant TokenItemModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     TokenItemEntry *rec = static_cast<TokenItemEntry*>(index.internalPointer());
+
+    std::string stdResult;
 
     switch (role) {
     case Qt::DisplayRole:
@@ -404,9 +508,16 @@ QVariant TokenItemModel::data(const QModelIndex &index, int role) const
     case TokenItemModel::RawBalanceRole:
         return QString::fromStdString(rec->balance.str());
         break;
+    case TokenItemModel::TypeRole:
+	return rec->contractType;
+        break;
+    case TokenItemModel::TypeRoleError:
+	return rec->contractTypeError;
+        break;
     default:
         break;
     }
+
 
     return QVariant();
 }
@@ -416,7 +527,7 @@ void TokenItemModel::updateToken(const QString &hash, int status, bool showToken
     // Find token in wallet
     uint256 updated;
     updated.SetHex(hash.toStdString());
-    interfaces::TokenInfo token =walletModel->wallet().getToken(updated);
+    interfaces::TokenInfo token = walletModel->wallet().getToken(updated);
     showToken &= token.hash == updated;
 
     TokenItemEntry tokenEntry;
@@ -434,6 +545,7 @@ void TokenItemModel::updateToken(const QString &hash, int status, bool showToken
 
 void TokenItemModel::checkTokenBalanceChanged()
 {
+
     if(!priv)
         return;
 
@@ -493,6 +605,8 @@ private:
     bool showToken;
 };
 
+
+
 static void NotifyTokenChanged(TokenItemModel *tim, const uint256 &hash, ChangeType status)
 {
     TokenNotification notification(hash, status, true);
@@ -520,9 +634,23 @@ void TokenItemModel::balanceChanged(QString hash, QString balance)
     }
 }
 
+void TokenItemModel::typeChanged(QString hash, QString contractType, int error)
+{
+    int index = priv->updateType(hash, contractType, error);
+    if(index > -1)
+    {
+        emitDataChanged(index);
+    }
+}
+
+
 void TokenItemModel::updateBalance(const TokenItemEntry &entry)
 {
     QString hash = QString::fromStdString(entry.hash.ToString());
     QMetaObject::invokeMethod(worker, "updateBalance", Qt::QueuedConnection,
                               Q_ARG(QString, hash), Q_ARG(QString, entry.contractAddress), Q_ARG(QString, entry.senderAddress));
+
+    QMetaObject::invokeMethod(worker, "updateType", Qt::QueuedConnection,  Q_ARG(QString, hash), Q_ARG(QString, entry.contractAddress));
+
 }
+

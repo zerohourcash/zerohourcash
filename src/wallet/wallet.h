@@ -1411,6 +1411,8 @@ public:
     std::string strTokenSymbol;
     uint8_t nDecimals;
     std::string strSenderAddress;
+    std::string contractType;
+    std::string tokenURI;
 
     // Wallet data for token transaction
     int64_t nCreateTime;
@@ -1451,6 +1453,8 @@ public:
         strSenderAddress = "";
         blockHash.SetNull();
         blockNumber = -1;
+	contractType = "0";
+	tokenURI = "";
     }
 
     uint256 GetHash() const;
@@ -1466,6 +1470,8 @@ public:
     std::string strReceiverAddress;
     uint256 nValue;
     uint256 transactionHash;
+    std::string contractType;
+    std::string tokenURI;
 
     // Wallet data for token transaction
     int64_t nCreateTime;
@@ -1509,6 +1515,8 @@ public:
         blockHash.SetNull();
         blockNumber = -1;
         strLabel = "";
+        contractType = "0";
+        tokenURI = "";
     }
 
     uint256 GetHash() const;

@@ -85,6 +85,13 @@ public:
     std::string tokenSymbol;
     uint8_t decimals;
     std::string label;
+    std::string contractType = "-1";
+    std::string contractAddress;
+    std::string tokenURI;
+
+    std::string senderWallet;
+    std::string receiverWallet;
+
     /**@}*/
 
     /** Return the unique identifier for this transaction (part) */

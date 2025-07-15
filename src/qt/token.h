@@ -4,6 +4,8 @@
 #include <vector>
 #include <uint256.h>
 
+#include <QString>
+
 struct TokenEvent{
     std::string address;
     std::string sender;
@@ -12,6 +14,7 @@ struct TokenEvent{
     uint64_t blockNumber;
     uint256 transactionHash;
     uint256 value;
+    std::string contractType;
 
     TokenEvent()
     {
@@ -45,6 +48,7 @@ public:
     void setGasLimit(const std::string &gaslimit);
     void setGasPrice(const std::string &gasPrice);
     void setSender(const std::string &sender);
+    void setReceiver(const std::string &reseiver);
     void clear();
 
     // Get transaction data
@@ -60,6 +64,7 @@ public:
     bool burn(const std::string& _value, bool& success, bool sendTo = false);
     bool balanceOf(std::string& result, bool sendTo = false);
     bool balanceOf(const std::string& spender, std::string& result, bool sendTo = false);
+    bool tokenURI(std::string &result, QString &jsonResult, std::string tokenId = "1");
     bool burnFrom(const std::string& _from, const std::string& _value, bool& success, bool sendTo = false);
     bool symbol(std::string& result, bool sendTo = false);
     bool transfer(const std::string& _to, const std::string& _value, bool sendTo = false);
@@ -69,6 +74,10 @@ public:
     // ABI Events
     bool transferEvents(std::vector<TokenEvent>& tokenEvents, int64_t fromBlock = 0, int64_t toBlock = -1);
     bool burnEvents(std::vector<TokenEvent>& tokenEvents, int64_t fromBlock = 0, int64_t toBlock = -1);
+
+    int errorNumber = 1;
+
+    QString resultJsonOut;
 
 private:
     bool exec(const std::vector<std::string>& input, int func, std::vector<std::string>& output, bool sendTo);

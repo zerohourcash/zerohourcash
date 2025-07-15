@@ -19,7 +19,7 @@ class TokenAmountField : public QWidget
 
 public:
     explicit TokenAmountField(QWidget *parent = 0);
-    int256_t value(bool *value=0) const;
+    int256_t value(bool *value = 0) const;
     void setValue(const int256_t& value);
 
     /** Set single step **/
@@ -43,7 +43,10 @@ public:
     void setMinimum(const int256_t& min);
 
     void setTotalSupply(const int256_t &value);
+
     void setDecimalUnits(int value);
+
+    void setType(const int tokenType);
 
     QString text() const;
 

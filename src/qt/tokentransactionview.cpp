@@ -24,6 +24,7 @@
 #include <QTableView>
 #include <QVBoxLayout>
 #include <QRegularExpressionValidator>
+#include <QDebug>
 
 #define paternTokenAmount "^[0-9]{1,59}\\.{1,1}[0-9]{0,18}"
 

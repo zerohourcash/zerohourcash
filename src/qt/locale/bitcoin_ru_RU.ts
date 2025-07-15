@@ -693,6 +693,10 @@
         <translation>Количество:</translation>
     </message>
     <message>
+        <source>Token ID:</source>
+        <translation>ID токена:</translation>
+    </message>
+    <message>
         <source>Fee:</source>
         <translation>Комиссия:</translation>
     </message>
@@ -1611,6 +1615,10 @@
         <translation>Количество</translation>
     </message>
     <message>
+        <source>Token ID</source>
+        <translation>ID токена</translation>
+    </message>
+    <message>
         <source>Enter a ZHCASH address (e.g. %1)</source>
         <translation>Введите ZHCASH-адрес (напр. %1)</translation>
     </message>
@@ -2080,6 +2088,10 @@
         <translation>&amp;Количество:</translation>
     </message>
     <message>
+        <source>&amp;Token ID:</source>
+        <translation>&amp;ID токена:</translation>
+    </message>
+    <message>
         <source>&amp;Label:</source>
         <translation>&amp;Метка:</translation>
     </message>
@@ -2207,6 +2219,10 @@
         <translation>Количество</translation>
     </message>
     <message>
+        <source>Token ID</source>
+        <translation>ID токена</translation>
+    </message>
+    <message>
         <source>Label</source>
         <translation>Метка</translation>
     </message>
@@ -2283,6 +2299,10 @@
     <message>
         <source>Amount:</source>
         <translation>Количество:</translation>
+    </message>
+    <message>
+        <source>Token ID:</source>
+        <translation>ID токена:</translation>
     </message>
     <message>
         <source>Fee:</source>
@@ -2590,6 +2610,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>A&amp;mount:</source>
         <translation>&amp;Количество:</translation>
+    </message>
+    <message>
+        <source>T&amp;oken ID:</source>
+        <translation>&amp;ID токена:</translation>
     </message>
     <message>
         <source>Pay &amp;To:</source>
@@ -2998,6 +3022,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Amount</source>
         <translation>Количество</translation>
+    </message>
+    <message>
+        <source>Token ID</source>
+        <translation>ID токена</translation>
     </message>
     <message>
         <source>true</source>
@@ -3997,6 +4025,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Количество</translation>
     </message>
     <message>
+        <source>Token ID</source>
+        <translation>ID токена</translation>
+    </message>
+    <message>
         <source>Gas Limit</source>
         <translation>Лимит Gas</translation>
     </message>
@@ -4061,6 +4093,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Amount</source>
         <translation>Количество</translation>
+    </message>
+    <message>
+        <source>Token ID</source>
+        <translation>ID токена</translation>
     </message>
     <message>
         <source>Description</source>
@@ -4151,6 +4187,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Remove token</source>
         <translation>Удалить токен</translation>
     </message>
+    <message>
+        <source>Amount</source>
+        <translation>Количество</translation>
+    </message>
 </context>
 <context>
     <name>TokenTransactionView</name>
@@ -4223,5 +4263,11 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Введите адрес</translation>
     </message>
 </context>
-
+<context>
+    <name>OptionsDialog</name>
+    <message>
+        <source>Enable log events</source>
+        <translation>Включить аудит событий</translation>
+    </message>
+</context>
 </TS>

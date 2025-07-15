@@ -10,9 +10,13 @@
 #include <libethcore/ABI.h>
 #include <qt/walletmodel.h>
 
+#include <QDebug>
+
 namespace Token_NS
 {
-static const std::string TOKEN_ABI = "[{\"constant\":true,\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_spender\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_from\",\"type\":\"address\"},{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"decimals\",\"outputs\":[{\"name\":\"\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"burn\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_from\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"burnFrom\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_spender\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"},{\"name\":\"_extraData\",\"type\":\"bytes\"}],\"name\":\"approveAndCall\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"address\"},{\"name\":\"\",\"type\":\"address\"}],\"name\":\"allowance\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"name\":\"initialSupply\",\"type\":\"uint256\"},{\"name\":\"tokenName\",\"type\":\"string\"},{\"name\":\"decimalUnits\",\"type\":\"uint8\"},{\"name\":\"tokenSymbol\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"from\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Burn\",\"type\":\"event\"}]";
+
+static const std::string TOKEN_ABI = "[{\"constant\":true,\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_spender\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_from\",\"type\":\"address\"},{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"decimals\",\"outputs\":[{\"name\":\"\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"burn\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_from\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"burnFrom\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_spender\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"},{\"name\":\"_extraData\",\"type\":\"bytes\"}],\"name\":\"approveAndCall\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"address\"},{\"name\":\"\",\"type\":\"address\"}],\"name\":\"allowance\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"name\":\"initialSupply\",\"type\":\"uint256\"},{\"name\":\"tokenName\",\"type\":\"string\"},{\"name\":\"decimalUnits\",\"type\":\"uint8\"},{\"name\":\"tokenSymbol\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"from\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Burn\",\"type\":\"event\"}]";
+
 
 static const QString PRC_CALL = "callcontract";
 static const QString PRC_SENDTO = "sendtocontract";
@@ -22,6 +26,7 @@ static const QString PARAM_AMOUNT = "amount";
 static const QString PARAM_GASLIMIT = "gaslimit";
 static const QString PARAM_GASPRICE = "gasprice";
 static const QString PARAM_SENDER = "sender";
+static const QString PARAM_RECEIVER = "receiver";
 static const QString PARAM_BROADCAST = "broadcast";
 static const QString PARAM_CHANGE_TO_SENDER = "changeToSender";
 
@@ -44,6 +49,7 @@ struct TokenData
     int funcDecimals;
     int funcBurn;
     int funcBalanceOf;
+    int funcTokenURI;
     int funcBurnFrom;
     int funcSymbol;
     int funcTransfer;
@@ -67,6 +73,7 @@ struct TokenData
         funcDecimals(-1),
         funcBurn(-1),
         funcBalanceOf(-1),
+        funcTokenURI(-1),
         funcBurnFrom(-1),
         funcSymbol(-1),
         funcTransfer(-1),
@@ -168,6 +175,10 @@ Token::Token():
             {
                 d->funcBalanceOf = i;
             }
+            else if(func.name == "tokenURI")
+            {
+                d->funcTokenURI = i;
+            }
             else if(func.name == "burnFrom")
             {
                 d->funcBurnFrom = i;
@@ -247,6 +258,11 @@ void Token::setGasPrice(const std::string &gasPrice)
 void Token::setSender(const std::string &sender)
 {
     d->lstParams[PARAM_SENDER] = QString::fromStdString(sender);
+}
+
+void Token::setReceiver(const std::string &receiver)
+{
+    d->lstParams[PARAM_RECEIVER] = QString::fromStdString(receiver);
 }
 
 void Token::clear()
@@ -414,6 +430,32 @@ bool Token::balanceOf(const std::string &spender, std::string &result, bool send
     return true;
 }
 
+
+bool Token::tokenURI(std::string &result, QString &jsonResult, std::string tokenId)
+{
+    std::vector<std::string> input;
+    input.push_back(tokenId);
+    std::vector<std::string> output;
+
+    if(!exec(input, d->funcTokenURI, output, false))
+    {
+        return false;
+    }
+
+    if(output.size() == 0)
+    {
+        return false;
+    }
+    else
+    {
+        result = output[0];
+	jsonResult = resultJsonOut;
+    }
+
+    return true;
+}
+
+
 bool Token::burnFrom(const std::string &_from, const std::string &_value, bool &success, bool sendTo)
 {
     std::vector<std::string> input;
@@ -524,12 +566,18 @@ bool Token::burnEvents(std::vector<TokenEvent> &tokenEvents, int64_t fromBlock, 
 
 bool Token::exec(const std::vector<std::string> &input, int func, std::vector<std::string> &output, bool sendTo)
 {
+
     // Convert the input data into hex encoded binary data
     d->txid = "";
     if(func == -1 || d->model == 0)
+    {
         return false;
+    }
+
     std::string strData;
+
     FunctionABI function = d->ABI->functions[func];
+
     std::vector<std::vector<std::string>> values;
     for(size_t i = 0; i < input.size(); i++)
     {
@@ -537,9 +585,14 @@ bool Token::exec(const std::vector<std::string> &input, int func, std::vector<st
         param.push_back(input[i]);
         values.push_back(param);
     }
+
     std::vector<ParameterABI::ErrorType> errors;
+
     if(!function.abiIn(values, strData, errors))
+    {
         return false;
+    }
+    
     setDataHex(strData);
 
     // Execute the command and get the result
@@ -548,9 +601,12 @@ bool Token::exec(const std::vector<std::string> &input, int func, std::vector<st
     QString resultJson;
     d->errorMessage.clear();
     if(!cmd->exec(d->model->node(), d->model, d->lstParams, result, resultJson, d->errorMessage))
+    {
         return false;
+    }
 
-    // Get the result from calling function
+    resultJsonOut = resultJson;
+
     if(!sendTo)
     {
         QVariantMap variantMap = result.toMap();
@@ -559,7 +615,10 @@ bool Token::exec(const std::vector<std::string> &input, int func, std::vector<st
         std::vector<std::vector<std::string>> values;
         std::vector<ParameterABI::ErrorType> errors;
         if(!function.abiOut(rawData, values, errors))
+	{
             return false;
+	}
+
         for(size_t i = 0; i < values.size(); i++)
         {
             std::vector<std::string> param = values[i];
@@ -617,10 +676,15 @@ bool Token::execEvents(int64_t fromBlock, int64_t toBlock, int func, std::vector
     std::string eventName = function.selector();
     std::string contractAddress = d->lstParams[PARAM_ADDRESS].toStdString();
     std::string senderAddress = d->lstParams[PARAM_SENDER].toStdString();
+    std::string receiverAddres = d->lstParams[PARAM_RECEIVER].toStdString();
+
     ToHash160(senderAddress, senderAddress);
     senderAddress  = "000000000000000000000000" + senderAddress;
-    if(!(d->eventLog->searchTokenTx(d->model->node(), d->model, fromBlock, toBlock, contractAddress, senderAddress, result)))
+    //if(!(d->eventLog->searchTokenTx(d->model->node(), d->model, fromBlock, toBlock, contractAddress, senderAddress, result)))
+    if(!(d->eventLog->searchTokenTx(d->model->node(), d->model, 600000, toBlock, contractAddress, senderAddress, result)))
+    {
         return false;
+    }
 
     // Parse the result events
     QList<QVariant> list = result.toList();
@@ -650,10 +714,26 @@ bool Token::execEvents(int64_t fromBlock, int64_t toBlock, int func, std::vector
 
             // Parse data
             std::string data = variantLog.value("data").toString().toStdString();
-            dev::bytes rawData = dev::fromHex(data);
-            dev::bytesConstRef o(&rawData);
-            dev::u256 outData = dev::eth::ABIDeserialiser<dev::u256>::deserialise(o);
-            tokenEvent.value = u256Touint(outData);
+	    if(data.size() == 0)
+	    {
+		if(topicsList.size() == 4)
+		{
+		    std::string data = topicsList[3].toString().toStdString();
+        	    dev::bytes rawData = dev::fromHex(data);
+        	    dev::bytesConstRef o(&rawData);
+        	    dev::u256 outData = dev::eth::ABIDeserialiser<dev::u256>::deserialise(o);
+        	    tokenEvent.value = u256Touint(outData);
+	    	    tokenEvent.contractType = "1";
+		}
+	    }
+	    else
+	    {
+        	dev::bytes rawData = dev::fromHex(data);
+        	dev::bytesConstRef o(&rawData);
+        	dev::u256 outData = dev::eth::ABIDeserialiser<dev::u256>::deserialise(o);
+        	tokenEvent.value = u256Touint(outData);
+	        tokenEvent.contractType = "0";
+	    }
 
             addTokenEvent(tokenEvents, tokenEvent);
         }

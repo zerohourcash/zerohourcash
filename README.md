@@ -36,6 +36,14 @@ This is a quick start script for compiling ZHCASH on Ubuntu
     cd zerohourcash
 
     # Note autogen will prompt to install some more dependencies if needed
+    1. Go to the depends folder, run make -j8, and wait until it finishes (about 10–15 minutes). The last line will show a path — copy it to the clipboard.
+
+    2. Run autogen.sh.
+
+    3. Run ./configure --prefix= and paste the path from step 1 right after the equals sign.
+
+    4. Run make -j8 and wait (about 20–25 minutes).
+
     ./autogen.sh
     ./configure 
     make -j2

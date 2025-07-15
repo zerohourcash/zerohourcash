@@ -71,6 +71,7 @@
         <file alias="zhrctoken">res/icons/zhrctoken.png</file>
         <file alias="token">res/icons/token.png</file>
         <file alias="show">res/icons/show.png</file>
+        <file alias="not_support">res/icons/not_support.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>

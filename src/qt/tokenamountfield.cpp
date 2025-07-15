@@ -1,4 +1,4 @@
-﻿#include <qt/tokenamountfield.h>
+#include <qt/tokenamountfield.h>
 
 #include <qt/bitcoinunits.h>
 #include <qt/styleSheet.h>
@@ -9,6 +9,8 @@
 #include <QKeyEvent>
 #include <QLineEdit>
 #include <QHBoxLayout>
+
+#include <QDebug>
 
 /** QSpinBox that uses fixed-point numbers internally and uses our own
  * formatting/parsing functions.
@@ -23,10 +25,10 @@ public:
         decimalUnits(0),
         totalSupply(0),
         singleStep(0),
-        minAmount(0)
+        minAmount(0),
+	tokenType(0)
     {
         setAlignment(Qt::AlignRight);
-
         connect(lineEdit(), &QLineEdit::textEdited, this, &TokenAmountSpinBox::valueChanged);
     }
 
@@ -52,7 +54,7 @@ public:
         }
     }
 
-    int256_t value(bool *valid_out=0) const
+    int256_t value(bool *valid_out = 0) const
     {
         return parse(text(), valid_out);
     }
@@ -95,28 +97,45 @@ public:
         setSingleStep();
     }
 
+    void setType(int type)
+    {
+	tokenType = type;
+    }
+
 private:
     int decimalUnits; // Token decimal units
     int256_t totalSupply; // Token total supply
     int256_t singleStep;
     int256_t minAmount;
+    int tokenType;
 
     /**
      * Parse a string into a number of base monetary units and
      * return validity.
      * @note Must return 0 if !valid.
      */
-    int256_t parse(const QString &text, bool *valid_out=0) const
+    int256_t parse(const QString &text, bool *valid_out = 0) const
     {
         int256_t val = 0;
         bool valid = BitcoinUnits::parseToken(decimalUnits, text, &val);
         if(valid)
         {
             if(val < 0 || val > totalSupply)
-                valid = false;
+	    {
+		if(tokenType == 0)
+		{
+		    valid = false;
+		}
+		else
+		{
+		    valid = true;
+		}
+	    }
         }
         if(valid_out)
+	{
             *valid_out = valid;
+	}
         return valid ? val : 0;
     }
 
@@ -261,6 +280,11 @@ void TokenAmountField::setMinimum(const int256_t& min)
 void TokenAmountField::setTotalSupply(const int256_t &value)
 {
     amount->setTotalSupply(value);
+}
+
+void TokenAmountField::setType(const int tokenType)
+{
+    amount->setType(tokenType);
 }
 
 void TokenAmountField::setDecimalUnits(int value)

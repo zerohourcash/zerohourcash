@@ -66,8 +66,17 @@ void ABIFunctionField::updateABIFunctionField()
             bool bTypeConstructor = function.type == "constructor";
             bool bTypeEvent = function.type == "event";
             bool bTypeDefault = function.type == "default";
-            bool bIsConstant = function.constant;
-            if((bFieldCreate && !bTypeConstructor) ||
+	    
+	    bool bIsConstant = false;
+
+	    if(function.stateMutability == "view" || function.stateMutability == "pure")
+	    {
+		bIsConstant = true;
+	    } else {
+		bIsConstant = function.constant;
+	    }
+            
+	    if((bFieldCreate && !bTypeConstructor) ||
                     (bFieldFunc && bTypeConstructor) ||
                     (bFieldFunc && bTypeEvent) ||
                     (bFieldCall && !bIsConstant && !bTypeDefault) ||

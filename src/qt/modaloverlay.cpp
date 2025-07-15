@@ -13,6 +13,8 @@
 #include <QResizeEvent>
 #include <QPropertyAnimation>
 
+#include <QDebug>
+
 ModalOverlay::ModalOverlay(QWidget *parent, OverlayType _type) :
 QWidget(parent),
 ui(new Ui::ModalOverlay),
@@ -111,6 +113,7 @@ void ModalOverlay::tipUpdate(int count, const QDateTime& blockDate, double nVeri
                 break;
             }
         }
+
         // show progress increase per hour
         ui->progressIncreasePerH->setText(QString::number(progressPerHour * 100, 'f', 2)+"%");
 

@@ -493,6 +493,8 @@ struct TokenInfo
     uint256 block_hash;
     int64_t block_number = -1;
     uint256 hash;
+    std::string contractType;
+    std::string tokenURI;
 };
 
 // Wallet token transaction
@@ -508,6 +510,8 @@ struct TokenTx
     int64_t block_number = -1;
     std::string label;
     uint256 hash;
+    std::string contractType;
+    std::string tokenURI;
 };
 
 // Wallet contract book data */

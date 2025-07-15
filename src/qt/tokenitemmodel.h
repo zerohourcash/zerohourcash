@@ -21,6 +21,7 @@ class TokenItemModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
+
     enum ColumnIndex {
         Name = 0,
         Symbol = 1,
@@ -36,6 +37,8 @@ public:
         SenderRole = Qt::UserRole + 6,
         BalanceRole = Qt::UserRole + 7,
         RawBalanceRole = Qt::UserRole + 8,
+        TypeRole = Qt::UserRole + 9,
+        TypeRoleError = Qt::UserRole + 10,
     };
 
     TokenItemModel(WalletModel *parent = 0);
@@ -56,6 +59,7 @@ public:
 public Q_SLOTS:
     void checkTokenBalanceChanged();
     void balanceChanged(QString hash, QString balance);
+    void typeChanged(QString hash, QString contractType, int error);
 
 private Q_SLOTS:
     void updateToken(const QString &hash, int status, bool showToken);

@@ -33,7 +33,8 @@ public:
         Type = 2,
         ToAddress = 3,
         Name = 4,
-        Amount = 5
+        Amount = 5,
+        ContractType = 6
     };
 
     /** Roles to get specific information from a transaction row.
@@ -54,6 +55,8 @@ public:
         LabelRole,
         /** Net amount of transaction */
         AmountRole,
+	/** Contract Type */
+        ContractTypeRole,
         /** Transaction hash */
         TxHashRole,
         /** Transaction data, hex-encoded */

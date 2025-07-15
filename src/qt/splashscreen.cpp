@@ -45,20 +45,20 @@ SplashScreen::SplashScreen(interfaces::Node& node, Qt::WindowFlags f, const Netw
     QString font            = QApplication::font().toString();
 
     // create a bitmap according to device pixelratio
-    QSize splashSize(480,320);
-    pixmap = QPixmap(480*devicePixelRatio,320*devicePixelRatio);
+    QSize splashSize(712,411);
+    pixmap = QPixmap(712*devicePixelRatio,411*devicePixelRatio);
 
     // change to HiDPI if it makes sense
     pixmap.setDevicePixelRatio(devicePixelRatio);
 
     QPainter pixPaint(&pixmap);
-    pixPaint.setPen(QColor("#ffffff"));
+    pixPaint.setPen(QColor("#FFFFFF"));
 
     QRect mainRect(QPoint(0,0), splashSize);
     pixPaint.fillRect(mainRect, QColor("#030509"));
 
     // draw background
-    QRect rectBg(QPoint(-50, -50), QSize(splashSize.width() + 50, splashSize.height() + 50));
+    QRect rectBg(QPoint(0, 0), QSize(splashSize.width(), splashSize.height()));
     QPixmap bg(":/styles/app-icons/splash_bg");
     pixPaint.drawPixmap(rectBg, bg);
 
@@ -77,7 +77,7 @@ SplashScreen::SplashScreen(interfaces::Node& node, Qt::WindowFlags f, const Netw
         pixPaint.drawText(titleAddRect, Qt::AlignHCenter | Qt::AlignVCenter, titleAddText);
     }
 
-    pixPaint.setFont(QFont(font, 11*fontFactor));
+    pixPaint.setFont(QFont(font, 12*fontFactor));
     //QRect versionRect(versionPoint, QSize(rectTitle.width(), versionTextHeight));
     //pixPaint.drawText(versionRect, Qt::AlignHCenter | Qt::AlignTop, versionText);
 
@@ -137,7 +137,7 @@ static void InitMessage(SplashScreen *splash, const std::string &message)
         Qt::QueuedConnection,
         Q_ARG(QString, QString::fromStdString(message)),
         Q_ARG(int, Qt::AlignBottom|Qt::AlignRight),
-        Q_ARG(QColor, QColor("#ffffff")));
+        Q_ARG(QColor, QColor("#FFFFFF")));
 }
 
 static void ShowProgress(SplashScreen *splash, const std::string &title, int nProgress, bool resume_possible)

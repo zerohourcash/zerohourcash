@@ -109,10 +109,11 @@ void OptionsModel::Init(bool resetSettings)
     if (!m_node.softSetArg("-dbcache", settings.value("nDatabaseCache").toString().toStdString()))
         addOverriddenOption("-dbcache");
 
-    if (!settings.contains("fLogEvents"))
-        settings.setValue("fLogEvents", fLogEvents);
-    if (!m_node.softSetBoolArg("-logevents", settings.value("fLogEvents").toBool()))
-        addOverriddenOption("-logevents");
+    // ZH DEV
+    //if (!settings.contains("fLogEvents"))
+    //    settings.setValue("fLogEvents", fLogEvents);
+    //if (!m_node.softSetBoolArg("-logevents", settings.value("fLogEvents").toBool()))
+    //    addOverriddenOption("-logevents");
 
 #ifdef ENABLE_WALLET
     if (!settings.contains("nReserveBalance"))
@@ -345,7 +346,7 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
         case DatabaseCache:
             return settings.value("nDatabaseCache");
         case LogEvents:
-            return settings.value("fLogEvents");
+            return true; //settings.value("fLogEvents");
         case ThreadsScriptVerif:
             return settings.value("nThreadsScriptVerif");
         case Listen:

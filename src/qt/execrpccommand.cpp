@@ -3,6 +3,8 @@
 #include <QJsonDocument>
 #include <univalue.h>
 
+#include <QDebug>
+
 ExecRPCCommand::ExecRPCCommand(const QString &command, const QStringList &mandatory, const QStringList &optional, const QMap<QString, QString>& translations, QObject *parent)
     : QObject(parent)
 {
@@ -30,7 +32,11 @@ bool ExecRPCCommand::exec(interfaces::Node &node, const WalletModel* wallet_mode
         {
             commandLine.append(params[key]);
         }
+
+
     }
+
+
     if(mandatoryNotPresent.count() > 0)
     {
         errorMessage = tr("Mandatory fields are not present:\n%1").arg(mandatoryNotPresent.join(", "));
@@ -46,6 +52,7 @@ bool ExecRPCCommand::exec(interfaces::Node &node, const WalletModel* wallet_mode
         QString key = m_optionalParams[i];
         if(params.contains(key))
         {
+
             if(!haveOptional) haveOptional = true;
             commandLine.insert(optionalParamsAt, params[key]);
         }
@@ -57,6 +64,7 @@ bool ExecRPCCommand::exec(interfaces::Node &node, const WalletModel* wallet_mode
             }
         }
     }
+
     if(optionalNotPresent.count() > 0)
     {
         errorMessage = tr("Optional fields are not present:\n%1").arg(optionalNotPresent.join(", "));

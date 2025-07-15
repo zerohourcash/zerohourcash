@@ -5,6 +5,7 @@
 #include <qt/styleSheet.h>
 
 #include <QMessageBox>
+#include <QTextEdit>
 
 ContractResult::ContractResult(QWidget *parent) :
     QStackedWidget(parent),
@@ -119,7 +120,7 @@ void ContractResult::setParamsData(FunctionABI function, QList<QStringList> para
     if(widgetParams->sizeHint().height() < 70)
         ui->scrollAreaParams->setMaximumHeight(widgetParams->sizeHint().height() + 2);
     else
-        ui->scrollAreaParams->setMaximumHeight(140);
+        ui->scrollAreaParams->setMaximumHeight(340);
     ui->scrollAreaParams->setWidget(widgetParams);
     ui->scrollAreaParams->setVisible(true);
 }
@@ -193,6 +194,7 @@ void ContractResult::updateCallResult(QVariant result, FunctionABI function, QLi
                 paramValuesLayout->setContentsMargins(0,0,0,0);
 
                 QLabel *resultName = new QLabel(this);
+		resultName->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
                 resultName->setFixedWidth(160);
                 resultName->setFixedHeight(19);
                 QFontMetrics metrix(resultName->font());
@@ -201,7 +203,7 @@ void ContractResult::updateCallResult(QVariant result, FunctionABI function, QLi
                 QString clippedText = metrix.elidedText(text, Qt::ElideRight, width);
                 resultName->setText(clippedText);
                 resultName->setToolTip(QString("%2 %1").arg(QString::fromStdString(function.outputs[i].name)).arg(QString::fromStdString(function.outputs[i].type)));
-
+		
                 vNameLayout->addWidget(resultName);
                 std::vector<std::string> listValues = values[i];
                 hLayout->addLayout(vNameLayout);
@@ -210,7 +212,7 @@ void ContractResult::updateCallResult(QVariant result, FunctionABI function, QLi
                     int spacerSize = 0;
                     for(size_t j = 0; j < listValues.size(); j++)
                     {
-                        QLineEdit *resultValue = new QLineEdit(this);
+                        QTextEdit *resultValue = new QTextEdit(this);
                         resultValue->setReadOnly(true);
                         resultValue->setText(QString::fromStdString(listValues[j]));
                         paramValuesLayout->addWidget(resultValue);
@@ -234,7 +236,7 @@ void ContractResult::updateCallResult(QVariant result, FunctionABI function, QLi
             }
             else
             {
-                ui->scrollAreaResult->setMaximumHeight(140);
+                ui->scrollAreaResult->setMaximumHeight(340);
             }
             ui->scrollAreaResult->setWidget(widgetResults);
             ui->groupBoxResult->setVisible(true);
