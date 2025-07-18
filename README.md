@@ -40,8 +40,4 @@ This is a quick start script for compiling ZHCASH on Ubuntu 20
     3. Run ./configure --prefix= and paste the path from step 1 right after the equals sign.
 
     4. Go to "zerohourcash" folder. Run make -j8 and wait (about 20–25 minutes).
-
-    ./autogen.sh
-    ./configure 
-    make -j2
     
