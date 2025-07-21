@@ -21,7 +21,8 @@ ZHCASH Core currently implements the following:
 * Compatibility with the Bitcoin Core set of RPC commands and APIs
 * Full SegWit capability with p2sh-segwit (legacy) and bech32 (native) addresses
 
-This is a quick start script for compiling ZHCASH on Ubuntu 20
+This is a quick start script for compiling ZHCASH on Ubuntu 20.04
+On UBUNTU newer than 20.04, compilation is only possible without qt
 
     sudo apt-get install build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils git cmake libboost-all-dev libgmp3-dev
     sudo apt-get update
