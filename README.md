@@ -40,7 +40,7 @@ This is a quick start script for compiling ZHCASH on Ubuntu 20.04. On UBUNTU new
         autogen.sh.
     3. Run:
         ./configure --prefix=/root/zerohourcash/depends/x86_64-pc-linux-gnu     // paste the path from step 1 right after the equals sign in prefix
-        ./configure --prefix=/root/zerohourcash/depends/x86_64-w64-mingw32 --with-gui=qt5 --host=x86_64-w64-mingw32 --enable-static --disable-shared  CXX=x86_64-w64-mingw32-g++  CXXFLAGS="-static-libgcc -static-libstdc++"                                            // to configure for windows
+        ./configure --prefix=/root/zerohourcash/depends/x86_64-w64-mingw32 --with-gui=qt5 --host=x86_64-w64-mingw32 --enable-static --disable-shared  CXX=x86_64-w64-mingw32-g++  CXXFLAGS="-static-libgcc -static-libstdc++"    // to configure for windows
     4. Go to "zerohourcash" folder. Run: 
         make -j$(nproc)                              // and wait (about 20–25 minutes).
     
