@@ -3,10 +3,29 @@
 #include <validation.h>
 #include <chainparams.h>
 #include <zerohour/zerohourstate.h>
+#include <set>
+#include <vector>
+#include <devcore/Address.h> // or wherever Address is defined
 
 using namespace std;
 using namespace dev;
 using namespace dev::eth;
+
+const std::set<dev::Address>& GetBannedContracts() {
+    static std::set<dev::Address> result;
+    static bool initialized = false;
+    if (!initialized) {
+        for (const std::string& addrStr : gArgs.GetArgs("-bannedcontract")) {
+            try {
+                result.insert(dev::Address(addrStr));
+            } catch (...) {
+                LogPrintf("Invalid bannedcontract address in config: %s\n", addrStr);
+            }
+        }
+        initialized = true;
+    }
+    return result;
+}
 
 ZHCASHState::ZHCASHState(u256 const& _accountStartNonce, OverlayDB const& _db, const string& _path, BaseState _bs) :
         State(_accountStartNonce, _db, _bs) {
@@ -22,6 +41,11 @@ ZHCASHState::ZHCASHState() : dev::eth::State(dev::Invalid256, dev::OverlayDB(), 
 ResultExecute ZHCASHState::execute(EnvInfo const& _envInfo, SealEngineFace const& _sealEngine, ZHCASHTransaction const& _t, Permanence _p, OnOpFunc const& _onOp){
 
     assert(_t.getVersion().toRaw() == VersionVM::GetEVMDefault().toRaw());
+
+    // Ban check: block execution if contract is banned
+    if (!_t.isCreation() && GetBannedContracts().count(_t.receiveAddress())) {
+        throw std::runtime_error("This contract is banned and cannot be executed.");
+    }
 
     addBalance(_t.sender(), _t.value() + (_t.gas() * _t.gasPrice()));
     newAddress = _t.isCreation() ? createZHCASHAddress(_t.getHashWith(), _t.getNVout()) : dev::Address();
@@ -239,15 +263,12 @@ void ZHCASHState::deleteAccounts(std::set<dev::Address>& addrs){
 
 void ZHCASHState::updateUTXO(const std::unordered_map<dev::Address, Vin>& vins){
     for(auto& v : vins){
-        Vin* vi = const_cast<Vin*>(vin(v.first));
-
-        if(vi){
-            vi->hash = v.second.hash;
-            vi->nVout = v.second.nVout;
-            vi->value = v.second.value;
-            vi->alive = v.second.alive;
-        } else if(v.second.alive > 0) {
+        if (v.second.alive > 0) {
             cacheUTXO[v.first] = v.second;
+        } else {
+            // Если UTXO неактуален — удалить из базы и из кэша
+            cacheUTXO.erase(v.first);
+            stateUTXO.remove(v.first); // если используется TrieDB/OverlayDB
         }
     }
 }
