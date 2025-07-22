@@ -37,7 +37,7 @@ This is a quick start script for compiling ZHCASH on Ubuntu 20.04. On UBUNTU new
 
     2. Run autogen.sh.
 
-    3. Run ./configure --prefix= and paste the path from step 1 right after the equals sign.
+    3. Run ./configure --prefix=/root/zerohourcash/depends/x86_64-pc-linux-gnu (and paste the path from step 1 right after the equals sign)
 
     4. Go to "zerohourcash" folder. Run make -j$(nproc) and wait (about 20–25 minutes).
     
