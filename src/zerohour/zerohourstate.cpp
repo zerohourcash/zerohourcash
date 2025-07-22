@@ -5,7 +5,7 @@
 #include <zerohour/zerohourstate.h>
 #include <set>
 #include <vector>
-#include <devcore/Address.h> // or wherever Address is defined
+#include "cpp-ethereum/libdevcore/Address.h"
 
 using namespace std;
 using namespace dev;
