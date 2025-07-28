@@ -4,6 +4,7 @@
 
 #include <coins.h>
 
+#include <amount.h>
 #include <consensus/consensus.h>
 #include <random.h>
 #include <version.h>
@@ -228,8 +229,14 @@ CAmount CCoinsViewCache::GetValueIn(const CTransaction& tx) const
         return 0;
 
     CAmount nResult = 0;
-    for (unsigned int i = 0; i < tx.vin.size(); i++)
-        nResult += AccessCoin(tx.vin[i].prevout).out.nValue;
+    for (unsigned int i = 0; i < tx.vin.size(); i++) {
+        const CAmount nValue = AccessCoin(tx.vin[i].prevout).out.nValue;
+        if (!MoneyRange(nValue))
+            throw std::runtime_error(std::string(__func__) + ": input value out of range");
+        nResult += nValue;
+        if (!MoneyRange(nResult))
+            throw std::runtime_error(std::string(__func__) + ": total input value out of range");
+    }
 
     return nResult;
 }

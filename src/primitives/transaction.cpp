@@ -84,9 +84,11 @@ CAmount CTransaction::GetValueOut() const
 {
     CAmount nValueOut = 0;
     for (const auto& tx_out : vout) {
+        if (!MoneyRange(tx_out.nValue))
+            throw std::runtime_error(std::string(__func__) + ": output value out of range");
         nValueOut += tx_out.nValue;
-        if (!MoneyRange(tx_out.nValue) || !MoneyRange(nValueOut))
-            throw std::runtime_error(std::string(__func__) + ": value out of range");
+        if (!MoneyRange(nValueOut))
+            throw std::runtime_error(std::string(__func__) + ": total output value out of range");
     }
     return nValueOut;
 }
