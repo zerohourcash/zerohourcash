@@ -1,0 +1,6 @@
+usr/local/bin/zerohour-qt usr/bin
+share/pixmaps/zerohour32.xpm usr/share/pixmaps
+share/pixmaps/zerohour16.xpm usr/share/pixmaps
+share/pixmaps/zerohour128.png usr/share/pixmaps
+debian/zerohour-qt.desktop usr/share/applications
+debian/zerohour-qt.protocol usr/share/kde4/services/
