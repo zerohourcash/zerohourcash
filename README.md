@@ -36,6 +36,7 @@ This is a quick start script for compiling ZHCASH on Ubuntu 20.04. On UBUNTU new
     1. Go to the "depends" folder, run: 
         make -j$(nproc)                              // For linux. Wait until it finishes (about 10–15 minutes). The last line will show a path — copy it to the clipboard.
         make HOST=x86_64-w64-mingw32 -j$(nproc)      // to compile for windows
+        make HOST=aarch64-apple-darwin -j$(nproc)     // to prepare a macOS Apple Silicon cross-build; requires a local Apple SDK and a tested arm64-capable OpenSSL depends package
     2. Run:
         autogen.sh.
     3. Run:
@@ -43,4 +44,8 @@ This is a quick start script for compiling ZHCASH on Ubuntu 20.04. On UBUNTU new
         ./configure --prefix=/root/zerohourcash/depends/x86_64-w64-mingw32 --with-gui=qt5 --host=x86_64-w64-mingw32 --enable-static --disable-shared  CXX=x86_64-w64-mingw32-g++  CXXFLAGS="-static-libgcc -static-libstdc++"    // to configure for windows
     4. Go to "zerohourcash" folder. Run: 
         make -j$(nproc)                              // and wait (about 20–25 minutes).
+
+For native Apple Silicon macOS builds, see `doc/build-osx-arm64.md`. The
+canonical target triplet is `aarch64-apple-darwin`; `arm64-apple-darwin` is not
+accepted by the bundled `config.sub`.
     

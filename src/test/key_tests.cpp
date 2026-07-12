@@ -20,10 +20,10 @@ static const std::string strSecret1     ("5JJsmJUKbBRt2KJvxdSipMMVBueAypioUxWKaP
 static const std::string strSecret2     ("5JqXG1jtemZ7dVesB2h5MPMGoTVRHhsHA5CiY8Npti1gfAqLLQJ");
 static const std::string strSecret1C    ("KyPu4Y7b3s2pCop9AXrXZzqRR9M53odWAPzQzNVJDn185rGaRQZt");
 static const std::string strSecret2C    ("L1jAZGGJyhekG5U8TGTtCyeUk3vSCjNvK3YiLPZLPE223PZxvfhJ");
-static const std::string addr1 ("QeQm1wAnWYQ6YPQxLGKtiTVGDuMU7giAH8");
-static const std::string addr2 ("QetZmtkmbZMVfhM77Yy5kFk85ubkxJmvaN");
-static const std::string addr1C("QYrLvRbEkkBkEp3v7yrCthrmj3zgE81J4z");
-static const std::string addr2C("QLjSN1pxpkTLY7MvYJZkP2cJYy9RdgV2P7");
+static const std::string addr1 ("ZVr2gKj88WbNXvUrsVeuPDUa512DkELLDw");
+static const std::string addr2 ("ZWKqSHK7DXYmfER1enJ6R1jRw1GWcLiYs3");
+static const std::string addr1C("ZQHcap9aNiP2EM7pfDBDZTr5a9fRszH5Cj");
+static const std::string addr2C("ZCAi2QPJSiecXeRq5Xtm3nbcQ4pBK4499z");
 
 
 static const std::string strAddressBad("QHV9Lc3sNHZxwj4Zk6fB38tEmBryq2cBiF");

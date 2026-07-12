@@ -123,6 +123,15 @@ void BaseIndex::ThreadSync()
                 last_locator_write_time = current_time;
             }
 
+            if (pindex->nHeight == 0) {
+                if (!WriteBlock(Params().GenesisBlock(), pindex)) {
+                    FatalError("%s: Failed to write genesis block %s to index database",
+                               __func__, pindex->GetBlockHash().ToString());
+                    return;
+                }
+                continue;
+            }
+
             CBlock block;
             if (!ReadBlockFromDisk(block, pindex, consensus_params)) {
                 FatalError("%s: Failed to read block %s from disk",

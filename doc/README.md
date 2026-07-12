@@ -39,6 +39,7 @@ The following are developer notes on how to build Bitcoin Core on your native pl
 
 - [Dependencies](dependencies.md)
 - [macOS Build Notes](build-osx.md)
+- [macOS Apple Silicon arm64 Build Notes](build-osx-arm64.md)
 - [Unix Build Notes](build-unix.md)
 - [Windows Build Notes](build-windows.md)
 - [FreeBSD Build Notes](build-freebsd.md)

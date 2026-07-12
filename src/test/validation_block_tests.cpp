@@ -57,7 +57,8 @@ std::shared_ptr<CBlock> Block(const uint256& prev_hash)
     auto ptemplate = BlockAssembler(Params()).CreateNewBlock(pubKey);
     auto pblock = std::make_shared<CBlock>(ptemplate->block);
     pblock->hashPrevBlock = prev_hash;
-    pblock->nTime = ++time;
+    time += Params().GetConsensus().nPowTargetSpacing * 2 + 1;
+    pblock->nTime = time;
 
     CMutableTransaction txCoinbase(*pblock->vtx[0]);
     txCoinbase.vout.resize(1);
@@ -134,10 +135,14 @@ BOOST_AUTO_TEST_CASE(processnewblock_signals_ordering)
     std::transform(blocks.begin(), blocks.end(), std::back_inserter(headers), [](std::shared_ptr<const CBlock> b) { return b->GetBlockHeader(); });
 
     // Process all the headers so we understand the toplogy of the chain
-    BOOST_CHECK(ProcessNewBlockHeaders(headers, state, Params()));
+    BOOST_REQUIRE_MESSAGE(ProcessNewBlockHeaders(headers, state, Params()), FormatStateMessage(state));
 
-    // Connect the genesis block and drain any outstanding events
-    BOOST_CHECK(ProcessNewBlock(Params(), std::make_shared<CBlock>(Params().GenesisBlock()), true, &ignored));
+    // The shared test setup has already connected genesis.
+    {
+        LOCK(cs_main);
+        BOOST_REQUIRE(chainActive.Tip());
+        BOOST_REQUIRE_EQUAL(chainActive.Tip()->GetBlockHash(), Params().GenesisBlock().GetHash());
+    }
     SyncWithValidationInterfaceQueue();
 
     // subscribe to events (this subscriber will validate event ordering)

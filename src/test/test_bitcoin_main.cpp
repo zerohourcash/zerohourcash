@@ -7,24 +7,31 @@
 #include <banman.h>
 #include <net.h>
 
+#include <atomic>
 #include <memory>
 
 #include <boost/test/unit_test.hpp>
 
 std::unique_ptr<CConnman> g_connman;
 std::unique_ptr<BanMan> g_banman;
+static std::atomic<bool> g_shutdown_requested{false};
 
-[[noreturn]] void Shutdown(void* parg)
+void Shutdown(void* parg)
 {
-  std::exit(EXIT_SUCCESS);
+    g_shutdown_requested = true;
 }
 
-[[noreturn]] void StartShutdown()
+void StartShutdown()
 {
-  std::exit(EXIT_SUCCESS);
+    g_shutdown_requested = true;
+}
+
+void AbortShutdown()
+{
+    g_shutdown_requested = false;
 }
 
 bool ShutdownRequested()
 {
-  return false;
+    return g_shutdown_requested;
 }

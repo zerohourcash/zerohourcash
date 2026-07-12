@@ -186,10 +186,12 @@ download-one: check-sources $(all_sources)
 
 download-osx:
 	@$(MAKE) -s HOST=x86_64-apple-darwin14 download-one
+download-osx-arm64:
+	@$(MAKE) -s HOST=aarch64-apple-darwin download-one
 download-linux:
 	@$(MAKE) -s HOST=x86_64-unknown-linux-gnu download-one
 download-win:
 	@$(MAKE) -s HOST=x86_64-w64-mingw32 download-one
 download: download-osx download-linux download-win
 
-.PHONY: install cached clean clean-all download-one download-osx download-linux download-win download check-packages check-sources
+.PHONY: install cached clean clean-all download-one download-osx download-osx-arm64 download-linux download-win download check-packages check-sources

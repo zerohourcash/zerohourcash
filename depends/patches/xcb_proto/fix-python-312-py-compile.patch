@@ -1,0 +1,65 @@
+--- a/py-compile
++++ b/py-compile
+@@ -118,43 +118,37 @@
+ $PYTHON -c "
+-import sys, os, py_compile, imp
++import sys, os, py_compile
+
+ files = '''$files'''
+
+ sys.stdout.write('Byte-compiling python modules...\n')
+ for file in files.split():
+-    $pathtrans
+-    $filetrans
+-    if not os.path.exists(filepath) or not (len(filepath) >= 3
+-                                            and filepath[-3:] == '.py'):
+-	    continue
+-    sys.stdout.write(file)
+-    sys.stdout.flush()
+-    if hasattr(imp, 'get_tag'):
+-        py_compile.compile(filepath, imp.cache_from_source(filepath), path)
+-    else:
+-        py_compile.compile(filepath, filepath + 'c', path)
++    $pathtrans
++    $filetrans
++    if not os.path.exists(filepath) or not (len(filepath) >= 3
++                                            and filepath[-3:] == '.py'):
++	    continue
++    sys.stdout.write(file)
++    sys.stdout.flush()
++    py_compile.compile(filepath, dfile=path)
+ sys.stdout.write('\n')" || exit $?
+
+ # this will fail for python < 1.5, but that doesn't matter ...
+ $PYTHON -O -c "
+-import sys, os, py_compile, imp
++import sys, os, py_compile
+
+ # pypy does not use .pyo optimization
+ if hasattr(sys, 'pypy_translation_info'):
+-    sys.exit(0)
++    sys.exit(0)
+
+ files = '''$files'''
+ sys.stdout.write('Byte-compiling python modules (optimized versions) ...\n')
+ for file in files.split():
+-    $pathtrans
+-    $filetrans
+-    if not os.path.exists(filepath) or not (len(filepath) >= 3
+-                                            and filepath[-3:] == '.py'):
+-	    continue
+-    sys.stdout.write(file)
+-    sys.stdout.flush()
+-    if hasattr(imp, 'get_tag'):
+-        py_compile.compile(filepath, imp.cache_from_source(filepath, False), path)
+-    else:
+-        py_compile.compile(filepath, filepath + 'o', path)
++    $pathtrans
++    $filetrans
++    if not os.path.exists(filepath) or not (len(filepath) >= 3
++                                            and filepath[-3:] == '.py'):
++	    continue
++    sys.stdout.write(file)
++    sys.stdout.flush()
++    py_compile.compile(filepath, dfile=path)
+ sys.stdout.write('\n')" 2>/dev/null || :

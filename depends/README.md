@@ -23,6 +23,7 @@ Common `host-platform-triplets` for cross compilation are:
 - `i686-w64-mingw32` for Win32
 - `x86_64-w64-mingw32` for Win64
 - `x86_64-apple-darwin14` for macOS
+- `aarch64-apple-darwin` for macOS Apple Silicon (arm64)
 - `arm-linux-gnueabihf` for Linux ARM 32 bit
 - `aarch64-linux-gnu` for Linux ARM 64 bit
 - `riscv32-linux-gnu` for Linux RISC-V 32 bit
@@ -35,6 +36,9 @@ No other options are needed, the paths are automatically configured.
 #### For macOS cross compilation
 
     sudo apt-get install curl librsvg2-bin libtiff-tools bsdmainutils cmake imagemagick libcap-dev libz-dev libbz2-dev python-setuptools
+
+For Apple Silicon builds use the canonical GNU triplet `aarch64-apple-darwin`.
+The alias `arm64-apple-darwin` is not accepted by the bundled `config.sub`.
 
 #### For Win32/Win64 cross compilation
 
@@ -90,4 +94,3 @@ options will be passed to bitcoin's configure. In this case, `--disable-wallet`.
 
 - [description.md](description.md): General description of the depends system
 - [packages.md](packages.md): Steps for adding packages
-

@@ -1355,6 +1355,10 @@ uint256 SignatureHashOutput(const CScript& scriptCode, const T& txTo, unsigned i
     return ss.GetHash();
 }
 
+// explicit instantiation
+template uint256 SignatureHashOutput<CTransaction>(const CScript& scriptCode, const CTransaction& txTo, unsigned int nOut, int nHashType, const CAmount& amount, SigVersion sigversion, const PrecomputedTransactionData* cache);
+template uint256 SignatureHashOutput<CMutableTransaction>(const CScript& scriptCode, const CMutableTransaction& txTo, unsigned int nOut, int nHashType, const CAmount& amount, SigVersion sigversion, const PrecomputedTransactionData* cache);
+
 template <class T>
 uint256 SignatureHash(const CScript& scriptCode, const T& txTo, unsigned int nIn, int nHashType, const CAmount& amount, SigVersion sigversion, const PrecomputedTransactionData* cache)
 {

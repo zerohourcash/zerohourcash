@@ -17,6 +17,7 @@
 #include <rpc/register.h>
 #include <rpc/server.h>
 #include <script/sigcache.h>
+#include <shutdown.h>
 #include <streams.h>
 #include <util/convert.h>
 #include <ui_interface.h>
@@ -35,6 +36,7 @@ std::ostream& operator<<(std::ostream& os, const uint256& num)
 BasicTestingSetup::BasicTestingSetup(const std::string& chainName)
     : m_path_root(fs::temp_directory_path() / "test_zerohour" / strprintf("%lu_%i", (unsigned long)GetTime(), (int)(InsecureRandRange(1 << 30))))
 {
+    AbortShutdown();
     SHA256AutoDetect();
     ECC_Start();
     SetupEnvironment();
@@ -103,7 +105,7 @@ TestingSetup::TestingSetup(const std::string& chainName) : BasicTestingSetup(cha
         }
         {
             CValidationState state;
-            if (!ActivateBestChain(state, chainparams)) {
+            if (!ActivateBestChain(state, chainparams, std::make_shared<const CBlock>(chainparams.GenesisBlock()))) {
                 throw std::runtime_error(strprintf("ActivateBestChain failed. (%s)", FormatStateMessage(state)));
             }
         }
