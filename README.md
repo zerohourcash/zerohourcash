@@ -42,14 +42,17 @@ sudo apt-get install -y \
   git cmake python3 patch curl ca-certificates gperf bison
 ```
 
-Clone and build the Linux dependency prefix:
+Clone this build branch and build the Linux dependency prefix:
 
 ```bash
-git clone https://github.com/zerohourcash/zerohourcash --recursive
+git clone --branch readme-build-instructions --recursive https://github.com/zerohourcash/zerohourcash
 cd zerohourcash
 
 make -C depends HOST=x86_64-pc-linux-gnu -j"$(nproc)"
 ```
+
+After these instructions are merged into the default branch, `--branch
+readme-build-instructions` can be omitted.
 
 Configure and build ZHCASH Core:
 
