@@ -21,31 +21,98 @@ ZHCASH Core currently implements the following:
 * Compatibility with the Bitcoin Core set of RPC commands and APIs
 * Full SegWit capability with p2sh-segwit (legacy) and bech32 (native) addresses
 
-This is a quick start script for compiling ZHCASH on Ubuntu 20.04. On UBUNTU newer than 20.04, compilation is only possible without qt
+Quick Build Instructions
+------------------------
 
-    sudo apt-get install build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils git cmake libboost-all-dev libgmp3-dev
-    sudo apt-get update
+The recommended build path is the bundled `depends` system. Ubuntu 24.04 is a
+supported build target, including the Qt GUI, when the commands below are used.
+The `depends` system builds or extracts the exact dependency set used by this
+source tree, including OpenSSL 1.1.1w for wallet compatibility. If
+`depends/built` is present and matches the current source tree, the dependency
+step reuses the cached tarballs instead of compiling every package again.
 
-    # If you want to build the Qt GUI:
-    sudo apt-get install libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler qrencode
+### Ubuntu 24.04 native build with Qt
 
-    git clone https://github.com/zerohourcash/zerohourcash --recursive
-    cd zerohourcash
+Install the host tools:
 
-    # Note autogen will prompt to install some more dependencies if needed
-    1. Go to the "depends" folder, run: 
-        make -j$(nproc)                              // For linux. Wait until it finishes (about 10–15 minutes). The last line will show a path — copy it to the clipboard.
-        make HOST=x86_64-w64-mingw32 -j$(nproc)      // to compile for windows
-        make HOST=aarch64-apple-darwin -j$(nproc)     // to prepare a macOS Apple Silicon cross-build; requires a local Apple SDK and a tested arm64-capable OpenSSL depends package
-    2. Run:
-        autogen.sh.
-    3. Run:
-        ./configure --prefix=/root/zerohourcash/depends/x86_64-pc-linux-gnu     // paste the path from step 1 right after the equals sign in prefix
-        ./configure --prefix=/root/zerohourcash/depends/x86_64-w64-mingw32 --with-gui=qt5 --host=x86_64-w64-mingw32 --enable-static --disable-shared  CXX=x86_64-w64-mingw32-g++  CXXFLAGS="-static-libgcc -static-libstdc++"    // to configure for windows
-    4. Go to "zerohourcash" folder. Run: 
-        make -j$(nproc)                              // and wait (about 20–25 minutes).
+```bash
+sudo apt-get update
+sudo apt-get install -y \
+  build-essential libtool autotools-dev automake pkg-config bsdmainutils \
+  git cmake python3 patch curl ca-certificates gperf bison
+```
 
-For native Apple Silicon macOS builds, see `doc/build-osx-arm64.md`. The
-canonical target triplet is `aarch64-apple-darwin`; `arm64-apple-darwin` is not
-accepted by the bundled `config.sub`.
+Clone and build the Linux dependency prefix:
+
+```bash
+git clone https://github.com/zerohourcash/zerohourcash --recursive
+cd zerohourcash
+
+make -C depends HOST=x86_64-pc-linux-gnu -j"$(nproc)"
+```
+
+Configure and build ZHCASH Core:
+
+```bash
+./autogen.sh
+CONFIG_SITE="$PWD/depends/x86_64-pc-linux-gnu/share/config.site" \
+  ./configure --with-gui=qt5
+make -j"$(nproc)"
+```
+
+The main binaries are created under `src/`, including `zerohourd`,
+`zerohour-cli`, `zerohour-tx`, `zerohour-wallet`, and the Qt GUI binary when
+GUI support is enabled.
+
+For a CLI-only build:
+
+```bash
+CONFIG_SITE="$PWD/depends/x86_64-pc-linux-gnu/share/config.site" \
+  ./configure --without-gui
+make -j"$(nproc)"
+```
+
+### Windows cross-build from Ubuntu 24.04
+
+Install the Windows cross compiler:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y \
+  build-essential libtool autotools-dev automake pkg-config bsdmainutils \
+  git cmake python3 patch curl ca-certificates gperf bison \
+  g++-mingw-w64-x86-64 binutils-mingw-w64-x86-64
+```
+
+Build or extract the Windows dependency prefix:
+
+```bash
+make -C depends HOST=x86_64-w64-mingw32 -j"$(nproc)"
+```
+
+Configure and build the Windows CLI and Qt binaries:
+
+```bash
+./autogen.sh
+CONFIG_SITE="$PWD/depends/x86_64-w64-mingw32/share/config.site" \
+  ./configure --host=x86_64-w64-mingw32 --with-gui=qt5
+make -j"$(nproc)"
+```
+
+The Windows `.exe` binaries are created under `src/`.
+
+### macOS Apple Silicon
+
+For native Apple Silicon macOS builds, see `doc/build-osx-arm64.md`.
+
+For Linux-to-macOS cross-build preparation, the target triplet is:
+
+```bash
+make -C depends HOST=aarch64-apple-darwin -j"$(nproc)"
+```
+
+This requires a local Apple `MacOSX*.sdk` under `depends/SDKs/`. The SDK is not
+included in this repository because it is distributed under Apple's license.
+The canonical target triplet is `aarch64-apple-darwin`; `arm64-apple-darwin` is
+not accepted by the bundled `config.sub`.
     
