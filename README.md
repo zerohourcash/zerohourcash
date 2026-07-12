@@ -31,6 +31,12 @@ source tree, including OpenSSL 1.1.1w for wallet compatibility. If
 `depends/built` is present and matches the current source tree, the dependency
 step reuses the cached tarballs instead of compiling every package again.
 
+Qt is built by `depends`, not by the system Qt packages. The Qt package is
+configured in `depends/packages/qt.mk` with `-no-openssl` because Qt 5.9.7 does
+not configure cleanly against the OpenSSL 1.1 API. This disables QtNetwork TLS
+inside Qt only; ZHCASH Core still builds and links OpenSSL 1.1.1w for wallet
+encryption and node cryptographic code.
+
 ### Ubuntu 24.04 native build with Qt
 
 Install the host tools:
@@ -42,7 +48,8 @@ sudo apt-get install -y \
   git cmake python3 patch curl ca-certificates gperf bison
 ```
 
-Clone this build branch and build the Linux dependency prefix:
+Clone this build branch and build the Linux dependency prefix. This step builds
+or extracts Qt 5.9.7 with `-no-openssl` automatically:
 
 ```bash
 git clone --branch modern-build-with-depends-cache --recursive https://github.com/zerohourcash/zerohourcash
@@ -53,6 +60,10 @@ make -C depends HOST=x86_64-pc-linux-gnu -j"$(nproc)"
 
 After these instructions are merged into the default branch, `--branch
 modern-build-with-depends-cache` can be omitted.
+
+Do not pass `-no-openssl` to `./configure`; it is a Qt configure option already
+handled inside the `depends` Qt package. The node configure step only needs to
+point at the generated dependency prefix through `CONFIG_SITE`.
 
 Configure and build ZHCASH Core:
 
@@ -87,7 +98,8 @@ sudo apt-get install -y \
   g++-mingw-w64-x86-64 binutils-mingw-w64-x86-64
 ```
 
-Build or extract the Windows dependency prefix:
+Build or extract the Windows dependency prefix. This also builds/extracts Qt
+with `-no-openssl` from `depends/packages/qt.mk`:
 
 ```bash
 make -C depends HOST=x86_64-w64-mingw32 -j"$(nproc)"
