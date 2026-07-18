@@ -5,6 +5,7 @@
 import biplist
 from ds_store import DSStore
 from mac_alias import Alias
+import struct
 import sys
 
 output_file = sys.argv[1]
@@ -40,14 +41,18 @@ icvp = {
     'backgroundType': 2,
     'backgroundColorRed': 1.0
 }
-alias = Alias.from_bytes(icvp['backgroundImageAlias'])
-alias.volume.name = package_name_ns
-alias.volume.posix_path = '/Volumes/' + package_name_ns
-alias.volume.disk_image_alias.target.filename = package_name_ns + '.temp.dmg'
-alias.volume.disk_image_alias.target.carbon_path = 'Macintosh HD:Users:\x00zerohouruser:\x00Documents:\x00zerohour:\x00zerohour:\x00' + package_name_ns + '.temp.dmg'
-alias.volume.disk_image_alias.target.posix_path = 'Users/zerohouruser/Documents/zerohour/zerohour/' + package_name_ns + '.temp.dmg'
-alias.target.carbon_path = package_name_ns + ':.background:\x00background.tiff'
-icvp['backgroundImageAlias'] = biplist.Data(alias.to_bytes())
+try:
+    alias = Alias.from_bytes(icvp['backgroundImageAlias'])
+    alias.volume.name = package_name_ns
+    alias.volume.posix_path = '/Volumes/' + package_name_ns
+    alias.volume.disk_image_alias.target.filename = package_name_ns + '.temp.dmg'
+    alias.volume.disk_image_alias.target.carbon_path = 'Macintosh HD:Users:\x00zerohouruser:\x00Documents:\x00zerohour:\x00zerohour:\x00' + package_name_ns + '.temp.dmg'
+    alias.volume.disk_image_alias.target.posix_path = 'Users/zerohouruser/Documents/zerohour/zerohour/' + package_name_ns + '.temp.dmg'
+    alias.target.carbon_path = package_name_ns + ':.background:\x00background.tiff'
+    icvp['backgroundImageAlias'] = biplist.Data(alias.to_bytes())
+except (IndexError, struct.error):
+    icvp['backgroundType'] = 0
+    del icvp['backgroundImageAlias']
 ds['.']['icvp'] = icvp
 
 ds['.']['vSrn'] = ('long', 1)

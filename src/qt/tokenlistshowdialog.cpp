@@ -19,6 +19,10 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#ifndef QT_NO_OPENSSL
+#include <QSslConfiguration>
+#include <QSslSocket>
+#endif
 #include <QEventLoop>
 #include <QBuffer>
 #include <QPushButton>
@@ -135,14 +139,16 @@ TokenListShowDialog::TokenListShowDialog(QWidget *parent, QList<TokenTransaction
 
 		if(ipfs_url.toString().size() == 46)
 		{
-		    QString requestUrl = "https://ipfs.zh.cash/ipfs/" + ipfs_url.toString();
+			    QString requestUrl = "https://ipfs.zh.cash/ipfs/" + ipfs_url.toString();
 
-		    QNetworkRequest request;
-		    QSslConfiguration conf = request.sslConfiguration();
-		    conf.setPeerVerifyMode(QSslSocket::VerifyNone);
+			    QNetworkRequest request;
+#ifndef QT_NO_OPENSSL
+			    QSslConfiguration conf = request.sslConfiguration();
+			    conf.setPeerVerifyMode(QSslSocket::VerifyNone);
 
-		    request.setSslConfiguration(conf);
-		    request.setUrl(QUrl(requestUrl));
+			    request.setSslConfiguration(conf);
+#endif
+			    request.setUrl(QUrl(requestUrl));
 
 		    manager = new QNetworkAccessManager();
 		    QObject::connect(manager, &QNetworkAccessManager::finished, this, [=](QNetworkReply *reply)
@@ -288,4 +294,3 @@ TokenListShowDialog::~TokenListShowDialog()
 {
     delete ui;
 }
-

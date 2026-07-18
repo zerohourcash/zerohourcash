@@ -7,6 +7,11 @@ $(package)_download_path=https://gmplib.org/download/$(package)
 define $(package)_set_vars
 $(package)_config_opts=--enable-static=yes --enable-shared=no --enable-cxx
 $(package)_config_opts_linux=--with-pic 
+ifeq ($(host_arch)_$(host_os),aarch64_darwin)
+$(package)_config_opts += --disable-assembly
+$(package)_cc += -fuse-ld=lld
+$(package)_cxx += -fuse-ld=lld
+endif
 endef
 
 define $(package)_preprocess_cmds

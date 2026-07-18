@@ -1,0 +1,14 @@
+--- a/boost/thread/pthread/thread_data.hpp
++++ b/boost/thread/pthread/thread_data.hpp
+@@ -50,7 +50,11 @@ namespace boost
+         // stack
+         void set_stack_size(std::size_t size) BOOST_NOEXCEPT {
+           if (size==0) return;
++#if defined(__APPLE__)
++          std::size_t page_size = static_cast<std::size_t>(sysconf(_SC_PAGESIZE));
++#else
+           std::size_t page_size = getpagesize();
++#endif
+ #ifdef PTHREAD_STACK_MIN
+           if (size<PTHREAD_STACK_MIN) size=PTHREAD_STACK_MIN;
+ #endif

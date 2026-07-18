@@ -16,7 +16,7 @@ AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
 BITCOIN_DAEMON_NAME=zerohourd
-BITCOIN_GUI_NAME=ZHCash-Qt
+BITCOIN_GUI_NAME=zerohour-qt
 BITCOIN_CLI_NAME=zerohour-cli
 BITCOIN_TX_NAME=zerohour-tx
 BITCOIN_WALLET_TOOL_NAME=zerohour-wallet
@@ -582,7 +582,7 @@ case $host in
      fi
 
      AX_CHECK_LINK_FLAG([[-Wl,-headerpad_max_install_names]], [LDFLAGS="$LDFLAGS -Wl,-headerpad_max_install_names"])
-     CPPFLAGS="$CPPFLAGS -DMAC_OSX"
+     CPPFLAGS="$CPPFLAGS -DMAC_OSX -D_DARWIN_C_SOURCE"
      OBJCXXFLAGS="$CXXFLAGS"
      ;;
    *android*)

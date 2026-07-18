@@ -207,13 +207,59 @@ contrib/devtools/import-macos-sdk.sh /path/to/MacOSX*.sdk.tar.gz
 The intended depends target is:
 
 ```bash
-cd depends
-make HOST=aarch64-apple-darwin SDK_PATH=/path/to/SDKs -j4
+make -C depends HOST=aarch64-apple-darwin SDK_PATH="$PWD/depends/SDKs" OSX_SDK_VERSION=15.5 -j"$(nproc)"
 ```
 
-Cross-compilation should not be treated as release-ready until the macOS SDK,
-OpenSSL 1.1.1w depends package, Qt, and final app packaging are tested together
-without regressing Linux and Windows builds.
+The tested Ubuntu 24 cross-build configure line is:
+
+```bash
+./autogen.sh
+CONFIG_SITE="$PWD/depends/aarch64-apple-darwin/share/config.site" ./configure \
+  --host=aarch64-apple-darwin \
+  --with-gui=qt5 \
+  --disable-bip70 \
+  --disable-tests \
+  --disable-bench \
+  --disable-shared \
+  --enable-static
+make -j"$(nproc)"
+```
+
+`--disable-shared --enable-static` is required for this maintenance build path:
+old libtool tries to create an intermediate Darwin dynamic library with `-r`,
+which is not supported by the modern Linux-hosted `ld64.lld` flow.
+
+To build the unsigned app bundle and DMG from Linux:
+
+```bash
+sudo apt-get install librsvg2-bin imagemagick libtiff-tools
+make appbundle
+make deploy
+```
+
+The expected cross-build outputs are:
+
+```text
+src/zerohourd
+src/zerohour-cli
+src/zerohour-tx
+src/zerohour-wallet
+src/qt/zerohour-qt
+ZHCASH-Qt.app/Contents/MacOS/ZHCASH-Qt
+ZHCASH-Core.dmg
+```
+
+Verify that the executable outputs are Apple Silicon binaries:
+
+```bash
+file src/zerohourd src/zerohour-cli src/zerohour-tx src/zerohour-wallet src/qt/zerohour-qt ZHCASH-Qt.app/Contents/MacOS/ZHCASH-Qt
+```
+
+Expected output includes `Mach-O 64-bit arm64 executable`.
+
+Cross-compilation should not be treated as release-ready until the resulting
+app is run on a real Apple Silicon Mac and the old encrypted `wallet.dat`
+unlock/decrypt path is verified on copies of real wallets.
 
 Release Notes
 -------------

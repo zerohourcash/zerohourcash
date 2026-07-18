@@ -62,7 +62,7 @@ define $(package)_build_cmds
 endef
 
 define $(package)_stage_cmds
-  MAKEFLAGS= $(MAKE) -j1 WINDRES="$(host_WINDRES)" DESTDIR=$($(package)_staging_dir) install_sw
+  MAKEFLAGS= $(MAKE) -j1 WINDRES="$(host_WINDRES)" DESTDIR=$($(package)_staging_dir) install_dev
 endef
 
 define $(package)_postprocess_cmds

@@ -1,0 +1,42 @@
+diff --git a/cctools/include/foreign/sys/sysctl.h b/cctools/include/foreign/sys/sysctl.h
+index 8a21ac2..6f7c56a 100644
+--- a/cctools/include/foreign/sys/sysctl.h
++++ b/cctools/include/foreign/sys/sysctl.h
+@@ -1,22 +1,33 @@
+-#ifndef __CYGWIN__
++#if !defined(__CYGWIN__) && (!defined(__has_include) || __has_include_next(<sys/sysctl.h>))
+ #include_next <sys/sysctl.h>
+ #else
+ #ifndef __SYSCTL_H__
+ #define __SYSCTL_H__
+ 
+ #include <errno.h>
++#include <stddef.h>
+ #include <stdio.h> /* stderr */
++#include <sys/types.h>
+ 
++#ifndef CTL_KERN
+ #define CTL_KERN 1
++#endif
++#ifndef KERN_OSRELEASE
+ #define KERN_OSRELEASE 2
++#endif
++#define KERN_PROC 14
++#define KERN_PROC_PATHNAME 12
++#define KERN_PROC_ARGS 38
++#define KERN_PROC_ARGV 1
++#define CTL_HW 6
++#define HW_NCPU 3
+ 
+ static inline
+ int sysctl(const int *name, u_int namelen, void *oldp,	size_t *oldlenp,
+            const void *newp, size_t newlen)
+ {
+-    /* fprintf(stderr, "sysctl() not implented\n"); */
+     errno = EINVAL;
+     return -1;
+ }
+-#endif /* __SYSCTL_H__ */
+-#endif /* ! __CYGWIN__ */
++#endif
++#endif
