@@ -12,6 +12,9 @@ if [[ ! -d "$sdk_path" ]]; then
   exit 1
 fi
 
+# xcrun commonly returns .../SDKs/MacOSX.sdk, which is a symlink. Archiving the
+# symlink creates a tiny unusable tarball, so resolve it to the physical SDK dir.
+sdk_path="$(cd "$sdk_path" && pwd -P)"
 sdk_name="$(basename "$sdk_path")"
 if [[ "$sdk_name" != MacOSX*.sdk ]]; then
   echo "error: unexpected SDK bundle name: $sdk_name" >&2
@@ -23,5 +26,5 @@ mkdir -p "$out_dir"
 out_file="$out_dir/$sdk_name.tar.gz"
 
 echo "Exporting $sdk_path"
-tar -C "$(dirname "$sdk_path")" -czf "$out_file" "$sdk_name"
+tar -C "$(dirname "$sdk_path")" -czhf "$out_file" "$sdk_name"
 echo "$out_file"
