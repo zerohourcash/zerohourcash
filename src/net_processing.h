@@ -101,6 +101,12 @@ struct CNodeStateStats {
 
 /** Get statistics from node state */
 bool GetNodeStateStats(NodeId nodeid, CNodeStateStats &stats);
+/** Configured activation height for the hard-fork peer protocol gate */
+int64_t GetForkMinPeerProtocolHeight();
+/** Configured minimum peer protocol version after the hard-fork peer protocol gate */
+int GetForkMinPeerProtocolVersion();
+/** Whether a peer should be disconnected by the hard-fork peer protocol gate */
+bool ShouldDisconnectPeerForForkMinProtocol(int peerVersion, int currentHeight);
 /** Process network block received from a given node */
 bool ProcessNetBlock(const CChainParams& chainparams, const std::shared_ptr<const CBlock> pblock, bool fForceProcessing, bool* fNewBlock, CNode* pfrom, CConnman& connman);
 

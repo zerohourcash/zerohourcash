@@ -32,6 +32,7 @@
 #include <checkpoints.h>
 #include <clientversion.h>
 #include <consensus/merkle.h>
+#include <version.h>
 
 #include <memory>
 
@@ -67,6 +68,22 @@ static constexpr int STALE_RELAY_AGE_LIMIT = 30 * 24 * 60 * 60;
 /// Age after which a block is considered historical for purposes of rate
 /// limiting block relay. Set to one week, denominated in seconds.
 static constexpr int HISTORICAL_BLOCK_AGE = 7 * 24 * 60 * 60;
+
+int64_t GetForkMinPeerProtocolHeight()
+{
+    return std::max<int64_t>(0, gArgs.GetArg("-forkminpeerheight", DEFAULT_FORK_MIN_PEER_PROTO_HEIGHT));
+}
+
+int GetForkMinPeerProtocolVersion()
+{
+    const int64_t configured = gArgs.GetArg("-forkminpeerversion", DEFAULT_FORK_MIN_PEER_PROTO_VERSION);
+    return static_cast<int>(std::max<int64_t>(MIN_PEER_PROTO_VERSION, configured));
+}
+
+bool ShouldDisconnectPeerForForkMinProtocol(int peerVersion, int currentHeight)
+{
+    return currentHeight >= GetForkMinPeerProtocolHeight() && peerVersion < GetForkMinPeerProtocolVersion();
+}
 
 struct COrphanTx {
     // When modifying, adapt the copy of this definition in tests/DoS_tests.
@@ -1896,6 +1913,18 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         	return false;
         }
 
+        if (ShouldDisconnectPeerForForkMinProtocol(nVersion, chainActive.Tip()->nHeight)) {
+            const int64_t forkHeight = GetForkMinPeerProtocolHeight();
+            const int minVersion = GetForkMinPeerProtocolVersion();
+            LogPrint(BCLog::NET, "peer=%d using obsolete version after configured hardfork height %i; disconnecting\n", pfrom->GetId(), nVersion);
+            if (enable_bip61) {
+                connman->PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
+                                   strprintf("Version must be %d or greater after hardfork height %d", minVersion, forkHeight)));
+            }
+            pfrom->fDisconnect = true;
+            return false;
+        }
+
         if (!vRecv.empty())
             vRecv >> addrFrom >> nNonce;
         if (!vRecv.empty()) {
@@ -3477,6 +3506,12 @@ bool PeerLogicValidation::SendMessages(CNode* pto)
         TRY_LOCK(cs_main, lockMain); // Acquire cs_main for IsInitialBlockDownload() and CNodeState()
         if (!lockMain)
             return true;
+
+        if (ShouldDisconnectPeerForForkMinProtocol(pto->nVersion, chainActive.Tip()->nHeight)) {
+            LogPrint(BCLog::NET, "peer=%d using obsolete version after configured hardfork height %i; disconnecting\n", pto->GetId(), pto->nVersion);
+            pto->fDisconnect = true;
+            return true;
+        }
 
         if (SendRejectsAndCheckIfBanned(pto, m_enable_bip61)) return true;
         CNodeState &state = *State(pto->GetId());

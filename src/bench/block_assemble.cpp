@@ -24,15 +24,12 @@
 #include <list>
 #include <vector>
 
-static std::shared_ptr<CBlock> PrepareBlock(const CScript& coinbase_scriptPubKey)
+static std::shared_ptr<CBlock> PrepareBlock(const CScript& coinbase_scriptPubKey, bool fMineWitnessTx = true)
 {
     auto block = std::make_shared<CBlock>(
         BlockAssembler{Params()}
-            .CreateNewBlock(coinbase_scriptPubKey)
+            .CreateNewBlock(coinbase_scriptPubKey, fMineWitnessTx)
             ->block);
-
-    block->nTime = ::chainActive.Tip()->GetMedianTimePast() + 1;
-    block->hashMerkleRoot = BlockMerkleRoot(*block);
 
     return block;
 }
@@ -40,7 +37,15 @@ static std::shared_ptr<CBlock> PrepareBlock(const CScript& coinbase_scriptPubKey
 
 static CTxIn MineBlock(const CScript& coinbase_scriptPubKey)
 {
-    auto block = PrepareBlock(coinbase_scriptPubKey);
+    auto block = PrepareBlock(coinbase_scriptPubKey, false);
+
+    const CChainParams& chainparams = Params();
+    {
+        LOCK(cs_main);
+        block->nVersion = 4;
+        block->nTime = ::chainActive.Tip()->GetBlockTime() + chainparams.GetConsensus().nPowTargetSpacing * 2 + 1;
+        block->hashMerkleRoot = BlockMerkleRoot(*block);
+    }
 
     while (!CheckProofOfWork(block->GetHash(), block->nBits, Params().GetConsensus())) {
         ++block->nNonce;

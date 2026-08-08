@@ -4,6 +4,9 @@
 
 #include <dbwrapper.h>
 
+#include <fs.h>
+#include <util/system.h>
+
 #include <memory>
 #include <random.h>
 

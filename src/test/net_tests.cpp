@@ -9,9 +9,11 @@
 #include <serialize.h>
 #include <streams.h>
 #include <net.h>
+#include <net_processing.h>
 #include <netbase.h>
 #include <chainparams.h>
 #include <util/system.h>
+#include <version.h>
 
 #include <memory>
 
@@ -85,6 +87,29 @@ BOOST_AUTO_TEST_CASE(cnode_listen_port)
     BOOST_CHECK(gArgs.SoftSetArg("-port", std::to_string(altPort)));
     port = GetListenPort();
     BOOST_CHECK(port == altPort);
+}
+
+BOOST_AUTO_TEST_CASE(fork_min_peer_protocol_policy)
+{
+    gArgs.ForceSetArg("-forkminpeerheight", std::to_string(DEFAULT_FORK_MIN_PEER_PROTO_HEIGHT));
+    gArgs.ForceSetArg("-forkminpeerversion", std::to_string(DEFAULT_FORK_MIN_PEER_PROTO_VERSION));
+
+    BOOST_CHECK_EQUAL(GetForkMinPeerProtocolHeight(), DEFAULT_FORK_MIN_PEER_PROTO_HEIGHT);
+    BOOST_CHECK_EQUAL(GetForkMinPeerProtocolVersion(), DEFAULT_FORK_MIN_PEER_PROTO_VERSION);
+    BOOST_CHECK(!ShouldDisconnectPeerForForkMinProtocol(DEFAULT_FORK_MIN_PEER_PROTO_VERSION - 1, DEFAULT_FORK_MIN_PEER_PROTO_HEIGHT - 1));
+    BOOST_CHECK(ShouldDisconnectPeerForForkMinProtocol(DEFAULT_FORK_MIN_PEER_PROTO_VERSION - 1, DEFAULT_FORK_MIN_PEER_PROTO_HEIGHT));
+    BOOST_CHECK(!ShouldDisconnectPeerForForkMinProtocol(DEFAULT_FORK_MIN_PEER_PROTO_VERSION, DEFAULT_FORK_MIN_PEER_PROTO_HEIGHT));
+
+    gArgs.ForceSetArg("-forkminpeerheight", "2000000");
+    gArgs.ForceSetArg("-forkminpeerversion", "70019");
+
+    BOOST_CHECK_EQUAL(GetForkMinPeerProtocolHeight(), 2000000);
+    BOOST_CHECK_EQUAL(GetForkMinPeerProtocolVersion(), 70019);
+    BOOST_CHECK(!ShouldDisconnectPeerForForkMinProtocol(70018, 1999999));
+    BOOST_CHECK(ShouldDisconnectPeerForForkMinProtocol(70018, 2000000));
+
+    gArgs.ForceSetArg("-forkminpeerheight", std::to_string(DEFAULT_FORK_MIN_PEER_PROTO_HEIGHT));
+    gArgs.ForceSetArg("-forkminpeerversion", std::to_string(DEFAULT_FORK_MIN_PEER_PROTO_VERSION));
 }
 
 BOOST_AUTO_TEST_CASE(caddrdb_read)

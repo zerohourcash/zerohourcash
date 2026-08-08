@@ -16,8 +16,12 @@
 */
 
 #include <thread>
+#include <list>
+#include <map>
+#include <mutex>
 #include <libdevcore/db.h>
 #include <libdevcore/Common.h>
+#include <util/system.h>
 #include "SHA3.h"
 #include "OverlayDB.h"
 #include "TrieDB.h"
@@ -39,6 +43,119 @@ inline db::Slice toSlice(std::string const& _str)
 inline db::Slice toSlice(bytes const& _b)
 {
     return db::Slice(reinterpret_cast<char const*>(&_b[0]), _b.size());
+}
+
+size_t configuredLookupCacheBytes()
+{
+    int64_t const value = gArgs.GetArg("-zhcstatelookupcache", 256);
+    if (value <= 0)
+        return 0;
+    return static_cast<size_t>(value) << 20;
+}
+
+class DiskLookupCache
+{
+public:
+    bool get(h256 const& _hash, std::string& _value)
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        resizeLimit();
+        if (m_limitBytes == 0)
+            return false;
+        auto it = m_index.find(_hash);
+        if (it == m_index.end())
+            return false;
+        m_lru.splice(m_lru.begin(), m_lru, it->second);
+        _value = it->second->second;
+        return true;
+    }
+
+    void put(h256 const& _hash, std::string const& _value)
+    {
+        if (_value.empty())
+            return;
+        std::lock_guard<std::mutex> lock(m_mutex);
+        resizeLimit();
+        if (m_limitBytes == 0)
+            return;
+        size_t const entryBytes = estimateEntryBytes(_value);
+        if (entryBytes > m_limitBytes)
+            return;
+
+        auto it = m_index.find(_hash);
+        if (it != m_index.end())
+        {
+            m_bytes -= estimateEntryBytes(it->second->second);
+            m_lru.erase(it->second);
+            m_index.erase(it);
+        }
+
+        m_lru.push_front(std::make_pair(_hash, _value));
+        m_index[_hash] = m_lru.begin();
+        m_bytes += entryBytes;
+        trim();
+    }
+
+    void erase(h256 const& _hash)
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        auto it = m_index.find(_hash);
+        if (it == m_index.end())
+            return;
+        m_bytes -= estimateEntryBytes(it->second->second);
+        m_lru.erase(it->second);
+        m_index.erase(it);
+    }
+
+    void clear()
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_lru.clear();
+        m_index.clear();
+        m_bytes = 0;
+        m_limitBytes = configuredLookupCacheBytes();
+    }
+
+private:
+    using LruEntry = std::pair<h256, std::string>;
+    using LruList = std::list<LruEntry>;
+
+    static size_t estimateEntryBytes(std::string const& _value)
+    {
+        return sizeof(h256) + sizeof(LruEntry) + _value.size();
+    }
+
+    void resizeLimit()
+    {
+        size_t const newLimit = configuredLookupCacheBytes();
+        if (newLimit == m_limitBytes)
+            return;
+        m_limitBytes = newLimit;
+        trim();
+    }
+
+    void trim()
+    {
+        while (m_bytes > m_limitBytes && !m_lru.empty())
+        {
+            auto const& entry = m_lru.back();
+            m_bytes -= estimateEntryBytes(entry.second);
+            m_index.erase(entry.first);
+            m_lru.pop_back();
+        }
+    }
+
+    std::mutex m_mutex;
+    size_t m_limitBytes = 0;
+    size_t m_bytes = 0;
+    LruList m_lru;
+    std::map<h256, LruList::iterator> m_index;
+};
+
+DiskLookupCache& diskLookupCache()
+{
+    static DiskLookupCache cache;
+    return cache;
 }
 
 }  // namespace
@@ -128,7 +245,12 @@ std::string OverlayDB::lookup(h256 const& _h) const
     if (!ret.empty() || !m_db)
         return ret;
 
-    return m_db->lookup(toSlice(_h));
+    if (diskLookupCache().get(_h, ret))
+        return ret;
+
+    ret = m_db->lookup(toSlice(_h));
+    diskLookupCache().put(_h, ret);
+    return ret;
 }
 
 bool OverlayDB::exists(h256 const& _h) const
@@ -140,6 +262,7 @@ bool OverlayDB::exists(h256 const& _h) const
 
 void OverlayDB::kill(h256 const& _h)
 {
+    diskLookupCache().erase(_h);
 #if ETH_PARANOIA || 1
     if (!StateCacheDB::kill(_h))
     {
@@ -160,6 +283,11 @@ void OverlayDB::kill(h256 const& _h)
 #else
     StateCacheDB::kill(_h);
 #endif
+}
+
+void OverlayDB::clearLookupCacheForTesting()
+{
+    diskLookupCache().clear();
 }
 
 }

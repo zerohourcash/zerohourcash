@@ -1,0 +1,11 @@
+# Keep internal planning/build artifacts out of source release archives.
+docs/superpowers/ export-ignore
+task_md/ export-ignore
+backups/ export-ignore
+downloads/ export-ignore
+release-artifacts/ export-ignore
+releases/ export-ignore
+README-UPGRADE-EXPERIMENTAL-*.md export-ignore
+*.log export-ignore
+perf.data export-ignore
+MacOSX*.sdk.tar.gz export-ignore

@@ -1287,7 +1287,13 @@ UniValue callcontract(const JSONRPCRequest& request)
     }
     uint64_t gasLimit=0;
     if(request.params.size() >= 4){
-        gasLimit = request.params[3].get_int64();
+        const int64_t parsedGasLimit = request.params[3].get_int64();
+        if(parsedGasLimit <= 0)
+            throw JSONRPCError(RPC_TYPE_ERROR, "Invalid value for gasLimit");
+        gasLimit = (uint64_t)parsedGasLimit;
+        const uint64_t maxCallGasLimit = GetMaxCallContractGasLimit();
+        if(gasLimit > maxCallGasLimit)
+            throw JSONRPCError(RPC_TYPE_ERROR, "Invalid value for gasLimit (Maximum is: "+i64tostr(maxCallGasLimit)+")");
     }
 
 

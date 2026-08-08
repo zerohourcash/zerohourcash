@@ -227,7 +227,15 @@ void SendToContract::on_sendToContractClicked()
         // Append params to the list
         ExecRPCCommand::appendParam(lstParams, PARAM_ADDRESS, ui->lineEditContractAddress->text());
         ExecRPCCommand::appendParam(lstParams, PARAM_DATAHEX, toDataHex(func, errorMessage));
-        QString amount = isFunctionPayable() ? BitcoinUnits::format(unit, ui->lineEditAmount->value(), false, BitcoinUnits::separatorNever) : "0";
+        const bool payable = isFunctionPayable();
+        const CAmount amountValue = ui->lineEditAmount->value();
+        if(!payable && amountValue > 0)
+        {
+            QString message = tr("The selected ABI function is marked non-payable. Sending an amount may make the EVM execution revert. Continue?");
+            if(QMessageBox::question(this, tr("Non-payable function amount"), message) == QMessageBox::No)
+                return;
+        }
+        QString amount = BitcoinUnits::format(unit, amountValue, false, BitcoinUnits::separatorNever);
         ExecRPCCommand::appendParam(lstParams, PARAM_AMOUNT, amount);
         ExecRPCCommand::appendParam(lstParams, PARAM_GASLIMIT, QString::number(gasLimit));
         ExecRPCCommand::appendParam(lstParams, PARAM_GASPRICE, BitcoinUnits::format(unit, gasPrice, false, BitcoinUnits::separatorNever));
@@ -304,11 +312,8 @@ void SendToContract::on_newContractABI()
 void SendToContract::on_functionChanged()
 {
     bool payable = isFunctionPayable();
-    ui->lineEditAmount->setEnabled(payable);
-    if(!payable)
-    {
-        ui->lineEditAmount->clear();
-    }
+    ui->lineEditAmount->setEnabled(true);
+    ui->labelAmount->setToolTip(payable ? tr("The amount in ZHC to send. Default = 0.") : tr("The selected function is non-payable; sending a non-zero amount may revert."));
 }
 
 void SendToContract::on_saveInfoClicked()
@@ -416,5 +421,5 @@ bool SendToContract::isFunctionPayable()
     int func = m_ABIFunctionField->getSelectedFunction();
     if(func < 0) return true;
     FunctionABI function = m_contractABI->functions[func];
-    return function.payable;
+    return function.payable || function.stateMutability == "payable";
 }

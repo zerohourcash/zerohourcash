@@ -139,34 +139,43 @@ TESTS = $(am__EXEEXT_8)
 @GLIBC_BACK_COMPAT_TRUE@am__append_10 = compat/glibc_compat.cpp
 @GLIBC_BACK_COMPAT_TRUE@am__append_11 = $(COMPAT_LDFLAGS)
 @TARGET_WINDOWS_TRUE@am__append_12 = bitcoind-res.rc
-@TARGET_WINDOWS_TRUE@am__append_13 = bitcoin-cli-res.rc
-@TARGET_WINDOWS_TRUE@am__append_14 = bitcoin-tx-res.rc
-@TARGET_WINDOWS_TRUE@am__append_15 = bitcoin-wallet-res.rc
-@BUILD_BITCOIN_LIBS_TRUE@@GLIBC_BACK_COMPAT_TRUE@am__append_16 = compat/glibc_compat.cpp
-@EMBEDDED_LEVELDB_TRUE@am__append_17 = $(LIBLEVELDB_INT) \
+@TARGET_WINDOWS_TRUE@am__append_13 = \
+@TARGET_WINDOWS_TRUE@  $(LIBBITCOIN_COMMON) \
+@TARGET_WINDOWS_TRUE@  $(LIBBITCOIN_UTIL) \
+@TARGET_WINDOWS_TRUE@  $(LIBBITCOIN_CRYPTO) \
+@TARGET_WINDOWS_TRUE@  $(LIBUNIVALUE) \
+@TARGET_WINDOWS_TRUE@  $(LIBLEVELDB) \
+@TARGET_WINDOWS_TRUE@  $(LIBLEVELDB_SSE42) \
+@TARGET_WINDOWS_TRUE@  $(LIBMEMENV)
+
+@TARGET_WINDOWS_TRUE@am__append_14 = bitcoin-cli-res.rc
+@TARGET_WINDOWS_TRUE@am__append_15 = bitcoin-tx-res.rc
+@TARGET_WINDOWS_TRUE@am__append_16 = bitcoin-wallet-res.rc
+@BUILD_BITCOIN_LIBS_TRUE@@GLIBC_BACK_COMPAT_TRUE@am__append_17 = compat/glibc_compat.cpp
+@EMBEDDED_LEVELDB_TRUE@am__append_18 = $(LIBLEVELDB_INT) \
 @EMBEDDED_LEVELDB_TRUE@	$(LIBMEMENV_INT) \
 @EMBEDDED_LEVELDB_TRUE@	$(LIBLEVELDB_SSE42_INT)
-@EMBEDDED_LEVELDB_TRUE@am__append_18 = $(LIBLEVELDB_INT)
-@EMBEDDED_LEVELDB_TRUE@am__append_19 = $(LIBMEMENV_INT)
-@EMBEDDED_LEVELDB_TRUE@am__append_20 = -I$(srcdir)/leveldb/include \
+@EMBEDDED_LEVELDB_TRUE@am__append_19 = $(LIBLEVELDB_INT)
+@EMBEDDED_LEVELDB_TRUE@am__append_20 = $(LIBMEMENV_INT)
+@EMBEDDED_LEVELDB_TRUE@am__append_21 = -I$(srcdir)/leveldb/include \
 @EMBEDDED_LEVELDB_TRUE@	-I$(srcdir)/leveldb/helpers/memenv
-@EMBEDDED_LEVELDB_TRUE@@TARGET_WINDOWS_TRUE@am__append_21 = -DLEVELDB_PLATFORM_WINDOWS -D__USE_MINGW_ANSI_STDIO=1
-@EMBEDDED_LEVELDB_TRUE@@TARGET_WINDOWS_FALSE@am__append_22 = -DLEVELDB_PLATFORM_POSIX
-@EMBEDDED_LEVELDB_TRUE@@TARGET_WINDOWS_TRUE@am__append_23 = leveldb/util/env_win.cc \
+@EMBEDDED_LEVELDB_TRUE@@TARGET_WINDOWS_TRUE@am__append_22 = -DLEVELDB_PLATFORM_WINDOWS -D__USE_MINGW_ANSI_STDIO=1
+@EMBEDDED_LEVELDB_TRUE@@TARGET_WINDOWS_FALSE@am__append_23 = -DLEVELDB_PLATFORM_POSIX
+@EMBEDDED_LEVELDB_TRUE@@TARGET_WINDOWS_TRUE@am__append_24 = leveldb/util/env_win.cc \
 @EMBEDDED_LEVELDB_TRUE@@TARGET_WINDOWS_TRUE@	leveldb/port/port_win.cc
-@EMBEDDED_LEVELDB_TRUE@@TARGET_WINDOWS_FALSE@am__append_24 = leveldb/port/port_posix.cc
-@EMBEDDED_LEVELDB_TRUE@@ENABLE_HWCRC32_TRUE@am__append_25 = -DLEVELDB_PLATFORM_POSIX_SSE
-@EMBEDDED_LEVELDB_TRUE@@ENABLE_HWCRC32_TRUE@am__append_26 = $(SSE42_CXXFLAGS)
-@ENABLE_FUZZ_TRUE@@ENABLE_TESTS_TRUE@am__append_27 = $(FUZZ_TARGETS:=)
-@ENABLE_FUZZ_FALSE@@ENABLE_TESTS_TRUE@am__append_28 = test/test_zerohour
-@ENABLE_PROPERTY_TESTS_TRUE@@ENABLE_TESTS_TRUE@am__append_29 = \
+@EMBEDDED_LEVELDB_TRUE@@TARGET_WINDOWS_FALSE@am__append_25 = leveldb/port/port_posix.cc
+@EMBEDDED_LEVELDB_TRUE@@ENABLE_HWCRC32_TRUE@am__append_26 = -DLEVELDB_PLATFORM_POSIX_SSE
+@EMBEDDED_LEVELDB_TRUE@@ENABLE_HWCRC32_TRUE@am__append_27 = $(SSE42_CXXFLAGS)
+@ENABLE_FUZZ_TRUE@@ENABLE_TESTS_TRUE@am__append_28 = $(FUZZ_TARGETS:=)
+@ENABLE_FUZZ_FALSE@@ENABLE_TESTS_TRUE@am__append_29 = test/test_zerohour
+@ENABLE_PROPERTY_TESTS_TRUE@@ENABLE_TESTS_TRUE@am__append_30 = \
 @ENABLE_PROPERTY_TESTS_TRUE@@ENABLE_TESTS_TRUE@  test/key_properties.cpp
 
-@ENABLE_PROPERTY_TESTS_TRUE@@ENABLE_TESTS_TRUE@am__append_30 = \
+@ENABLE_PROPERTY_TESTS_TRUE@@ENABLE_TESTS_TRUE@am__append_31 = \
 @ENABLE_PROPERTY_TESTS_TRUE@@ENABLE_TESTS_TRUE@  test/gen/crypto_gen.cpp \
 @ENABLE_PROPERTY_TESTS_TRUE@@ENABLE_TESTS_TRUE@  test/gen/crypto_gen.h
 
-@ENABLE_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_31 = \
+@ENABLE_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_32 = \
 @ENABLE_TESTS_TRUE@@ENABLE_WALLET_TRUE@  wallet/test/db_tests.cpp \
 @ENABLE_TESTS_TRUE@@ENABLE_WALLET_TRUE@  wallet/test/psbt_wallet_tests.cpp \
 @ENABLE_TESTS_TRUE@@ENABLE_WALLET_TRUE@  wallet/test/wallet_tests.cpp \
@@ -174,51 +183,51 @@ TESTS = $(am__EXEEXT_8)
 @ENABLE_TESTS_TRUE@@ENABLE_WALLET_TRUE@  wallet/test/coinselector_tests.cpp \
 @ENABLE_TESTS_TRUE@@ENABLE_WALLET_TRUE@  wallet/test/init_tests.cpp
 
-@ENABLE_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_32 = \
+@ENABLE_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_33 = \
 @ENABLE_TESTS_TRUE@@ENABLE_WALLET_TRUE@  wallet/test/wallet_test_fixture.cpp \
 @ENABLE_TESTS_TRUE@@ENABLE_WALLET_TRUE@  wallet/test/wallet_test_fixture.h \
 @ENABLE_TESTS_TRUE@@ENABLE_WALLET_TRUE@  wallet/test/init_test_fixture.cpp \
 @ENABLE_TESTS_TRUE@@ENABLE_WALLET_TRUE@  wallet/test/init_test_fixture.h
 
-@ENABLE_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_33 = $(LIBBITCOIN_WALLET)
-@ENABLE_TESTS_TRUE@@ENABLE_ZMQ_TRUE@am__append_34 = $(ZMQ_LIBS)
-@ENABLE_TESTS_TRUE@am__append_35 = $(CLEAN_BITCOIN_TEST)
-@ENABLE_BENCH_TRUE@am__append_36 = bench/bench_zerohour
-@ENABLE_BENCH_TRUE@@ENABLE_ZMQ_TRUE@am__append_37 = $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
-@ENABLE_BENCH_TRUE@@ENABLE_WALLET_TRUE@am__append_38 = bench/coin_selection.cpp
-@ENABLE_BENCH_TRUE@am__append_39 = $(CLEAN_BITCOIN_BENCH)
-@ENABLE_QT_TRUE@am__append_40 = qt/zerohour-qt
-@ENABLE_QT_TRUE@am__append_41 = qt/libbitcoinqt.a
-@ENABLE_QT_TRUE@@TARGET_WINDOWS_TRUE@am__append_42 = $(BITCOIN_QT_WINDOWS_CPP)
-@ENABLE_QT_TRUE@@ENABLE_WALLET_TRUE@am__append_43 = $(BITCOIN_QT_WALLET_CPP)
-@ENABLE_BIP70_TRUE@@ENABLE_QT_TRUE@@ENABLE_WALLET_TRUE@am__append_44 = $(BITCOIN_QT_WALLET_BIP70_CPP)
-@ENABLE_QT_TRUE@@TARGET_DARWIN_TRUE@am__append_45 = $(BITCOIN_MM)
-@ENABLE_QT_TRUE@@TARGET_WINDOWS_TRUE@am__append_46 = $(BITCOIN_RC)
-@ENABLE_QT_TRUE@@ENABLE_WALLET_TRUE@am__append_47 = $(LIBBITCOIN_UTIL) $(LIBBITCOIN_WALLET)
-@ENABLE_QT_TRUE@@ENABLE_ZMQ_TRUE@am__append_48 = $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
-@ENABLE_BIP70_TRUE@@ENABLE_QT_TRUE@am__append_49 = $(SSL_LIBS)
-@ENABLE_BIP70_FALSE@@ENABLE_QT_TRUE@@TARGET_WINDOWS_TRUE@am__append_50 = $(SSL_LIBS)
-@ENABLE_QT_TRUE@am__append_51 = $(CLEAN_QT)
-@ENABLE_QT_TESTS_TRUE@am__append_52 = qt/test/test_zerohour-qt
+@ENABLE_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_34 = $(LIBBITCOIN_WALLET)
+@ENABLE_TESTS_TRUE@@ENABLE_ZMQ_TRUE@am__append_35 = $(ZMQ_LIBS)
+@ENABLE_TESTS_TRUE@am__append_36 = $(CLEAN_BITCOIN_TEST)
+@ENABLE_BENCH_TRUE@am__append_37 = bench/bench_zerohour
+@ENABLE_BENCH_TRUE@@ENABLE_ZMQ_TRUE@am__append_38 = $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
+@ENABLE_BENCH_TRUE@@ENABLE_WALLET_TRUE@am__append_39 = bench/coin_selection.cpp
+@ENABLE_BENCH_TRUE@am__append_40 = $(CLEAN_BITCOIN_BENCH)
+@ENABLE_QT_TRUE@am__append_41 = qt/zerohour-qt
+@ENABLE_QT_TRUE@am__append_42 = qt/libbitcoinqt.a
+@ENABLE_QT_TRUE@@TARGET_WINDOWS_TRUE@am__append_43 = $(BITCOIN_QT_WINDOWS_CPP)
+@ENABLE_QT_TRUE@@ENABLE_WALLET_TRUE@am__append_44 = $(BITCOIN_QT_WALLET_CPP)
+@ENABLE_BIP70_TRUE@@ENABLE_QT_TRUE@@ENABLE_WALLET_TRUE@am__append_45 = $(BITCOIN_QT_WALLET_BIP70_CPP)
+@ENABLE_QT_TRUE@@TARGET_DARWIN_TRUE@am__append_46 = $(BITCOIN_MM)
+@ENABLE_QT_TRUE@@TARGET_WINDOWS_TRUE@am__append_47 = $(BITCOIN_RC)
+@ENABLE_QT_TRUE@@ENABLE_WALLET_TRUE@am__append_48 = $(LIBBITCOIN_UTIL) $(LIBBITCOIN_WALLET)
+@ENABLE_QT_TRUE@@ENABLE_ZMQ_TRUE@am__append_49 = $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
+@ENABLE_BIP70_TRUE@@ENABLE_QT_TRUE@am__append_50 = $(SSL_LIBS)
+@ENABLE_BIP70_FALSE@@ENABLE_QT_TRUE@@TARGET_WINDOWS_TRUE@am__append_51 = $(SSL_LIBS)
+@ENABLE_QT_TRUE@am__append_52 = $(CLEAN_QT)
 @ENABLE_QT_TESTS_TRUE@am__append_53 = qt/test/test_zerohour-qt
-@ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_54 = \
+@ENABLE_QT_TESTS_TRUE@am__append_54 = qt/test/test_zerohour-qt
+@ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_55 = \
 @ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@  qt/test/moc_addressbooktests.cpp \
 @ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@  qt/test/moc_wallettests.cpp
 
-@ENABLE_BIP70_TRUE@@ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_55 = \
+@ENABLE_BIP70_TRUE@@ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_56 = \
 @ENABLE_BIP70_TRUE@@ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@  qt/test/moc_paymentservertests.cpp
 
-@ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_56 = \
+@ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_57 = \
 @ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@  qt/test/addressbooktests.cpp \
 @ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@  qt/test/wallettests.cpp \
 @ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@  wallet/test/wallet_test_fixture.cpp
 
-@ENABLE_BIP70_TRUE@@ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_57 = \
+@ENABLE_BIP70_TRUE@@ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_58 = \
 @ENABLE_BIP70_TRUE@@ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@  qt/test/paymentservertests.cpp
 
-@ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_58 = $(LIBBITCOIN_UTIL) $(LIBBITCOIN_WALLET)
-@ENABLE_QT_TESTS_TRUE@@ENABLE_ZMQ_TRUE@am__append_59 = $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
-@ENABLE_QT_TESTS_TRUE@am__append_60 = $(CLEAN_BITCOIN_QT_TEST)
+@ENABLE_QT_TESTS_TRUE@@ENABLE_WALLET_TRUE@am__append_59 = $(LIBBITCOIN_UTIL) $(LIBBITCOIN_WALLET)
+@ENABLE_QT_TESTS_TRUE@@ENABLE_ZMQ_TRUE@am__append_60 = $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
+@ENABLE_QT_TESTS_TRUE@am__append_61 = $(CLEAN_BITCOIN_QT_TEST)
 subdir = src
 SUBDIRS =
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -1441,8 +1450,8 @@ am__bench_bench_zerohour_SOURCES_DIST = bench/data/blockbench.raw \
 @ENABLE_BENCH_TRUE@	$(am__objects_26)
 bench_bench_zerohour_OBJECTS = $(am_bench_bench_zerohour_OBJECTS) \
 	$(nodist_bench_bench_zerohour_OBJECTS)
-am__DEPENDENCIES_1 = $(am__append_18)
-am__DEPENDENCIES_2 = $(am__append_19)
+am__DEPENDENCIES_1 = $(am__append_19)
+am__DEPENDENCIES_2 = $(am__append_20)
 am__DEPENDENCIES_3 =
 @EMBEDDED_UNIVALUE_FALSE@am__DEPENDENCIES_4 = $(am__DEPENDENCIES_3)
 @EMBEDDED_UNIVALUE_TRUE@am__DEPENDENCIES_4 = univalue/libunivalue.la
@@ -1508,7 +1517,7 @@ qt_test_test_zerohour_qt_OBJECTS =  \
 @ENABLE_QT_TESTS_TRUE@@ENABLE_ZMQ_TRUE@	$(am__DEPENDENCIES_3)
 @ENABLE_QT_TESTS_TRUE@qt_test_test_zerohour_qt_DEPENDENCIES =  \
 @ENABLE_QT_TESTS_TRUE@	$(LIBBITCOINQT) $(LIBBITCOIN_SERVER) \
-@ENABLE_QT_TESTS_TRUE@	$(am__append_58) $(am__DEPENDENCIES_6) \
+@ENABLE_QT_TESTS_TRUE@	$(am__append_59) $(am__DEPENDENCIES_6) \
 @ENABLE_QT_TESTS_TRUE@	$(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) \
 @ENABLE_QT_TESTS_TRUE@	$(LIBBITCOIN_UTIL) \
 @ENABLE_QT_TESTS_TRUE@	$(LIBBITCOIN_CONSENSUS) \
@@ -1550,7 +1559,7 @@ qt_zerohour_qt_OBJECTS = $(am_qt_zerohour_qt_OBJECTS)
 @ENABLE_BIP70_TRUE@@ENABLE_QT_TRUE@	$(am__DEPENDENCIES_3)
 @ENABLE_BIP70_FALSE@@ENABLE_QT_TRUE@@TARGET_WINDOWS_TRUE@am__DEPENDENCIES_9 = $(am__DEPENDENCIES_3)
 @ENABLE_QT_TRUE@qt_zerohour_qt_DEPENDENCIES = qt/libbitcoinqt.a \
-@ENABLE_QT_TRUE@	$(LIBBITCOIN_SERVER) $(am__append_47) \
+@ENABLE_QT_TRUE@	$(LIBBITCOIN_SERVER) $(am__append_48) \
 @ENABLE_QT_TRUE@	$(am__DEPENDENCIES_7) $(LIBBITCOIN_CLI) \
 @ENABLE_QT_TRUE@	$(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) \
 @ENABLE_QT_TRUE@	$(LIBBITCOIN_CONSENSUS) $(LIBBITCOIN_CRYPTO) \
@@ -2126,7 +2135,8 @@ am__test_test_zerohour_SOURCES_DIST = test/test_bitcoin_main.cpp \
 	test/compilerbug_tests.cpp test/compress_tests.cpp \
 	test/crypto_tests.cpp test/cuckoocache_tests.cpp \
 	test/denialofservice_tests.cpp test/descriptor_tests.cpp \
-	test/fs_tests.cpp test/getarg_tests.cpp test/hash_tests.cpp \
+	test/evm_state_cache_tests.cpp test/fs_tests.cpp \
+	test/getarg_tests.cpp test/hash_tests.cpp \
 	test/key_io_tests.cpp test/key_tests.cpp \
 	test/limitedmap_tests.cpp test/dbwrapper_tests.cpp \
 	test/main_tests.cpp test/mempool_tests.cpp \
@@ -2198,6 +2208,7 @@ am__test_test_zerohour_SOURCES_DIST = test/test_bitcoin_main.cpp \
 @ENABLE_TESTS_TRUE@	test/test_zerohour-cuckoocache_tests.$(OBJEXT) \
 @ENABLE_TESTS_TRUE@	test/test_zerohour-denialofservice_tests.$(OBJEXT) \
 @ENABLE_TESTS_TRUE@	test/test_zerohour-descriptor_tests.$(OBJEXT) \
+@ENABLE_TESTS_TRUE@	test/test_zerohour-evm_state_cache_tests.$(OBJEXT) \
 @ENABLE_TESTS_TRUE@	test/test_zerohour-fs_tests.$(OBJEXT) \
 @ENABLE_TESTS_TRUE@	test/test_zerohour-getarg_tests.$(OBJEXT) \
 @ENABLE_TESTS_TRUE@	test/test_zerohour-hash_tests.$(OBJEXT) \
@@ -2260,7 +2271,7 @@ test_test_zerohour_OBJECTS = $(am_test_test_zerohour_OBJECTS) \
 	$(nodist_test_test_zerohour_OBJECTS)
 @ENABLE_TESTS_TRUE@@ENABLE_ZMQ_TRUE@am__DEPENDENCIES_10 =  \
 @ENABLE_TESTS_TRUE@@ENABLE_ZMQ_TRUE@	$(am__DEPENDENCIES_3)
-@ENABLE_TESTS_TRUE@test_test_zerohour_DEPENDENCIES = $(am__append_33) \
+@ENABLE_TESTS_TRUE@test_test_zerohour_DEPENDENCIES = $(am__append_34) \
 @ENABLE_TESTS_TRUE@	$(LIBBITCOIN_SERVER) $(LIBBITCOIN_CLI) \
 @ENABLE_TESTS_TRUE@	$(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) \
 @ENABLE_TESTS_TRUE@	$(LIBBITCOIN_CONSENSUS) \
@@ -2329,17 +2340,23 @@ am__zerohourd_SOURCES_DIST = bitcoind.cpp bitcoind-res.rc
 @TARGET_WINDOWS_TRUE@am__objects_66 = bitcoind-res.$(OBJEXT)
 am_zerohourd_OBJECTS = zerohourd-bitcoind.$(OBJEXT) $(am__objects_66)
 zerohourd_OBJECTS = $(am_zerohourd_OBJECTS)
+@TARGET_WINDOWS_TRUE@am__DEPENDENCIES_11 = $(LIBBITCOIN_COMMON) \
+@TARGET_WINDOWS_TRUE@	$(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) \
+@TARGET_WINDOWS_TRUE@	$(am__DEPENDENCIES_4) \
+@TARGET_WINDOWS_TRUE@	$(am__DEPENDENCIES_1) $(LIBLEVELDB_SSE42) \
+@TARGET_WINDOWS_TRUE@	$(am__DEPENDENCIES_2)
 zerohourd_DEPENDENCIES = $(LIBBITCOIN_SERVER) $(LIBBITCOIN_WALLET) \
 	$(LIBBITCOIN_SERVER) $(LIBBITCOIN_COMMON) \
 	$(am__DEPENDENCIES_4) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_ZMQ) \
 	$(LIBBITCOIN_CONSENSUS) $(LIBBITCOIN_CRYPTO) \
 	$(am__DEPENDENCIES_1) $(LIBLEVELDB_SSE42) \
 	$(am__DEPENDENCIES_2) $(LIBCRYPTOPP) $(LIBFF) $(LIBSECP256K1) \
+	$(am__DEPENDENCIES_11) $(am__DEPENDENCIES_3) \
 	$(am__DEPENDENCIES_3) $(am__DEPENDENCIES_3) \
 	$(am__DEPENDENCIES_3) $(am__DEPENDENCIES_3) \
 	$(am__DEPENDENCIES_3) $(am__DEPENDENCIES_3) \
 	$(am__DEPENDENCIES_3) $(am__DEPENDENCIES_3) \
-	$(am__DEPENDENCIES_3) $(am__DEPENDENCIES_3)
+	$(am__DEPENDENCIES_3)
 zerohourd_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(zerohourd_CXXFLAGS) \
 	$(CXXFLAGS) $(zerohourd_LDFLAGS) $(LDFLAGS) -o $@
@@ -2957,6 +2974,7 @@ am__depfiles_remade = ./$(DEPDIR)/libbitcoin_common_a-base58.Po \
 	test/$(DEPDIR)/test_zerohour-dbwrapper_tests.Po \
 	test/$(DEPDIR)/test_zerohour-denialofservice_tests.Po \
 	test/$(DEPDIR)/test_zerohour-descriptor_tests.Po \
+	test/$(DEPDIR)/test_zerohour-evm_state_cache_tests.Po \
 	test/$(DEPDIR)/test_zerohour-fs_tests.Po \
 	test/$(DEPDIR)/test_zerohour-getarg_tests.Po \
 	test/$(DEPDIR)/test_zerohour-hash_tests.Po \
@@ -3598,13 +3616,13 @@ LCOV = @LCOV@
 LCOV_OPTS = @LCOV_OPTS@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
-LEVELDB_CPPFLAGS = @LEVELDB_CPPFLAGS@ $(am__append_20)
+LEVELDB_CPPFLAGS = @LEVELDB_CPPFLAGS@ $(am__append_21)
 LEVELDB_TARGET_FLAGS = @LEVELDB_TARGET_FLAGS@
 LIBCRYPTOPP = cryptopp/libcryptopp.a $(LIBCRYPTOPP_INT)
 LIBFF = libff/libff.a $(LIBFF_INT)
 LIBFF_CPPFLAGS = @LIBFF_CPPFLAGS@ -I$(srcdir)/cryptopp/include
-LIBLEVELDB = @LIBLEVELDB@ $(am__append_18)
-LIBMEMENV = @LIBMEMENV@ $(am__append_19)
+LIBLEVELDB = @LIBLEVELDB@ $(am__append_19)
+LIBMEMENV = @LIBMEMENV@ $(am__append_20)
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
@@ -3796,8 +3814,8 @@ AM_LIBTOOLFLAGS = --preserve-dup-deps
 EXTRA_LIBRARIES = $(LIBBITCOIN_CRYPTO) $(LIBBITCOIN_UTIL) \
 	$(LIBBITCOIN_COMMON) $(LIBBITCOIN_CONSENSUS) \
 	$(LIBBITCOIN_SERVER) $(LIBBITCOIN_CLI) $(LIBBITCOIN_WALLET) \
-	$(LIBBITCOIN_WALLET_TOOL) $(LIBBITCOIN_ZMQ) $(am__append_17) \
-	$(LIBCRYPTOPP_INT) $(LIBFF_INT) $(am__append_41)
+	$(LIBBITCOIN_WALLET_TOOL) $(LIBBITCOIN_ZMQ) $(am__append_18) \
+	$(LIBCRYPTOPP_INT) $(LIBFF_INT) $(am__append_42)
 @EMBEDDED_UNIVALUE_FALSE@LIBUNIVALUE = $(UNIVALUE_LIBS)
 @EMBEDDED_UNIVALUE_TRUE@LIBUNIVALUE = univalue/libunivalue.la
 BITCOIN_INCLUDES = -I$(builddir) $(BDB_CPPFLAGS) $(BOOST_CPPFLAGS) \
@@ -4413,12 +4431,12 @@ zerohourd_LDADD = $(LIBBITCOIN_SERVER) $(LIBBITCOIN_WALLET) \
 	$(LIBBITCOIN_UTIL) $(LIBBITCOIN_ZMQ) $(LIBBITCOIN_CONSENSUS) \
 	$(LIBBITCOIN_CRYPTO) $(LIBLEVELDB) $(LIBLEVELDB_SSE42) \
 	$(LIBMEMENV) $(LIBCRYPTOPP) $(LIBFF) $(LIBSECP256K1) \
-	$(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) \
-	$(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) \
-	$(ZMQ_LIBS) $(GMP_LIBS) $(GMPXX_LIBS)
+	$(am__append_13) $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) \
+	$(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) \
+	$(EVENT_LIBS) $(ZMQ_LIBS) $(GMP_LIBS) $(GMPXX_LIBS)
 
 # bitcoin-cli binary #
-zerohour_cli_SOURCES = bitcoin-cli.cpp $(am__append_13)
+zerohour_cli_SOURCES = bitcoin-cli.cpp $(am__append_14)
 zerohour_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
 zerohour_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 zerohour_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
@@ -4431,7 +4449,7 @@ zerohour_cli_LDADD = $(LIBBITCOIN_CLI) $(LIBUNIVALUE) \
 
 # bitcoin-tx binary #
 zerohour_tx_SOURCES = bitcoin-tx.cpp consensus/consensus.cpp \
-	$(am__append_14)
+	$(am__append_15)
 zerohour_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 zerohour_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 zerohour_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
@@ -4443,7 +4461,7 @@ zerohour_tx_LDADD = $(LIBUNIVALUE) $(LIBBITCOIN_COMMON) \
 #
 
 # bitcoin-wallet binary #
-zerohour_wallet_SOURCES = bitcoin-wallet.cpp $(am__append_15)
+zerohour_wallet_SOURCES = bitcoin-wallet.cpp $(am__append_16)
 zerohour_wallet_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 zerohour_wallet_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 zerohour_wallet_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
@@ -4460,7 +4478,7 @@ zerohour_wallet_LDADD = $(LIBBITCOIN_WALLET_TOOL) $(LIBBITCOIN_WALLET) \
 @BUILD_BITCOIN_LIBS_TRUE@include_HEADERS = script/bitcoinconsensus.h
 @BUILD_BITCOIN_LIBS_TRUE@libbitcoinconsensus_la_SOURCES = $(crypto_libbitcoin_crypto_base_a_SOURCES) \
 @BUILD_BITCOIN_LIBS_TRUE@	$(libbitcoin_consensus_a_SOURCES) \
-@BUILD_BITCOIN_LIBS_TRUE@	$(am__append_16)
+@BUILD_BITCOIN_LIBS_TRUE@	$(am__append_17)
 @BUILD_BITCOIN_LIBS_TRUE@libbitcoinconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
 @BUILD_BITCOIN_LIBS_TRUE@libbitcoinconsensus_la_LIBADD = $(LIBSECP256K1)
 @BUILD_BITCOIN_LIBS_TRUE@libbitcoinconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include $(BITCOIN_INCLUDES) -DBUILD_BITCOIN_INTERNAL
@@ -4476,8 +4494,8 @@ CLEANFILES = $(EXTRA_LIBRARIES) *.gcda *.gcno compat/*.gcda \
 	primitives/*.gcno script/*.gcda script/*.gcno support/*.gcda \
 	support/*.gcno univalue/*.gcda univalue/*.gcno wallet/*.gcda \
 	wallet/*.gcno wallet/test/*.gcda wallet/test/*.gcno zmq/*.gcda \
-	zmq/*.gcno obj/build.h $(am__append_35) $(am__append_39) \
-	$(am__append_51) $(am__append_60)
+	zmq/*.gcno obj/build.h $(am__append_36) $(am__append_40) \
+	$(am__append_52) $(am__append_61)
 EXTRA_DIST = $(CTAES_DIST)
 @EMBEDDED_LEVELDB_TRUE@LIBLEVELDB_INT = leveldb/libleveldb.a
 @EMBEDDED_LEVELDB_TRUE@LIBMEMENV_INT = leveldb/libmemenv.a
@@ -4486,8 +4504,8 @@ EXTRA_DIST = $(CTAES_DIST)
 @EMBEDDED_LEVELDB_TRUE@LEVELDB_CPPFLAGS_INT = -I$(srcdir)/leveldb \
 @EMBEDDED_LEVELDB_TRUE@	$(LEVELDB_TARGET_FLAGS) \
 @EMBEDDED_LEVELDB_TRUE@	-DLEVELDB_ATOMIC_PRESENT \
-@EMBEDDED_LEVELDB_TRUE@	-D__STDC_LIMIT_MACROS $(am__append_21) \
-@EMBEDDED_LEVELDB_TRUE@	$(am__append_22)
+@EMBEDDED_LEVELDB_TRUE@	-D__STDC_LIMIT_MACROS $(am__append_22) \
+@EMBEDDED_LEVELDB_TRUE@	$(am__append_23)
 @EMBEDDED_LEVELDB_TRUE@leveldb_libleveldb_a_CPPFLAGS = $(AM_CPPFLAGS) $(LEVELDB_CPPFLAGS_INT) $(LEVELDB_CPPFLAGS)
 @EMBEDDED_LEVELDB_TRUE@leveldb_libleveldb_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 @EMBEDDED_LEVELDB_TRUE@leveldb_libleveldb_a_SOURCES =  \
@@ -4582,8 +4600,8 @@ EXTRA_DIST = $(CTAES_DIST)
 @EMBEDDED_LEVELDB_TRUE@	leveldb/util/histogram.cc \
 @EMBEDDED_LEVELDB_TRUE@	leveldb/util/logging.cc \
 @EMBEDDED_LEVELDB_TRUE@	leveldb/util/options.cc \
-@EMBEDDED_LEVELDB_TRUE@	leveldb/util/status.cc $(am__append_23) \
-@EMBEDDED_LEVELDB_TRUE@	$(am__append_24)
+@EMBEDDED_LEVELDB_TRUE@	leveldb/util/status.cc $(am__append_24) \
+@EMBEDDED_LEVELDB_TRUE@	$(am__append_25)
 @EMBEDDED_LEVELDB_TRUE@leveldb_libmemenv_a_CPPFLAGS = $(leveldb_libleveldb_a_CPPFLAGS)
 @EMBEDDED_LEVELDB_TRUE@leveldb_libmemenv_a_CXXFLAGS = $(leveldb_libleveldb_a_CXXFLAGS)
 @EMBEDDED_LEVELDB_TRUE@leveldb_libmemenv_a_SOURCES =  \
@@ -4591,10 +4609,10 @@ EXTRA_DIST = $(CTAES_DIST)
 @EMBEDDED_LEVELDB_TRUE@	leveldb/helpers/memenv/memenv.h
 @EMBEDDED_LEVELDB_TRUE@leveldb_libleveldb_sse42_a_CPPFLAGS =  \
 @EMBEDDED_LEVELDB_TRUE@	$(leveldb_libleveldb_a_CPPFLAGS) \
-@EMBEDDED_LEVELDB_TRUE@	$(am__append_25)
+@EMBEDDED_LEVELDB_TRUE@	$(am__append_26)
 @EMBEDDED_LEVELDB_TRUE@leveldb_libleveldb_sse42_a_CXXFLAGS =  \
 @EMBEDDED_LEVELDB_TRUE@	$(leveldb_libleveldb_a_CXXFLAGS) \
-@EMBEDDED_LEVELDB_TRUE@	$(am__append_26)
+@EMBEDDED_LEVELDB_TRUE@	$(am__append_27)
 @EMBEDDED_LEVELDB_TRUE@leveldb_libleveldb_sse42_a_SOURCES = leveldb/port/port_posix_sse.cc
 LIBCRYPTOPP_INT = cryptopp/libcryptopp.a
 CRYPTOPP_CPPFLAGS_INT = -I$(srcdir)/cryptopp $(CRYPTOPP_TARGET_FLAGS)
@@ -4768,7 +4786,7 @@ libff_libff_a_SOURCES =  \
 @ENABLE_TESTS_TRUE@GENERATED_TEST_FILES = $(JSON_TEST_FILES:.json=.json.h) $(RAW_TEST_FILES:.raw=.raw.h)
 @ENABLE_TESTS_TRUE@BITCOIN_TEST_SUITE = test/test_bitcoin_main.cpp \
 @ENABLE_TESTS_TRUE@	test/test_bitcoin.h test/test_bitcoin.cpp \
-@ENABLE_TESTS_TRUE@	$(am__append_30) $(am__append_32)
+@ENABLE_TESTS_TRUE@	$(am__append_31) $(am__append_33)
 @ENABLE_TESTS_TRUE@FUZZ_SUITE = \
 @ENABLE_TESTS_TRUE@  test/fuzz/fuzz.cpp \
 @ENABLE_TESTS_TRUE@  test/fuzz/fuzz.h
@@ -4793,9 +4811,11 @@ libff_libff_a_SOURCES =  \
 @ENABLE_TESTS_TRUE@	test/crypto_tests.cpp \
 @ENABLE_TESTS_TRUE@	test/cuckoocache_tests.cpp \
 @ENABLE_TESTS_TRUE@	test/denialofservice_tests.cpp \
-@ENABLE_TESTS_TRUE@	test/descriptor_tests.cpp test/fs_tests.cpp \
-@ENABLE_TESTS_TRUE@	test/getarg_tests.cpp test/hash_tests.cpp \
-@ENABLE_TESTS_TRUE@	test/key_io_tests.cpp test/key_tests.cpp \
+@ENABLE_TESTS_TRUE@	test/descriptor_tests.cpp \
+@ENABLE_TESTS_TRUE@	test/evm_state_cache_tests.cpp \
+@ENABLE_TESTS_TRUE@	test/fs_tests.cpp test/getarg_tests.cpp \
+@ENABLE_TESTS_TRUE@	test/hash_tests.cpp test/key_io_tests.cpp \
+@ENABLE_TESTS_TRUE@	test/key_tests.cpp \
 @ENABLE_TESTS_TRUE@	test/limitedmap_tests.cpp \
 @ENABLE_TESTS_TRUE@	test/dbwrapper_tests.cpp \
 @ENABLE_TESTS_TRUE@	test/main_tests.cpp test/mempool_tests.cpp \
@@ -4836,10 +4856,10 @@ libff_libff_a_SOURCES =  \
 @ENABLE_TESTS_TRUE@	test/zerohourtests/dgp_tests.cpp \
 @ENABLE_TESTS_TRUE@	test/zerohourtests/constantinoplefork_tests.cpp \
 @ENABLE_TESTS_TRUE@	test/zerohourtests/btcecrecoverfork_tests.cpp \
-@ENABLE_TESTS_TRUE@	$(am__append_29) $(am__append_31)
+@ENABLE_TESTS_TRUE@	$(am__append_30) $(am__append_32)
 @ENABLE_TESTS_TRUE@test_test_zerohour_SOURCES = $(BITCOIN_TEST_SUITE) $(BITCOIN_TESTS) $(JSON_TEST_FILES) $(RAW_TEST_FILES)
 @ENABLE_TESTS_TRUE@test_test_zerohour_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) -I$(builddir)/test/ $(TESTDEFS) $(EVENT_CFLAGS)
-@ENABLE_TESTS_TRUE@test_test_zerohour_LDADD = $(am__append_33) \
+@ENABLE_TESTS_TRUE@test_test_zerohour_LDADD = $(am__append_34) \
 @ENABLE_TESTS_TRUE@	$(LIBBITCOIN_SERVER) $(LIBBITCOIN_CLI) \
 @ENABLE_TESTS_TRUE@	$(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) \
 @ENABLE_TESTS_TRUE@	$(LIBBITCOIN_CONSENSUS) \
@@ -4856,7 +4876,7 @@ libff_libff_a_SOURCES =  \
 @ENABLE_TESTS_TRUE@	$(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) \
 @ENABLE_TESTS_TRUE@	$(MINIUPNPC_LIBS) $(RAPIDCHECK_LIBS) \
 @ENABLE_TESTS_TRUE@	$(LIBFF) $(GMP_LIBS) $(GMPXX_LIBS) \
-@ENABLE_TESTS_TRUE@	$(am__append_34)
+@ENABLE_TESTS_TRUE@	$(am__append_35)
 @ENABLE_TESTS_TRUE@test_test_zerohour_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 @ENABLE_TESTS_TRUE@test_test_zerohour_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) -static
 @ENABLE_FUZZ_TRUE@@ENABLE_TESTS_TRUE@test_fuzz_block_deserialize_SOURCES = $(FUZZ_SUITE) test/fuzz/deserialize.cpp
@@ -5236,7 +5256,7 @@ libff_libff_a_SOURCES =  \
 @ENABLE_BENCH_TRUE@	bench/mempool_eviction.cpp \
 @ENABLE_BENCH_TRUE@	bench/verify_script.cpp bench/base58.cpp \
 @ENABLE_BENCH_TRUE@	bench/bech32.cpp bench/lockedpool.cpp \
-@ENABLE_BENCH_TRUE@	bench/prevector.cpp $(am__append_38)
+@ENABLE_BENCH_TRUE@	bench/prevector.cpp $(am__append_39)
 @ENABLE_BENCH_TRUE@nodist_bench_bench_zerohour_SOURCES = $(GENERATED_BENCH_FILES)
 @ENABLE_BENCH_TRUE@bench_bench_zerohour_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CLFAGS) $(EVENT_PTHREADS_CFLAGS) -I$(builddir)/bench/
 @ENABLE_BENCH_TRUE@bench_bench_zerohour_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -5250,7 +5270,7 @@ libff_libff_a_SOURCES =  \
 @ENABLE_BENCH_TRUE@	$(LIBETHASH) $(LIBETHCORE) $(LIBDEVCORE) \
 @ENABLE_BENCH_TRUE@	$(LIBJSONCPP) $(LIBEVM) $(LIBEVMCORE) \
 @ENABLE_BENCH_TRUE@	$(LIBDEVCRYPTO) $(LIBCRYPTOPP) \
-@ENABLE_BENCH_TRUE@	$(LIBSCRYIPT) $(am__append_37) \
+@ENABLE_BENCH_TRUE@	$(LIBSCRYIPT) $(am__append_38) \
 @ENABLE_BENCH_TRUE@	$(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) \
 @ENABLE_BENCH_TRUE@	$(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBFF) \
 @ENABLE_BENCH_TRUE@	$(GMP_LIBS) $(GMPXX_LIBS)
@@ -5665,8 +5685,8 @@ libff_libff_a_SOURCES =  \
 @ENABLE_QT_TRUE@  qt/paymentrequestplus.cpp
 
 @ENABLE_QT_TRUE@BITCOIN_QT_CPP = $(BITCOIN_QT_BASE_CPP) \
-@ENABLE_QT_TRUE@	$(am__append_42) $(am__append_43) \
-@ENABLE_QT_TRUE@	$(am__append_44)
+@ENABLE_QT_TRUE@	$(am__append_43) $(am__append_44) \
+@ENABLE_QT_TRUE@	$(am__append_45)
 @ENABLE_QT_TRUE@RES_IMAGES = 
 @ENABLE_QT_TRUE@RES_MOVIES = $(wildcard $(srcdir)/qt/res/movies/spinner-*.png)
 @ENABLE_QT_TRUE@RES_STYLES = qt/res/styles/buttontransparentbordered.css \
@@ -5732,7 +5752,7 @@ libff_libff_a_SOURCES =  \
 @ENABLE_QT_TRUE@	$(BITCOIN_QT_H) $(QT_FORMS_UI) $(QT_QRC) \
 @ENABLE_QT_TRUE@	$(QT_QRC_LOCALE) $(QT_TS) $(PROTOBUF_PROTO) \
 @ENABLE_QT_TRUE@	$(RES_ICONS) $(RES_IMAGES) $(RES_MOVIES) \
-@ENABLE_QT_TRUE@	$(RES_STYLES) $(am__append_45)
+@ENABLE_QT_TRUE@	$(RES_STYLES) $(am__append_46)
 @ENABLE_QT_TRUE@nodist_qt_libbitcoinqt_a_SOURCES = $(QT_MOC_CPP) $(QT_MOC) $(PROTOBUF_CC) \
 @ENABLE_QT_TRUE@  $(PROTOBUF_H) $(QT_QRC_CPP) $(QT_QRC_LOCALE_CPP)
 
@@ -5745,10 +5765,10 @@ libff_libff_a_SOURCES =  \
 @ENABLE_QT_TRUE@  $(QT_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS)
 
 @ENABLE_QT_TRUE@qt_zerohour_qt_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
-@ENABLE_QT_TRUE@qt_zerohour_qt_SOURCES = qt/main.cpp $(am__append_46)
+@ENABLE_QT_TRUE@qt_zerohour_qt_SOURCES = qt/main.cpp $(am__append_47)
 @ENABLE_QT_TRUE@qt_zerohour_qt_LDADD = qt/libbitcoinqt.a \
-@ENABLE_QT_TRUE@	$(LIBBITCOIN_SERVER) $(am__append_47) \
-@ENABLE_QT_TRUE@	$(am__append_48) $(LIBBITCOIN_CLI) \
+@ENABLE_QT_TRUE@	$(LIBBITCOIN_SERVER) $(am__append_48) \
+@ENABLE_QT_TRUE@	$(am__append_49) $(LIBBITCOIN_CLI) \
 @ENABLE_QT_TRUE@	$(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) \
 @ENABLE_QT_TRUE@	$(LIBBITCOIN_CONSENSUS) $(LIBBITCOIN_CRYPTO) \
 @ENABLE_QT_TRUE@	$(LIBUNIVALUE) $(LIBLEVELDB) \
@@ -5761,7 +5781,7 @@ libff_libff_a_SOURCES =  \
 @ENABLE_QT_TRUE@	$(LIBJSONCPP) $(LIBEVM) $(LIBEVMCORE) \
 @ENABLE_QT_TRUE@	$(LIBDEVCRYPTO) $(LIBCRYPTOPP) $(LIBSCRYIPT) \
 @ENABLE_QT_TRUE@	$(LIBFF) $(GMP_LIBS) $(GMPXX_LIBS) \
-@ENABLE_QT_TRUE@	$(am__append_49) $(am__append_50) \
+@ENABLE_QT_TRUE@	$(am__append_50) $(am__append_51) \
 @ENABLE_QT_TRUE@	$(CRYPTO_LIBS)
 @ENABLE_QT_TRUE@qt_zerohour_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 @ENABLE_QT_TRUE@qt_zerohour_qt_LIBTOOLFLAGS = $(AM_LIBTOOLFLAGS) --tag CXX
@@ -5773,7 +5793,7 @@ libff_libff_a_SOURCES =  \
 @ENABLE_QT_TESTS_TRUE@	qt/test/moc_compattests.cpp \
 @ENABLE_QT_TESTS_TRUE@	qt/test/moc_rpcnestedtests.cpp \
 @ENABLE_QT_TESTS_TRUE@	qt/test/moc_uritests.cpp \
-@ENABLE_QT_TESTS_TRUE@	$(am__append_54) $(am__append_55)
+@ENABLE_QT_TESTS_TRUE@	$(am__append_55) $(am__append_56)
 @ENABLE_QT_TESTS_TRUE@TEST_QT_H = \
 @ENABLE_QT_TESTS_TRUE@  qt/test/addressbooktests.h \
 @ENABLE_QT_TESTS_TRUE@  qt/test/apptests.h \
@@ -5801,12 +5821,12 @@ libff_libff_a_SOURCES =  \
 @ENABLE_QT_TESTS_TRUE@	qt/test/test_main.cpp \
 @ENABLE_QT_TESTS_TRUE@	qt/test/uritests.cpp qt/test/util.cpp \
 @ENABLE_QT_TESTS_TRUE@	$(TEST_QT_H) $(TEST_BITCOIN_CPP) \
-@ENABLE_QT_TESTS_TRUE@	$(TEST_BITCOIN_H) $(am__append_56) \
-@ENABLE_QT_TESTS_TRUE@	$(am__append_57)
+@ENABLE_QT_TESTS_TRUE@	$(TEST_BITCOIN_H) $(am__append_57) \
+@ENABLE_QT_TESTS_TRUE@	$(am__append_58)
 @ENABLE_QT_TESTS_TRUE@nodist_qt_test_test_zerohour_qt_SOURCES = $(TEST_QT_MOC_CPP)
 @ENABLE_QT_TESTS_TRUE@qt_test_test_zerohour_qt_LDADD =  \
 @ENABLE_QT_TESTS_TRUE@	$(LIBBITCOINQT) $(LIBBITCOIN_SERVER) \
-@ENABLE_QT_TESTS_TRUE@	$(am__append_58) $(am__append_59) \
+@ENABLE_QT_TESTS_TRUE@	$(am__append_59) $(am__append_60) \
 @ENABLE_QT_TESTS_TRUE@	$(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) \
 @ENABLE_QT_TESTS_TRUE@	$(LIBBITCOIN_UTIL) \
 @ENABLE_QT_TESTS_TRUE@	$(LIBBITCOIN_CONSENSUS) \
@@ -7862,6 +7882,8 @@ test/test_zerohour-denialofservice_tests.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/test_zerohour-descriptor_tests.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
+test/test_zerohour-evm_state_cache_tests.$(OBJEXT):  \
+	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/test_zerohour-fs_tests.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/test_zerohour-getarg_tests.$(OBJEXT): test/$(am__dirstamp) \
@@ -8682,6 +8704,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_zerohour-dbwrapper_tests.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_zerohour-denialofservice_tests.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_zerohour-descriptor_tests.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_zerohour-evm_state_cache_tests.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_zerohour-fs_tests.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_zerohour-getarg_tests.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_zerohour-hash_tests.Po@am__quote@ # am--include-marker
@@ -18015,6 +18038,20 @@ test/test_zerohour-descriptor_tests.obj: test/descriptor_tests.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_test_zerohour_CPPFLAGS) $(CPPFLAGS) $(test_test_zerohour_CXXFLAGS) $(CXXFLAGS) -c -o test/test_zerohour-descriptor_tests.obj `if test -f 'test/descriptor_tests.cpp'; then $(CYGPATH_W) 'test/descriptor_tests.cpp'; else $(CYGPATH_W) '$(srcdir)/test/descriptor_tests.cpp'; fi`
 
+test/test_zerohour-evm_state_cache_tests.o: test/evm_state_cache_tests.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_test_zerohour_CPPFLAGS) $(CPPFLAGS) $(test_test_zerohour_CXXFLAGS) $(CXXFLAGS) -MT test/test_zerohour-evm_state_cache_tests.o -MD -MP -MF test/$(DEPDIR)/test_zerohour-evm_state_cache_tests.Tpo -c -o test/test_zerohour-evm_state_cache_tests.o `test -f 'test/evm_state_cache_tests.cpp' || echo '$(srcdir)/'`test/evm_state_cache_tests.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_zerohour-evm_state_cache_tests.Tpo test/$(DEPDIR)/test_zerohour-evm_state_cache_tests.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='test/evm_state_cache_tests.cpp' object='test/test_zerohour-evm_state_cache_tests.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_test_zerohour_CPPFLAGS) $(CPPFLAGS) $(test_test_zerohour_CXXFLAGS) $(CXXFLAGS) -c -o test/test_zerohour-evm_state_cache_tests.o `test -f 'test/evm_state_cache_tests.cpp' || echo '$(srcdir)/'`test/evm_state_cache_tests.cpp
+
+test/test_zerohour-evm_state_cache_tests.obj: test/evm_state_cache_tests.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_test_zerohour_CPPFLAGS) $(CPPFLAGS) $(test_test_zerohour_CXXFLAGS) $(CXXFLAGS) -MT test/test_zerohour-evm_state_cache_tests.obj -MD -MP -MF test/$(DEPDIR)/test_zerohour-evm_state_cache_tests.Tpo -c -o test/test_zerohour-evm_state_cache_tests.obj `if test -f 'test/evm_state_cache_tests.cpp'; then $(CYGPATH_W) 'test/evm_state_cache_tests.cpp'; else $(CYGPATH_W) '$(srcdir)/test/evm_state_cache_tests.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_zerohour-evm_state_cache_tests.Tpo test/$(DEPDIR)/test_zerohour-evm_state_cache_tests.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='test/evm_state_cache_tests.cpp' object='test/test_zerohour-evm_state_cache_tests.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_test_zerohour_CPPFLAGS) $(CPPFLAGS) $(test_test_zerohour_CXXFLAGS) $(CXXFLAGS) -c -o test/test_zerohour-evm_state_cache_tests.obj `if test -f 'test/evm_state_cache_tests.cpp'; then $(CYGPATH_W) 'test/evm_state_cache_tests.cpp'; else $(CYGPATH_W) '$(srcdir)/test/evm_state_cache_tests.cpp'; fi`
+
 test/test_zerohour-fs_tests.o: test/fs_tests.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_test_zerohour_CPPFLAGS) $(CPPFLAGS) $(test_test_zerohour_CXXFLAGS) $(CXXFLAGS) -MT test/test_zerohour-fs_tests.o -MD -MP -MF test/$(DEPDIR)/test_zerohour-fs_tests.Tpo -c -o test/test_zerohour-fs_tests.o `test -f 'test/fs_tests.cpp' || echo '$(srcdir)/'`test/fs_tests.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_zerohour-fs_tests.Tpo test/$(DEPDIR)/test_zerohour-fs_tests.Po
@@ -20100,6 +20137,7 @@ distclean: distclean-recursive
 	-rm -f test/$(DEPDIR)/test_zerohour-dbwrapper_tests.Po
 	-rm -f test/$(DEPDIR)/test_zerohour-denialofservice_tests.Po
 	-rm -f test/$(DEPDIR)/test_zerohour-descriptor_tests.Po
+	-rm -f test/$(DEPDIR)/test_zerohour-evm_state_cache_tests.Po
 	-rm -f test/$(DEPDIR)/test_zerohour-fs_tests.Po
 	-rm -f test/$(DEPDIR)/test_zerohour-getarg_tests.Po
 	-rm -f test/$(DEPDIR)/test_zerohour-hash_tests.Po
@@ -20880,6 +20918,7 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f test/$(DEPDIR)/test_zerohour-dbwrapper_tests.Po
 	-rm -f test/$(DEPDIR)/test_zerohour-denialofservice_tests.Po
 	-rm -f test/$(DEPDIR)/test_zerohour-descriptor_tests.Po
+	-rm -f test/$(DEPDIR)/test_zerohour-evm_state_cache_tests.Po
 	-rm -f test/$(DEPDIR)/test_zerohour-fs_tests.Po
 	-rm -f test/$(DEPDIR)/test_zerohour-getarg_tests.Po
 	-rm -f test/$(DEPDIR)/test_zerohour-hash_tests.Po

@@ -7,6 +7,11 @@ StorageResults::StorageResults(std::string const& _path){
     leveldb::Status status = leveldb::DB::Open(options, path, &db);
     assert(status.ok());
     LogPrintf("Opened LevelDB successfully\n");
+    if (gArgs.GetBoolArg("-zhcstateforcecompact", false)) {
+        LogPrintf("Starting EVM results database compaction of %s\n", path);
+        db->CompactRange(nullptr, nullptr);
+        LogPrintf("Finished EVM results database compaction of %s\n", path);
+    }
 }
 
 StorageResults::~StorageResults()

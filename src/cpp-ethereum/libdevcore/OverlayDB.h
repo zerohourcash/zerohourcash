@@ -56,6 +56,8 @@ public:
 	bool exists(h256 const& _h) const;
 	void kill(h256 const& _h);
 
+    static void clearLookupCacheForTesting();
+
 	bytes lookupAux(h256 const& _h) const;
 
 private:

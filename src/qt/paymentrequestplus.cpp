@@ -17,7 +17,9 @@
 
 #include <QDateTime>
 #include <QDebug>
+#ifndef QT_NO_SSL
 #include <QSslCertificate>
+#endif
 
 class SSLVerifyError : public std::runtime_error
 {
@@ -89,9 +91,12 @@ bool PaymentRequestPlus::getMerchant(X509_STORE* certStore, QString& merchant) c
     }
 
     std::vector<X509*> certs;
+#ifndef QT_NO_SSL
     const QDateTime currentTime = QDateTime::currentDateTime();
+#endif
     for (int i = 0; i < certChain.certificate_size(); i++) {
         QByteArray certData(certChain.certificate(i).data(), certChain.certificate(i).size());
+#ifndef QT_NO_SSL
         QSslCertificate qCert(certData, QSsl::Der);
         if (currentTime < qCert.effectiveDate() || currentTime > qCert.expiryDate()) {
             qWarning() << "PaymentRequestPlus::getMerchant: Payment request: certificate expired or not yet active: " << qCert;
@@ -101,10 +106,19 @@ bool PaymentRequestPlus::getMerchant(X509_STORE* certStore, QString& merchant) c
             qWarning() << "PaymentRequestPlus::getMerchant: Payment request: certificate blacklisted: " << qCert;
             return false;
         }
+#endif
         const unsigned char *data = (const unsigned char *)certChain.certificate(i).data();
         X509 *cert = d2i_X509(nullptr, &data, certChain.certificate(i).size());
-        if (cert)
+        if (cert) {
+#ifdef QT_NO_SSL
+            if (X509_cmp_time(X509_get0_notBefore(cert), nullptr) > 0 || X509_cmp_time(X509_get0_notAfter(cert), nullptr) < 0) {
+                qWarning() << "PaymentRequestPlus::getMerchant: Payment request: certificate expired or not yet active";
+                X509_free(cert);
+                return false;
+            }
+#endif
             certs.push_back(cert);
+        }
     }
     if (certs.empty()) {
         qWarning() << "PaymentRequestPlus::getMerchant: Payment request: empty certificate chain";

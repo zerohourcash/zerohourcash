@@ -21,6 +21,56 @@ ZHCASH Core currently implements the following:
 * Compatibility with the Bitcoin Core set of RPC commands and APIs
 * Full SegWit capability with p2sh-segwit (legacy) and bech32 (native) addresses
 
+Consensus Change Policy
+-----------------------
+
+Project owner rule: consensus changes are forbidden in this maintenance line
+everywhere except the separately approved halving/subsidy schedule patch and
+its P2P peer-protocol upgrade gate.
+
+Do not change block validity, transaction validity, EVM execution semantics,
+P2P protocol behavior, serialization, wallet database compatibility, historical
+validation behavior, chain parameters, checkpoints, DGP/QIP rules, staking
+rules, or state transition logic as part of build, dependency, UI, RPC,
+performance, explorer, or contract usability work.
+
+Contract-related UX improvements must be implemented by creating already-valid
+transactions, for example using explicit `OP_CALL`/`sendtocontract` for a
+payment to a contract `receive()` function, not by changing validator behavior
+for ordinary payment outputs.
+
+The only currently authorized consensus work is the halving/subsidy patch, and
+it must remain isolated, height-gated, tested, documented, and released as a
+mandatory network upgrade.
+
+Mandatory Upgrade Peer Gate
+---------------------------
+
+Evolution 1.0.0 advertises P2P protocol version `70018`. By default, upgraded
+nodes stop interacting with peers below protocol `70018` starting at block
+`1,700,000`.
+
+Operators can override the peer gate in `zerohour.conf` if needed:
+
+```ini
+forkminpeerheight=1700000
+forkminpeerversion=70018
+```
+
+This gate is P2P policy, not a replacement for consensus validation. The
+halving/subsidy schedule is still enforced by block validation.
+
+Live Network Status
+-------------------
+
+Use the Zeroscan websocket API endpoint below as the primary live source for
+mainnet height, supply, circulating supply, network stake weight, fee rate, and
+DGP parameters:
+
+```bash
+curl https://ws.zeroscan.st/info
+```
+
 Quick Build Instructions
 ------------------------
 

@@ -80,6 +80,11 @@ std::shared_ptr<dev::eth::SealEngineFace> globalSealEngine;
 bool fRecordLogOpcodes = false;
 bool fIsVMlogFile = false;
 bool fGettingValuesDGP = false;
+
+static int64_t GetSlowLogThresholdMicros(const char* arg, int64_t default_ms)
+{
+    return gArgs.GetArg(arg, default_ms) * 1000;
+}
  //////////////////////////////
 
 namespace {
@@ -1230,6 +1235,9 @@ bool CheckHeaderPoS(const CBlockHeader& block, const Consensus::Params& consensu
 }
 
 bool CheckHeaderProof(const CBlockHeader& block, const Consensus::Params& consensusParams){
+    if (block.GetHash() == consensusParams.hashGenesisBlock) {
+        return true;
+    }
     if(block.IsProofOfWork()){
         return CheckHeaderPoW(block, consensusParams);
     }
@@ -1373,6 +1381,23 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
     if(nHeight <= consensusParams.nLastPOWBlock)
         return 320000 * COIN;
+
+    if (consensusParams.nSubsidyHalvingInterval == 5256000) {
+        if (nHeight >= 6500000)
+            return 10 * COIN;
+
+        if (nHeight >= 2500000) {
+            int halvings = 2 + (nHeight - 2500000) / 1000000;
+            CAmount nSubsidy = 800 * COIN;
+            nSubsidy >>= halvings;
+            return nSubsidy;
+        }
+
+        if (nHeight >= 1700000)
+            return 400 * COIN;
+
+        return 800 * COIN;
+    }
 
     int halvings = (nHeight - consensusParams.nLastPOWBlock - 1) / consensusParams.nSubsidyHalvingInterval;
     // Force block reward to zero when right shift is undefined.
@@ -2279,6 +2304,15 @@ bool CheckSenderScript(const CCoinsViewCache& view, const CTransaction& tx){
     return true;
 }
 
+uint64_t GetMaxCallContractGasLimit()
+{
+    const int64_t configured = gArgs.GetArg("-rpcmaxcallcontractgas", (int64_t)MAX_BLOCK_GAS_LIMIT_DGP);
+    if (configured <= 0) {
+        return MAX_BLOCK_GAS_LIMIT_DGP;
+    }
+    return std::min<uint64_t>((uint64_t)configured, MAX_BLOCK_GAS_LIMIT_DGP);
+}
+
 std::vector<ResultExecute> CallContract(const dev::Address& addrContract, std::vector<unsigned char> opcode, const dev::Address& sender, uint64_t gasLimit){
     CBlock block;
     CMutableTransaction tx;
@@ -2294,20 +2328,24 @@ std::vector<ResultExecute> CallContract(const dev::Address& addrContract, std::v
 
     ZHCASHDGP zerohourDGP(globalState.get(), fGettingValuesDGP);
     uint64_t blockGasLimit = zerohourDGP.getBlockGasLimit(chainActive.Tip()->nHeight + 1);
+    uint64_t callGasLimit = gasLimit;
+    const uint64_t maxCallGasLimit = GetMaxCallContractGasLimit();
 
-    if(gasLimit == 0){
-        gasLimit = blockGasLimit - 1;
+    if(callGasLimit == 0){
+        callGasLimit = blockGasLimit - 1;
     }
+    callGasLimit = std::min<uint64_t>(callGasLimit, maxCallGasLimit);
+    const uint64_t simulationBlockGasLimit = std::max<uint64_t>(blockGasLimit, callGasLimit);
     dev::Address senderAddress = sender == dev::Address() ? dev::Address("ffffffffffffffffffffffffffffffffffffffff") : sender;
     tx.vout.push_back(CTxOut(0, CScript() << OP_DUP << OP_HASH160 << senderAddress.asBytes() << OP_EQUALVERIFY << OP_CHECKSIG));
     block.vtx.push_back(MakeTransactionRef(CTransaction(tx)));
  
-    ZHCASHTransaction callTransaction(0, 1, dev::u256(gasLimit), addrContract, opcode, dev::u256(0));
+    ZHCASHTransaction callTransaction(0, 1, dev::u256(callGasLimit), addrContract, opcode, dev::u256(0));
     callTransaction.forceSender(senderAddress);
     callTransaction.setVersion(VersionVM::GetEVMDefault());
 
     
-    ByteCodeExec exec(block, std::vector<ZHCASHTransaction>(1, callTransaction), blockGasLimit, pblockindex);
+    ByteCodeExec exec(block, std::vector<ZHCASHTransaction>(1, callTransaction), simulationBlockGasLimit, pblockindex);
     exec.performByteCode(dev::eth::Permanence::Reverted);
     return exec.getResult();
 }
@@ -2534,6 +2572,8 @@ void LastHashes::clear()
 }
 
 bool ByteCodeExec::performByteCode(dev::eth::Permanence type){
+    int64_t nTimeStart = GetTimeMicros();
+    int64_t nTimeExecute = 0;
     for(ZHCASHTransaction& tx : txs){
         //validate VM version
         if(tx.getVersion().toRaw() != VersionVM::GetEVMDefault().toRaw()){
@@ -2546,10 +2586,21 @@ bool ByteCodeExec::performByteCode(dev::eth::Permanence type){
             result.push_back(ResultExecute{execRes, dev::eth::TransactionReceipt(dev::h256(), dev::u256(), dev::eth::LogEntries()), CTransaction()});
             continue;
         }
+        int64_t nTimeTxStart = GetTimeMicros();
         result.push_back(globalState->execute(envInfo, *globalSealEngine.get(), tx, type, OnOpFunc()));
+        nTimeExecute += GetTimeMicros() - nTimeTxStart;
     }
+    int64_t nTimeCommitStart = GetTimeMicros();
     globalState->db().commit();
     globalState->dbUtxo().commit();
+    int64_t nTimeCommit = GetTimeMicros() - nTimeCommitStart;
+    int64_t nTimeTotal = GetTimeMicros() - nTimeStart;
+    const int64_t slowEvm = GetSlowLogThresholdMicros("-zhcslowevmms", 1000);
+    const int64_t slowCommit = GetSlowLogThresholdMicros("-zhcslowcommitms", 1000);
+    if (nTimeExecute >= slowEvm || nTimeCommit >= slowCommit) {
+        LogPrintf("Slow EVM execution: total=%.2fms execute=%.2fms commit=%.2fms txs=%u permanence=%d\n",
+            nTimeTotal * MILLI, nTimeExecute * MILLI, nTimeCommit * MILLI, (unsigned)txs.size(), (int)type);
+    }
     globalSealEngine.get()->deleteAddresses.clear();
     return true;
 }
@@ -3814,6 +3865,11 @@ bool CChainState::ConnectTip(CValidationState& state, const CChainParams& chainp
         }
         nTime3 = GetTimeMicros(); nTimeConnectTotal += nTime3 - nTime2;
         LogPrint(BCLog::BENCH, "  - Connect total: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime3 - nTime2) * MILLI, nTimeConnectTotal * MICRO, nTimeConnectTotal * MILLI / nBlocksTotal);
+        const int64_t slowBlock = GetSlowLogThresholdMicros("-zhcslowblockms", 2000);
+        if (nTime3 - nTime2 >= slowBlock) {
+            LogPrintf("Slow block validation: height=%d hash=%s connect=%.2fms txs=%u\n",
+                pindexNew->nHeight, pindexNew->GetBlockHash().ToString(), (nTime3 - nTime2) * MILLI, (unsigned)blockConnecting.vtx.size());
+        }
         bool flushed = view.Flush();
         assert(flushed);
     }
@@ -4873,7 +4929,7 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
     }
 
     // Enforce rule that the coinbase starts with serialized block height
-    if (nHeight >= consensusParams.BIP34Height)
+    if (nHeight > 0 && nHeight >= consensusParams.BIP34Height)
     {
         CScript expect = CScript() << nHeight;
         if (block.vtx[0]->vin[0].scriptSig.size() < expect.size() ||
@@ -5234,7 +5290,7 @@ bool CChainState::AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CVali
         return error("AcceptBlock() : block timestamp too far in the future");
 
     // Enforce rule that the coinbase starts with serialized block height
-    if (nHeight >= chainparams.GetConsensus().BIP34Height)
+    if (nHeight > 0 && nHeight >= chainparams.GetConsensus().BIP34Height)
     {
         CScript expect = CScript() << nHeight;
         if (block.vtx[0]->vin[0].scriptSig.size() < expect.size() ||

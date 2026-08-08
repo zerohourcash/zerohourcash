@@ -30,9 +30,18 @@ namespace db
 class LevelDB : public DatabaseFace
 {
 public:
+    struct ConfiguredOptions
+    {
+        size_t blockCacheBytes;
+        size_t writeBufferBytes;
+        int maxOpenFiles;
+        int bloomBitsPerKey;
+    };
+
     static leveldb::ReadOptions defaultReadOptions();
     static leveldb::WriteOptions defaultWriteOptions();
     static leveldb::Options defaultDBOptions();
+    static ConfiguredOptions configuredOptions();
 
     explicit LevelDB(boost::filesystem::path const& _path,
         leveldb::ReadOptions _readOptions = defaultReadOptions(),

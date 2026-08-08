@@ -995,6 +995,8 @@ bool GetSpentCoinFromMainChain(const CBlockIndex* pforkPrev, COutPoint prevoutSt
 
 unsigned int GetContractScriptFlags(int nHeight, const Consensus::Params& consensusparams);
 
+uint64_t GetMaxCallContractGasLimit();
+
 std::vector<ResultExecute> CallContract(const dev::Address& addrContract, std::vector<unsigned char> opcode, const dev::Address& sender = dev::Address(), uint64_t gasLimit=0);
 
 bool CheckOpSender(const CTransaction& tx, const CChainParams& chainparams, int nHeight);

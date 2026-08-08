@@ -194,24 +194,74 @@ static UniValue generatetoaddress(const JSONRPCRequest& request)
 
 static UniValue getsubsidy(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() > 1)
+    if (request.fHelp || request.params.size() > 2)
         throw std::runtime_error(
             RPCHelpMan{"getsubsidy",
-                "\nReturns subsidy value for the specified value of target.",
-                {},
+                "\nReturns subsidy value for the specified block height.\n"
+                "If endheight is provided, returns a fast dry-run summary for the inclusive height range.\n"
+                "The range mode does not mine or require the blocks to exist on the local chain.\n",
+                {
+                    {"height", RPCArg::Type::NUM, /* default */ "chain tip", "The block height to calculate subsidy for."},
+                    {"endheight", RPCArg::Type::NUM, /* default */ "null", "If set, calculate total subsidy from height to endheight inclusive."},
+                },
                 RPCResult{
-            "subsidy             (numeric)  Subsidy value for the specified target\n"
+            "subsidy             (numeric)  Subsidy value in satoshis for the specified height\n"
+            "\n"
+            "{                   (object)   Returned only when endheight is provided\n"
+            "  \"startheight\": n,           (numeric) First height in the checked range\n"
+            "  \"endheight\": n,             (numeric) Last height in the checked range\n"
+            "  \"blocks\": n,                (numeric) Number of checked blocks\n"
+            "  \"firstsubsidy\": n,          (numeric) Subsidy in satoshis at startheight\n"
+            "  \"lastsubsidy\": n,           (numeric) Subsidy in satoshis at endheight\n"
+            "  \"totalsubsidy\": n,          (numeric) Total subsidy in satoshis for the range\n"
+            "  \"totalsubsidy_zhc\": n       (numeric) Total subsidy in ZHC for the range\n"
+            "}\n"
                 },
                 RPCExamples{
                     HelpExampleCli("getsubsidy", "")
+            + HelpExampleCli("getsubsidy", "1700000")
+            + HelpExampleCli("getsubsidy", "1 10000000")
             + HelpExampleRpc("getsubsidy", "")
                 },
             }.ToString());
-    int nTarget = request.params.size() == 1 ? request.params[0].get_int() : chainActive.Height();
+
+    int nTarget;
+    if (request.params.size() >= 1) {
+        nTarget = request.params[0].get_int();
+    } else {
+        LOCK(cs_main);
+        nTarget = chainActive.Height();
+    }
     if (nTarget < 0)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Block height out of range");
+
     const Consensus::Params& consensusParams = Params().GetConsensus();
-    return (uint64_t)GetBlockSubsidy(nTarget, consensusParams);
+    if (request.params.size() == 1 || request.params[1].isNull()) {
+        return (uint64_t)GetBlockSubsidy(nTarget, consensusParams);
+    }
+
+    int nEndTarget = request.params[1].get_int();
+    if (nEndTarget < nTarget)
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "End block height must be greater than or equal to start block height");
+
+    const int64_t nBlocks = (int64_t)nEndTarget - nTarget + 1;
+    if (nBlocks > 20000000)
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Subsidy range is too large; maximum is 20000000 blocks");
+
+    CAmount nTotalSubsidy = 0;
+    for (int nHeight = nTarget; nHeight <= nEndTarget; ++nHeight) {
+        nTotalSubsidy += GetBlockSubsidy(nHeight, consensusParams);
+    }
+
+    UniValue result(UniValue::VOBJ);
+    result.pushKV("startheight", nTarget);
+    result.pushKV("endheight", nEndTarget);
+    result.pushKV("blocks", nBlocks);
+    result.pushKV("firstsubsidy", (uint64_t)GetBlockSubsidy(nTarget, consensusParams));
+    result.pushKV("lastsubsidy", (uint64_t)GetBlockSubsidy(nEndTarget, consensusParams));
+    result.pushKV("totalsubsidy", (uint64_t)nTotalSubsidy);
+    result.pushKV("totalsubsidy_zhc", ValueFromAmount(nTotalSubsidy));
+    return result;
 }
 
 static UniValue getmininginfo(const JSONRPCRequest& request)
@@ -1112,7 +1162,7 @@ static const CRPCCommand commands[] =
     { "mining",             "submitblock",            &submitblock,            {"hexdata","dummy"} },
     { "mining",             "submitheader",           &submitheader,           {"hexdata"} },
 
-    { "mining",             "getsubsidy",             &getsubsidy,             {"height"} },
+    { "mining",             "getsubsidy",             &getsubsidy,             {"height","endheight"} },
     { "mining",             "getstakinginfo",         &getstakinginfo,         {} },
 
     { "generating",         "generatetoaddress",      &generatetoaddress,      {"nblocks","address","maxtries"} },

@@ -612,6 +612,7 @@ CMutableTransaction ConstructTransaction(const UniValue& inputs_in, const UniVal
     // Duplicate checking
     std::set<CTxDestination> destinations;
     bool has_data{false};
+    int contract_outputs = 0;
 
     for (const std::string& name_ : outputs.getKeys()) {
         if (name_ == "data") {
@@ -624,6 +625,10 @@ CMutableTransaction ConstructTransaction(const UniValue& inputs_in, const UniVal
             CTxOut out(0, CScript() << OP_RETURN << data);
             rawTx.vout.push_back(out);
         } else if (name_ == "contract") {
+            contract_outputs++;
+            if (contract_outputs > 1) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter, only one contract output per transaction is supported in maintenance mode");
+            }
             // Get the call object
             UniValue Contract = outputs[name_];
             if(!Contract.isObject())
@@ -667,13 +672,14 @@ CMutableTransaction ConstructTransaction(const UniValue& inputs_in, const UniVal
             // Get gas limit
             uint64_t nGasLimit=DEFAULT_GAS_LIMIT_OP_SEND;
             if (Contract.exists("gasLimit")){
-                nGasLimit = Contract["gasLimit"].get_int64();
+                const int64_t parsedGasLimit = Contract["gasLimit"].get_int64();
+                if (parsedGasLimit <= 0)
+                    throw JSONRPCError(RPC_TYPE_ERROR, "Invalid value for gasLimit");
+                nGasLimit = (uint64_t)parsedGasLimit;
                 if (nGasLimit > blockGasLimit)
                     throw JSONRPCError(RPC_TYPE_ERROR, "Invalid value for gasLimit (Maximum is: "+i64tostr(blockGasLimit)+")");
                 if (nGasLimit < MINIMUM_GAS_LIMIT)
                     throw JSONRPCError(RPC_TYPE_ERROR, "Invalid value for gasLimit (Minimum is: "+i64tostr(MINIMUM_GAS_LIMIT)+")");
-                if (nGasLimit <= 0)
-                    throw JSONRPCError(RPC_TYPE_ERROR, "Invalid value for gasLimit");
             }
 
             // Get gas price

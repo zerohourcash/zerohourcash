@@ -62,6 +62,7 @@
 #include <cerrno>
 #include <signal.h>
 #include <sys/stat.h>
+#include <unistd.h>
 #endif
 
 #include <boost/algorithm/string/classification.hpp>
@@ -428,6 +429,8 @@ void SetupServerArgs()
     gArgs.AddArg("-enablebip61", strprintf("Send reject messages per BIP61 (default: %u)", DEFAULT_ENABLE_BIP61), false, OptionsCategory::CONNECTION);
     gArgs.AddArg("-externalip=<ip>", "Specify your own public address", false, OptionsCategory::CONNECTION);
     gArgs.AddArg("-forcednsseed", strprintf("Always query for peer addresses via DNS lookup (default: %u)", DEFAULT_FORCEDNSSEED), false, OptionsCategory::CONNECTION);
+    gArgs.AddArg("-forkminpeerheight=<n>", strprintf("Disconnect peers below -forkminpeerversion starting at this block height (default: %d)", DEFAULT_FORK_MIN_PEER_PROTO_HEIGHT), false, OptionsCategory::CONNECTION);
+    gArgs.AddArg("-forkminpeerversion=<n>", strprintf("Minimum peer protocol version required after -forkminpeerheight (default: %d)", DEFAULT_FORK_MIN_PEER_PROTO_VERSION), false, OptionsCategory::CONNECTION);
     gArgs.AddArg("-listen", "Accept connections from outside (default: 1 if no -proxy or -connect)", false, OptionsCategory::CONNECTION);
     gArgs.AddArg("-listenonion", strprintf("Automatically create Tor hidden service (default: %d)", DEFAULT_LISTEN_ONION), false, OptionsCategory::CONNECTION);
     gArgs.AddArg("-maxconnections=<n>", strprintf("Maintain at most <n> connections to peers (default: %u)", DEFAULT_MAX_PEER_CONNECTIONS), false, OptionsCategory::CONNECTION);
@@ -515,6 +518,15 @@ void SetupServerArgs()
     gArgs.AddArg("-maxsigcachesize=<n>", strprintf("Limit sum of signature cache and script execution cache sizes to <n> MiB (default: %u)", DEFAULT_MAX_SIG_CACHE_SIZE), true, OptionsCategory::DEBUG_TEST);
     gArgs.AddArg("-maxtipage=<n>", strprintf("Maximum tip age in seconds to consider node in initial block download (default: %u)", DEFAULT_MAX_TIP_AGE), true, OptionsCategory::DEBUG_TEST);
     gArgs.AddArg("-minmempoolgaslimit=<limit>", strprintf("The minimum transaction gas limit we are willing to accept into the mempool (default: %s)",MEMPOOL_MIN_GAS_LIMIT), true, OptionsCategory::DEBUG_TEST);
+    gArgs.AddArg("-zhcslowblockms=<n>", "Log block validation stages slower than <n> milliseconds (default: 2000)", true, OptionsCategory::DEBUG_TEST);
+    gArgs.AddArg("-zhcslowevmms=<n>", "Log EVM execution stages slower than <n> milliseconds (default: 1000)", true, OptionsCategory::DEBUG_TEST);
+    gArgs.AddArg("-zhcslowcommitms=<n>", "Log EVM state commit stages slower than <n> milliseconds (default: 1000)", true, OptionsCategory::DEBUG_TEST);
+    gArgs.AddArg("-zhcstatecache=<n>", "EVM state LevelDB block cache size in MiB (default: 256)", true, OptionsCategory::DEBUG_TEST);
+    gArgs.AddArg("-zhcstatewritebuffer=<n>", "EVM state LevelDB write buffer size in MiB (default: 64)", true, OptionsCategory::DEBUG_TEST);
+    gArgs.AddArg("-zhcstatemaxopenfiles=<n>", "Maximum open files for EVM state LevelDB (default: 1024)", true, OptionsCategory::DEBUG_TEST);
+    gArgs.AddArg("-zhcstatebloom=<n>", "Bloom filter bits per key for EVM state LevelDB, 0 disables it (default: 10)", true, OptionsCategory::DEBUG_TEST);
+    gArgs.AddArg("-zhcstatelookupcache=<n>", "In-memory read-through cache for immutable EVM trie nodes in MiB, 0 disables it (default: 256)", true, OptionsCategory::DEBUG_TEST);
+    gArgs.AddArg("-zhcstateforcecompact", "Compact EVM state LevelDB databases on startup (default: 0)", true, OptionsCategory::DEBUG_TEST);
     gArgs.AddArg("-maxtxfee=<amt>", strprintf("Maximum total fees (in %s) to use in a single wallet transaction or raw transaction; setting this too low may abort large transactions (default: %s)",
         CURRENCY_UNIT, FormatMoney(DEFAULT_TRANSACTION_MAXFEE)), false, OptionsCategory::DEBUG_TEST);
     gArgs.AddArg("-printpriority", strprintf("Log transaction fee per kB when mining blocks (default: %u)", DEFAULT_PRINTPRIORITY), true, OptionsCategory::DEBUG_TEST);
@@ -557,6 +569,7 @@ void SetupServerArgs()
     gArgs.AddArg("-rpccookiefile=<loc>", "Location of the auth cookie. Relative paths will be prefixed by a net-specific datadir location. (default: data dir)", false, OptionsCategory::RPC);
     gArgs.AddArg("-rpcpassword=<pw>", "Password for JSON-RPC connections", false, OptionsCategory::RPC);
     gArgs.AddArg("-rpcport=<port>", strprintf("Listen for JSON-RPC connections on <port> (default: %u, testnet: %u, regtest: %u)", defaultBaseParams->RPCPort(), testnetBaseParams->RPCPort(), regtestBaseParams->RPCPort()), false, OptionsCategory::RPC);
+    gArgs.AddArg("-rpcmaxcallcontractgas=<n>", "Maximum gas allowed for local callcontract simulation only (default: 1000000000). This does not change DGP block gas limit or on-chain transaction validation.", false, OptionsCategory::RPC);
     gArgs.AddArg("-rpcserialversion", strprintf("Sets the serialization of raw transaction or block hex returned in non-verbose mode, non-segwit(0) or segwit(1) (default: %d)", DEFAULT_RPC_SERIALIZE_VERSION), false, OptionsCategory::RPC);
     gArgs.AddArg("-rpcservertimeout=<n>", strprintf("Timeout during HTTP requests (default: %d)", DEFAULT_HTTP_SERVER_TIMEOUT), true, OptionsCategory::RPC);
     gArgs.AddArg("-rpcthreads=<n>", strprintf("Set the number of threads to service RPC calls (default: %d)", DEFAULT_HTTP_THREADS), false, OptionsCategory::RPC);

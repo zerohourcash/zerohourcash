@@ -18,6 +18,12 @@
 #include "LevelDB.h"
 #include "Assertions.h"
 
+#include <leveldb/cache.h>
+#include <leveldb/filter_policy.h>
+#include <logging.h>
+#include <mutex>
+#include <util/system.h>
+
 namespace dev
 {
 namespace db
@@ -57,6 +63,35 @@ void checkStatus(leveldb::Status const& _status, boost::filesystem::path const& 
     BOOST_THROW_EXCEPTION(ex);
 }
 
+size_t mibArg(char const* _name, int64_t _defaultMiB)
+{
+    int64_t const value = gArgs.GetArg(_name, _defaultMiB);
+    if (value <= 0)
+        return 0;
+    return static_cast<size_t>(value) << 20;
+}
+
+int intArg(char const* _name, int64_t _defaultValue, int _minimum)
+{
+    int64_t const value = gArgs.GetArg(_name, _defaultValue);
+    return static_cast<int>(std::max<int64_t>(value, _minimum));
+}
+
+struct LevelDBRuntimeObjects
+{
+    std::mutex mutex;
+    size_t cacheBytes = 0;
+    int bloomBits = 0;
+    std::unique_ptr<leveldb::Cache> blockCache;
+    std::unique_ptr<const leveldb::FilterPolicy> filterPolicy;
+};
+
+LevelDBRuntimeObjects& runtimeObjects()
+{
+    static LevelDBRuntimeObjects objects;
+    return objects;
+}
+
 class LevelDBWriteBatch : public WriteBatchFace
 {
 public:
@@ -94,9 +129,42 @@ leveldb::WriteOptions LevelDB::defaultWriteOptions()
 
 leveldb::Options LevelDB::defaultDBOptions()
 {
+    ConfiguredOptions const configured = configuredOptions();
     leveldb::Options options;
     options.create_if_missing = true;
-    options.max_open_files = 256;
+    options.max_open_files = configured.maxOpenFiles;
+    options.write_buffer_size = configured.writeBufferBytes;
+
+    LevelDBRuntimeObjects& objects = runtimeObjects();
+    std::lock_guard<std::mutex> lock(objects.mutex);
+    if (configured.blockCacheBytes > 0)
+    {
+        if (!objects.blockCache || objects.cacheBytes != configured.blockCacheBytes)
+        {
+            objects.blockCache.reset(leveldb::NewLRUCache(configured.blockCacheBytes));
+            objects.cacheBytes = configured.blockCacheBytes;
+        }
+        options.block_cache = objects.blockCache.get();
+    }
+    if (configured.bloomBitsPerKey > 0)
+    {
+        if (!objects.filterPolicy || objects.bloomBits != configured.bloomBitsPerKey)
+        {
+            objects.filterPolicy.reset(leveldb::NewBloomFilterPolicy(configured.bloomBitsPerKey));
+            objects.bloomBits = configured.bloomBitsPerKey;
+        }
+        options.filter_policy = objects.filterPolicy.get();
+    }
+    return options;
+}
+
+LevelDB::ConfiguredOptions LevelDB::configuredOptions()
+{
+    ConfiguredOptions options;
+    options.blockCacheBytes = mibArg("-zhcstatecache", 256);
+    options.writeBufferBytes = mibArg("-zhcstatewritebuffer", 64);
+    options.maxOpenFiles = intArg("-zhcstatemaxopenfiles", 1024, 64);
+    options.bloomBitsPerKey = intArg("-zhcstatebloom", 10, 0);
     return options;
 }
 
@@ -110,6 +178,12 @@ LevelDB::LevelDB(boost::filesystem::path const& _path, leveldb::ReadOptions _rea
 
     assert(db);
     m_db.reset(db);
+
+    if (gArgs.GetBoolArg("-zhcstateforcecompact", false)) {
+        LogPrintf("Starting EVM state database compaction of %s\n", _path.string());
+        m_db->CompactRange(nullptr, nullptr);
+        LogPrintf("Finished EVM state database compaction of %s\n", _path.string());
+    }
 }
 
 std::string LevelDB::lookup(Slice _key) const
