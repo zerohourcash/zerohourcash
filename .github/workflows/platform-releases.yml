@@ -33,6 +33,7 @@ jobs:
       - name: Configure and build Qt wallet
         run: |
           set -euxo pipefail
+          find . -type f \( -name '*.sh' -o -name 'genbuild.sh' \) -exec chmod +x {} +
           bash ./autogen.sh
           ac_cv_lib_gmp___gmpn_sub_n=yes \
           GMP_LIBS=/usr/lib/x86_64-linux-gnu/libgmp.a \
@@ -68,6 +69,7 @@ jobs:
       - name: Configure and build Qt wallet
         run: |
           set -euxo pipefail
+          find . -type f \( -name '*.sh' -o -name 'genbuild.sh' \) -exec chmod +x {} +
           export PATH="$(brew --prefix qt@5)/bin:$(brew --prefix berkeley-db@4)/bin:$PATH"
           export CPPFLAGS="-I$(brew --prefix berkeley-db@4)/include -I$(brew --prefix openssl@3)/include"
           export LDFLAGS="-L$(brew --prefix berkeley-db@4)/lib -L$(brew --prefix openssl@3)/lib"
