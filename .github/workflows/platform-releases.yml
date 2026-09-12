@@ -34,6 +34,9 @@ jobs:
         run: |
           set -euxo pipefail
           bash ./autogen.sh
+          ac_cv_lib_gmp___gmpn_sub_n=yes \
+          GMP_LIBS=/usr/lib/x86_64-linux-gnu/libgmp.a \
+          GMPXX_LIBS=/usr/lib/x86_64-linux-gnu/libgmpxx.a \
           bash ./configure --with-gui=qt5 --with-incompatible-bdb --disable-tests --disable-bench
           make -j"$(nproc)"
       - name: Package Ubuntu Qt release
@@ -69,6 +72,9 @@ jobs:
           export CPPFLAGS="-I$(brew --prefix berkeley-db@4)/include -I$(brew --prefix openssl@3)/include"
           export LDFLAGS="-L$(brew --prefix berkeley-db@4)/lib -L$(brew --prefix openssl@3)/lib"
           bash ./autogen.sh
+          ac_cv_lib_gmp___gmpn_sub_n=yes \
+          GMP_LIBS="$(brew --prefix gmp)/lib/libgmp.a" \
+          GMPXX_LIBS="$(brew --prefix gmp)/lib/libgmpxx.a" \
           bash ./configure --with-gui=qt5 --with-incompatible-bdb --disable-tests --disable-bench
           make -j"$(sysctl -n hw.ncpu)"
       - name: Build macOS app and DMG
