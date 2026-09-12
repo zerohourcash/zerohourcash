@@ -1,0 +1,113 @@
+name: ZHCASH Evolution platform releases
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v1.0.0-platform'
+
+permissions:
+  contents: write
+
+env:
+  PACKAGE_VERSION: '1.0.0'
+
+jobs:
+  ubuntu-qt:
+    name: Ubuntu Qt x86_64
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install Ubuntu Qt build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential libtool autotools-dev automake pkg-config \
+            libssl-dev libevent-dev bsdmainutils git cmake libboost-all-dev \
+            libgmp3-dev libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev \
+            qttools5-dev-tools libprotobuf-dev protobuf-compiler qrencode \
+            libdb-dev libdb++-dev python3-zmq
+      - name: Configure and build Qt wallet
+        run: |
+          set -euxo pipefail
+          ./autogen.sh
+          ./configure --with-gui=qt5 --with-incompatible-bdb --disable-tests --disable-bench
+          make -j"$(nproc)"
+      - name: Package Ubuntu Qt release
+        run: |
+          set -euxo pipefail
+          mkdir -p dist/zhcash-evolution-${PACKAGE_VERSION}-linux-x86_64-ubuntu22.04-qt/bin
+          install -m 0755 src/zerohour-qt dist/zhcash-evolution-${PACKAGE_VERSION}-linux-x86_64-ubuntu22.04-qt/bin/
+          install -m 0755 src/zerohourd dist/zhcash-evolution-${PACKAGE_VERSION}-linux-x86_64-ubuntu22.04-qt/bin/
+          install -m 0755 src/zerohour-cli dist/zhcash-evolution-${PACKAGE_VERSION}-linux-x86_64-ubuntu22.04-qt/bin/
+          tar -C dist -czf dist/zhcash-evolution-${PACKAGE_VERSION}-linux-x86_64-ubuntu22.04-qt.tar.gz zhcash-evolution-${PACKAGE_VERSION}-linux-x86_64-ubuntu22.04-qt
+          sha256sum dist/*.tar.gz > dist/SHA256SUMS-ubuntu-qt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zhcash-ubuntu-qt
+          path: dist/*
+
+  macos-qt:
+    name: macOS Qt x86_64
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install macOS build dependencies
+        run: |
+          brew update
+          brew install automake berkeley-db@4 boost miniupnpc openssl@3 pkg-config protobuf qt@5 libevent qrencode gmp
+          brew link --force --overwrite qt@5 berkeley-db@4
+      - name: Configure and build Qt wallet
+        run: |
+          set -euxo pipefail
+          export PATH="$(brew --prefix qt@5)/bin:$(brew --prefix berkeley-db@4)/bin:$PATH"
+          export CPPFLAGS="-I$(brew --prefix berkeley-db@4)/include -I$(brew --prefix openssl@3)/include"
+          export LDFLAGS="-L$(brew --prefix berkeley-db@4)/lib -L$(brew --prefix openssl@3)/lib"
+          ./autogen.sh
+          ./configure --with-gui=qt5 --with-incompatible-bdb --disable-tests --disable-bench
+          make -j"$(sysctl -n hw.ncpu)"
+      - name: Build macOS app and DMG
+        run: |
+          set -euxo pipefail
+          make deploy
+          app="ZHCASH-Qt.app"
+          test -d "$app"
+          ditto -c -k --sequesterRsrc --keepParent "$app" "ZHCASH-Qt-${PACKAGE_VERSION}-macos-x86_64.app.zip"
+          test -f *.dmg
+          mv *.dmg "zhcash-evolution-${PACKAGE_VERSION}-macos-x86_64-qt.dmg"
+          sha256sum *.dmg *.zip > SHA256SUMS-macos-qt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zhcash-macos-qt
+          path: |
+            *.dmg
+            *.zip
+            SHA256SUMS-macos-qt
+
+  release:
+    name: Publish platform release
+    needs: [ubuntu-qt, macos-qt]
+    if: startsWith(github.ref, 'refs/tags/v1.0.0-platform')
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+      - name: Create combined checksums
+        run: |
+          set -euxo pipefail
+          find release-assets -type f \( -name '*.tar.gz' -o -name '*.dmg' -o -name '*.zip' \) -print0 | sort -z | xargs -0 sha256sum > release-assets/SHA256SUMS
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euxo pipefail
+          gh release create v1.0.0-platform release-assets/* \
+            --repo "${GITHUB_REPOSITORY}" \
+            --title 'ZHCASH Evolution v1.0.0 platform builds' \
+            --notes 'Ubuntu Qt x86_64 and macOS Qt x86_64 builds of the v1.0.0 node source. SHA256SUMS is included.'
