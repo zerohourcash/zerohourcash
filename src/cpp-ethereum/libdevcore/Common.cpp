@@ -38,7 +38,10 @@ void InvariantChecker::checkInvariants(HasInvariants const* _this, char const* _
     if (!_this->invariants())
     {
         cwarn << (_pre ? "Pre" : "Post") << "invariant failed in" << _fn << "at" << _file << ":" << _line;
-        ::boost::exception_detail::throw_exception_(FailedInvariant(), _fn, _file, _line);
+        // Boost 1.74+ no longer exposes the internal throw_exception_ helper
+        // used by the original cpp-ethereum code.  Use the supported public
+        // macro so invariant failures remain typed exceptions on all builds.
+        BOOST_THROW_EXCEPTION(FailedInvariant());
     }
 }
 
