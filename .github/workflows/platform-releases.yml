@@ -32,8 +32,8 @@ jobs:
       - name: Configure and build Qt wallet
         run: |
           set -euxo pipefail
-          ./autogen.sh
-          ./configure --with-gui=qt5 --with-incompatible-bdb --disable-tests --disable-bench
+          bash ./autogen.sh
+          bash ./configure --with-gui=qt5 --with-incompatible-bdb --disable-tests --disable-bench
           make -j"$(nproc)"
       - name: Package Ubuntu Qt release
         run: |
@@ -67,8 +67,8 @@ jobs:
           export PATH="$(brew --prefix qt@5)/bin:$(brew --prefix berkeley-db@4)/bin:$PATH"
           export CPPFLAGS="-I$(brew --prefix berkeley-db@4)/include -I$(brew --prefix openssl@3)/include"
           export LDFLAGS="-L$(brew --prefix berkeley-db@4)/lib -L$(brew --prefix openssl@3)/lib"
-          ./autogen.sh
-          ./configure --with-gui=qt5 --with-incompatible-bdb --disable-tests --disable-bench
+          bash ./autogen.sh
+          bash ./configure --with-gui=qt5 --with-incompatible-bdb --disable-tests --disable-bench
           make -j"$(sysctl -n hw.ncpu)"
       - name: Build macOS app and DMG
         run: |
