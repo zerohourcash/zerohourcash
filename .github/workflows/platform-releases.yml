@@ -26,9 +26,10 @@ jobs:
           sudo apt-get install -y \
             build-essential libtool autotools-dev automake pkg-config \
             libssl-dev libevent-dev bsdmainutils git cmake libboost-all-dev \
-            libgmp3-dev libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev \
-            qttools5-dev-tools libprotobuf-dev protobuf-compiler qrencode \
-            libdb-dev libdb++-dev python3-zmq
+            libgmp-dev libqt5gui5 libqt5core5a libqt5dbus5 qtbase5-dev \
+            qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler \
+            qrencode libqrencode-dev libdb-dev libdb++-dev libminiupnpc-dev \
+            libzmq3-dev python3-zmq
       - name: Configure and build Qt wallet
         run: |
           set -euxo pipefail
