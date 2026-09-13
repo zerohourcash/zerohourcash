@@ -44,7 +44,7 @@ jobs:
         run: |
           set -euxo pipefail
           mkdir -p dist/zhcash-evolution-${PACKAGE_VERSION}-linux-x86_64-ubuntu22.04-qt/bin
-          install -m 0755 src/zerohour-qt dist/zhcash-evolution-${PACKAGE_VERSION}-linux-x86_64-ubuntu22.04-qt/bin/
+          install -m 0755 src/qt/zerohour-qt dist/zhcash-evolution-${PACKAGE_VERSION}-linux-x86_64-ubuntu22.04-qt/bin/
           install -m 0755 src/zerohourd dist/zhcash-evolution-${PACKAGE_VERSION}-linux-x86_64-ubuntu22.04-qt/bin/
           install -m 0755 src/zerohour-cli dist/zhcash-evolution-${PACKAGE_VERSION}-linux-x86_64-ubuntu22.04-qt/bin/
           tar -C dist -czf dist/zhcash-evolution-${PACKAGE_VERSION}-linux-x86_64-ubuntu22.04-qt.tar.gz zhcash-evolution-${PACKAGE_VERSION}-linux-x86_64-ubuntu22.04-qt
