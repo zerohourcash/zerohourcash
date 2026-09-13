@@ -7,6 +7,9 @@
 #include <interfaces/node.h>
 #include <interfaces/handler.h>
 #include <algorithm>
+#include <boost/bind/bind.hpp>
+
+using namespace boost::placeholders;
 
 #include <QDateTime>
 #include <QFont>
@@ -653,4 +656,3 @@ void TokenItemModel::updateBalance(const TokenItemEntry &entry)
     QMetaObject::invokeMethod(worker, "updateType", Qt::QueuedConnection,  Q_ARG(QString, hash), Q_ARG(QString, entry.contractAddress));
 
 }
-
