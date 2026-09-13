@@ -34,6 +34,9 @@
 #include <QSet>
 #include <QTimer>
 #include <QFile>
+#include <boost/bind/bind.hpp>
+
+using namespace boost::placeholders;
 
 class WalletWorker : public QObject
 {
