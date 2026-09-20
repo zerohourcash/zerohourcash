@@ -29,6 +29,9 @@ NetworkStyle::NetworkStyle(const QString &_appName, const int iconColorHueShift,
     // load pixmap
     QPixmap pixmap(":/icons/bitcoin");
 
+    // macOS uses the same brand asset in Finder and Dock. Network names remain
+    // visible in the window title; avoid recoloring the app after launch.
+#ifndef Q_OS_MAC
     if(iconColorHueShift != 0 && iconColorSaturationReduction != 0)
     {
         // generate QImage from QPixmap
@@ -71,6 +74,10 @@ NetworkStyle::NetworkStyle(const QString &_appName, const int iconColorHueShift,
         pixmap.convertFromImage(img);
     }
 
+#else
+    Q_UNUSED(iconColorHueShift);
+    Q_UNUSED(iconColorSaturationReduction);
+#endif
     appIcon             = QIcon(pixmap);
     trayAndWindowIcon   = QIcon(pixmap.scaled(QSize(256,256)));
 }

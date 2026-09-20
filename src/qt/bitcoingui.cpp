@@ -202,7 +202,7 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
     QString curStyle = QApplication::style()->metaObject()->className();
     if(curStyle == "QWindowsStyle" || curStyle == "QWindowsXPStyle")
     {
-        progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
+        progressBar->setStyleSheet("QProgressBar { background-color: #2b3036; border: 1px solid #414850; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #53606d, stop: 1 #cbd2d9); border-radius: 7px; margin: 0px; }");
     }
 
     statusBar()->addWidget(progressBarLabel);
@@ -534,6 +534,16 @@ void BitcoinGUI::createMenuBar()
         settings->addSeparator();
     }
     settings->addAction(optionsAction);
+#ifdef Q_OS_MAC
+    if (walletFrame) {
+        QAction* soundAction = settings->addAction(QString::fromUtf8("Звук пополнения"));
+        soundAction->setCheckable(true);
+        soundAction->setChecked(QSettings().value("fIncomingTransactionSound", true).toBool());
+        connect(soundAction, &QAction::toggled, this, [](bool enabled) {
+            QSettings().setValue("fIncomingTransactionSound", enabled);
+        });
+    }
+#endif
 
     QMenu* window_menu = appMenuBar->addMenu(tr("&Window"));
 
@@ -1369,6 +1379,13 @@ void BitcoinGUI::dropEvent(QDropEvent *event)
 
 bool BitcoinGUI::eventFilter(QObject *object, QEvent *event)
 {
+#ifdef Q_OS_MAC
+    // Refresh all dock areas after Cocoa applies a resize. Legacy Qt can retain
+    // stale backing-store pixels when the title/navigation docks are relaid out.
+    if (object == this && event->type() == QEvent::Resize) {
+        QTimer::singleShot(0, this, [this] { update(); });
+    }
+#endif
     // Catch status tip events
     if (event->type() == QEvent::StatusTip)
     {

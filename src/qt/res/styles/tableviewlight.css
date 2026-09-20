@@ -2,7 +2,7 @@
 Table View light CSS
 --------------------------------------------*/
 QHeaderView{
-    color: #5a5a5d;
+    color: #87909b;
     background-color: #e1e1e1;
     border: none;
 }
@@ -41,7 +41,7 @@ QTableView::item{
 QTableView::item:selected{
     qproperty-showGrid: false;
     background-color: #ffffff;
-    color: #5a5a5d;
+    color: #87909b;
 }
 
 /*--------------------------------------------

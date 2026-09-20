@@ -89,7 +89,7 @@ PlatformStyle::PlatformStyle(const QString &_name, bool _imagesOnButtons, bool _
 {
     // Determine icon highlighting color
     if (colorizeIcons) {
-        singleColor = 0x008ac8;
+        singleColor = 0xcbd2d9;
     }
     // Determine text color
     textColor = 0xe6f0f0;

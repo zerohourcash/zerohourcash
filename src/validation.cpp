@@ -1249,6 +1249,12 @@ bool CheckHeaderProof(const CBlockHeader& block, const Consensus::Params& consen
 
 bool CheckIndexProof(const CBlockIndex& block, const Consensus::Params& consensusParams)
 {
+    // Match CheckHeaderProof/CheckBlock: the configured genesis is a trusted
+    // anchor. In particular, regtest's genesis is not mined to its nBits target.
+    // Checking its PoW only on database reload made every regtest restart fail.
+    if (block.nHeight == 0 && block.GetBlockHash() == consensusParams.hashGenesisBlock) {
+        return true;
+    }
     // Get the hash of the proof
     // After validating the PoS block the computed hash proof is saved in the block index, which is used to check the index
     uint256 hashProof = block.IsProofOfWork() ? block.GetBlockHash() : block.hashProof;

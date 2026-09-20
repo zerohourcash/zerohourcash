@@ -8,8 +8,8 @@ QTreeWidget {
 }
 QTreeView{
     color: #C5C5C5;
-    background-color: #2e2e2e;
-    alternate-background-color: #393939;
+    background-color: #23272c;
+    alternate-background-color: #30363d;
     border: none;
     font: normal;
     qproperty-showGrid: false;
@@ -37,7 +37,7 @@ QScrollBar:vertical {
 }
 QScrollBar::handle:vertical {
     border: none;
-    background: #2e2e2e;
+    background: #23272c;
     border-radius: 0px;
     min-height: 35px;
 }
@@ -52,7 +52,7 @@ QScrollBar:horizontal {
 }
 QScrollBar::handle:horizontal {
     border: none;
-    background: #2e2e2e;
+    background: #23272c;
     border-radius: 0px;
     min-width: 35px;
 }

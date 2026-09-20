@@ -3,6 +3,8 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <qt/walletview.h>
+#include <qt/incomingtransactionsound.h>
+#include <qt/transactionrecord.h>
 
 #include <qt/addressbookpage.h>
 #include <qt/askpassphrasedialog.h>
@@ -187,7 +189,7 @@ void WalletView::setWalletModel(WalletModel *_walletModel)
     }
 }
 
-void WalletView::processNewTransaction(const QModelIndex& parent, int start, int /*end*/)
+void WalletView::processNewTransaction(const QModelIndex& parent, int start, int end)
 {
     // Prevent balloon-spam when initial block download is in progress
     if (!walletModel || !clientModel || clientModel->node().isInitialBlockDownload())
@@ -196,6 +198,16 @@ void WalletView::processNewTransaction(const QModelIndex& parent, int start, int
     TransactionTableModel *ttm = walletModel->getTransactionTableModel();
     if (!ttm || ttm->processingQueuedTransactions())
         return;
+
+    // Existing initial-sync and queued-history guards above also suppress sound.
+    for (int row = start; row <= end; ++row) {
+        const QModelIndex item = ttm->index(row, 0, parent);
+        const int category = item.data(TransactionTableModel::TypeRole).toInt();
+        const qint64 credit = ttm->index(row, TransactionTableModel::Amount, parent).data(Qt::EditRole).toLongLong();
+        if (credit > 0 && (category == TransactionRecord::RecvWithAddress || category == TransactionRecord::RecvFromOther || category == TransactionRecord::ContractRecv)) {
+            PlayIncomingTransactionSound(walletModel->getWalletName() + "|" + item.data(TransactionTableModel::TxHashRole).toString());
+        }
+    }
 
     QString date = ttm->index(start, TransactionTableModel::Date, parent).data().toString();
     qint64 amount = ttm->index(start, TransactionTableModel::Amount, parent).data(Qt::EditRole).toULongLong();
@@ -229,6 +241,7 @@ void WalletView::processNewTokenTransaction(const QModelIndex &parent, int start
     {
     case TokenTransactionRecord::RecvWithAddress:
     case TokenTransactionRecord::RecvFromOther:
+        PlayIncomingTransactionSound(walletModel->getWalletName() + "|" + index.data(TokenTransactionTableModel::TxHashRole).toString());
         title = tr("Incoming transaction");
         break;
     default:

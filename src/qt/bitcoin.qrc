@@ -165,4 +165,7 @@
         <file alias="toolbutton_down_arrow">res/styles/app-icons/toolbutton_down_arrow.png</file>
         <file alias="toolbutton_right_arrow">res/styles/app-icons/toolbutton_right_arrow.png</file>
     </qresource>
+    <qresource prefix="/sounds">
+        <file alias="cash-register.mp3">res/sounds/cash-register.mp3</file>
+    </qresource>
 </RCC>

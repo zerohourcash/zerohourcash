@@ -66,12 +66,12 @@ public:
         QString typeString = ind.data(Qt::DisplayRole).toString();
 
         QRect mainRect = option.rect;
-        QColor txColor = index.row() % 2 ? QColor("#393939") : QColor("#2e2e2e");
+        QColor txColor = index.row() % 2 ? QColor("#2b3036") : QColor("#23272c");
         painter->fillRect(mainRect, txColor);
 
         QPen pen;
         pen.setWidth(2);
-        pen.setColor(QColor("#009ee5"));
+        pen.setColor(QColor("#cbd2d9"));
         painter->setPen(pen);
         bool selected = option.state & QStyle::State_Selected;
         if(selected)
@@ -244,12 +244,18 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     ui->labelWalletStatus->setIcon(icon);
     ui->labelTokenStatus->setIcon(icon);
 
+    for (QLabel* amount : {ui->labelBalance, ui->labelWatchAvailable}) {
+        QFont amountFont = amount->font();
+        amountFont.setPointSizeF(amountFont.pointSizeF() * 1.5);
+        amount->setFont(amountFont);
+    }
+
     QFont font = ui->labelTotal->font();
-    font.setPointSizeF(font.pointSizeF() * 1.5);
+    font.setPointSizeF(font.pointSizeF() * 1.9);
     ui->labelTotal->setFont(font);
 
     QFont fontWatch = ui->labelWatchTotal->font();
-    fontWatch.setPointSizeF(fontWatch.pointSizeF() * 1.5);
+    fontWatch.setPointSizeF(fontWatch.pointSizeF() * 1.9);
     ui->labelWatchTotal->setFont(fontWatch);
 
     ui->labelDate->setFixedWidth(DATE_WIDTH);

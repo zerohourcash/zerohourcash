@@ -181,3 +181,10 @@ included in this repository because it is distributed under Apple's license.
 The canonical target triplet is `aarch64-apple-darwin`; `arm64-apple-darwin` is
 not accepted by the bundled `config.sub`.
     
+
+### Evolution visual refresh (macOS)
+
+The refreshed desktop build preserves the complete existing Qt wallet and adds
+a graphite palette and the ZHC Wallet Desktop incoming-transfer MP3.
+The overview shows balances and transactions directly, without a decorative banner. See [the implementation, build and verification notes](doc/evolution-visual-refresh.md).
+The macOS release retains the original complete Qt wallet.

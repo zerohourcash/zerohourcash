@@ -197,6 +197,7 @@ BITCOIN_QT_H = \
   qt/optionsdialog.h \
   qt/optionsmodel.h \
   qt/overviewpage.h \
+  qt/incomingtransactionsound.h \
   qt/paymentrequestplus.h \
   qt/paymentserver.h \
   qt/peertablemodel.h \
@@ -437,6 +438,7 @@ qt/res/styles/buttonblack.css \
 qt/res/styles/toolgroupblack.css \
 qt/res/styles/toolblack.css \
 qt/res/styles/toolsubblack.css \
+qt/res/sounds/cash-register.mp3 \
 qt/res/styles/app.css \
 qt/res/styles/scrollbarlight.css \
 qt/res/styles/buttonwhite.css \

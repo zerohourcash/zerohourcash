@@ -531,6 +531,11 @@ int GuiMain(int argc, char* argv[])
     QApplication::setAttribute(Qt::AA_DontShowIconsInMenus);
 #endif
 
+#ifdef Q_OS_MAC
+    // Legacy Cocoa backing-store updates leave offset/duplicated fragments on
+    // current macOS. Select Qt's layer-backed renderer before QApplication.
+    qputenv("QT_MAC_WANTS_LAYER", "1");
+#endif
     BitcoinApplication app(*node, argc, argv);
 
     // Register meta types used for QMetaObject::invokeMethod

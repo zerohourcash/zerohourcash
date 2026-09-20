@@ -4,14 +4,14 @@ Button Transparent bordered CSS
 QPushButton {
     color: white; 
     background-color: transparent;
-    border: 1px solid #545454;
-    border-radius: 0px;
+    border: 1px solid #3b444e;
+    border-radius: 6px;
     min-width: 5em;
     padding: 6px;
     margin: 0px;
 }
 QPushButton:hover{
-    border: 1px solid #7e7e7e;
+    border: 1px solid #cbd2d9;
 }
 QPushButton:pressed {
     border: 1px solid #6b6b6b;

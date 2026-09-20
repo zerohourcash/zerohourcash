@@ -14,7 +14,7 @@
 #include <QtGlobal>
 
 static const QString STYLE_FORMAT = ":/styles/%1";
-static const QColor LINK_COLOR = "#2d9ad0";
+static const QColor LINK_COLOR = "#cbd2d9";
 
 class ZHCASHStyle : public QProxyStyle
 {
