@@ -17,6 +17,9 @@ TitleBar::TitleBar(const PlatformStyle *platformStyle, QWidget *parent) :
     ui(new Ui::TitleBar)
 {
     ui->setupUi(this);
+    ui->widgetLogo->setMinimumWidth(0);
+    ui->widgetLogo->setMaximumWidth(QWIDGETSIZE_MAX);
+    ui->widgetLogo->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
     // Set size policy
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     ui->tabWidget->setDrawBase(false);

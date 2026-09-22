@@ -12,9 +12,9 @@ namespace NavigationBar_NS
 static const int ToolButtonWidth = 220;
 static const int ToolButtonHeight = 54;
 static const int ToolButtonIconSize = 32;
-static const int MarginLeft = 0;
-static const int MarginRight = 0;
-static const int MarginTop = 0;
+static const int MarginLeft = 8;
+static const int MarginRight = 8;
+static const int MarginTop = 8;
 static const int MarginBottom = 8;
 static const int ButtonSpacing = 2;
 static const int SubNavPaddingRight = 40;
@@ -69,19 +69,19 @@ protected:
             QColor color;
             if(!(toolbutton->state & QStyle::State_Enabled))
             {
-                color = 0x1a96ce;
+                color = 0x777a77;
             }
             else if(toolbutton->state & (QStyle::State_Sunken | QStyle::State_On))
             {
-                color = 0xe5f3f9;
+                color = 0xededed;
             }
             else if(toolbutton->state & QStyle::State_MouseOver)
             {
-                color = 0xb3dcef;
+                color = 0xe3e3e3;
             }
             else
             {
-                color = 0x7fc4e3;
+                color = 0xbcbebc;
             }
 
             // Determine area
@@ -137,6 +137,7 @@ NavigationBar::NavigationBar(QWidget *parent) :
     m_subBar(false),
     m_built(false)
 {
+    setAttribute(Qt::WA_StyledBackground, true);
 }
 
 void NavigationBar::addAction(QAction *action)
@@ -168,6 +169,7 @@ void NavigationBar::buildUi()
     {
         // Set it visible if main component
         setVisible(!m_subBar);
+        setProperty("subNavigation", m_subBar);
 
         // Create new layout for the bar
         QActionGroup* actionGroup = new QActionGroup(this);

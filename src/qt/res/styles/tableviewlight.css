@@ -2,7 +2,7 @@
 Table View light CSS
 --------------------------------------------*/
 QHeaderView{
-    color: #87909b;
+    color: #8e918e;
     background-color: #e1e1e1;
     border: none;
 }
@@ -41,7 +41,7 @@ QTableView::item{
 QTableView::item:selected{
     qproperty-showGrid: false;
     background-color: #ffffff;
-    color: #87909b;
+    color: #8e918e;
 }
 
 /*--------------------------------------------
@@ -86,3 +86,25 @@ QAbstractScrollArea::corner {
     background: #747474;
     border: 0px;
 }
+
+/* Neutral dark surfaces matching the desktop reference. */
+QTableView { background: #292c29; alternate-background-color: #2e302e; color: #d1d1d1; border-color: #3f423f; }
+QTableView::item:selected { background: #3b3e3b; color: #ededed; }
+QHeaderView, QHeaderView::section { background: #292c29; color: #a4a6a4; }
+
+QTableView, QTreeView { background: #181818; alternate-background-color: #202020; color: #e3e3e3; border: none; }
+QTableView::item, QTreeView::item { color: #e3e3e3; }
+QTableView::item:selected, QTreeView::item:selected { background: #353835; color: #ffffff; }
+QHeaderView, QHeaderView::section { background: #181818; color: #bcbcbc; border: none; border-bottom: 1px solid #2c2c2c; }
+QAbstractScrollArea::corner { background: #181818; }
+
+/* Compact neutral scrollbars, including per-widget table overrides. */
+QScrollBar:horizontal { background: #181818; height: 10px; padding: 2px; margin: 0px; border: none; }
+QScrollBar:vertical { background: #181818; width: 10px; padding: 2px; margin: 0px; border: none; }
+QScrollBar::handle { background: #454545; border: none; border-radius: 3px; }
+QScrollBar::handle:horizontal { min-width: 24px; }
+QScrollBar::handle:vertical { min-height: 24px; }
+QScrollBar::handle:hover { background: #666666; }
+QScrollBar::add-line, QScrollBar::sub-line { width: 0px; height: 0px; border: none; background: transparent; }
+QScrollBar::add-page, QScrollBar::sub-page { background: transparent; }
+QAbstractScrollArea::corner { background: #181818; border: none; }

@@ -3,7 +3,7 @@ Tool Button Black CSS
 --------------------------------------------*/
 QToolButton {
     color: rgba(255, 255, 255, 50%);
-    background: #353e47;
+    background: transparent;
     border: 0px solid transparent;
     border-radius: 6px;
     padding: 6px 30px 6px 6px;
@@ -11,16 +11,21 @@ QToolButton {
 }
 QToolButton:pressed, QToolButton:hover:pressed, QToolButton:checked {
     color: rgba(255, 255, 255, 90%);
-    background: #353e47;
+    background: transparent;
     background-image: url(":/styles/app-icons/toolbutton_right_arrow");
     background-position: center right;
     background-repeat: no-repeat;
 }
 QToolButton:hover:!checked {
     color: rgba(255, 255, 255, 70%);
-    background: #353e47;
+    background: transparent;
 }
 QToolButton:disabled {
-    color: rgba(255, 255, 255, 10%);
-    background: rgba(83, 96, 109, 40%);
+    color: rgba(255, 255, 255, 50%);
+    background: transparent;
 }
+
+QToolButton:checked, QToolButton:hover:!checked { background-color: transparent; }
+
+/* Highlight submenus only while the pointer is over them. */
+QToolButton:hover:!checked, QToolButton:hover:checked, QToolButton:hover:pressed { background-color: #2d302d; }

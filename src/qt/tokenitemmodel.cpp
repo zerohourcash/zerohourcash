@@ -160,12 +160,10 @@ private Q_SLOTS:
                 tokenTx.block_number = event.blockNumber;
                 tokenTx.contractType = event.contractType;
 
-		QString tokenId = BitcoinUnits::formatTokenWithUnit("", 0, dev::u2s(uintTou256(event.value)), false);
-		std::string result = getTokenURI(event.address, std::to_string(tokenId.toInt()));
-		if(result != "ERROR")
-		{
-		    tokenTx.tokenURI = result;
-		}
+                // Keep all 256 bits: NFT identifiers are not signed 32-bit amounts.
+                const std::string tokenId = uintTou256(event.value).convert_to<std::string>();
+                const std::string uri = getTokenURI(event.address, tokenId);
+                if (uri != "ERROR") tokenTx.tokenURI = uri;
 
                 walletModel->wallet().addTokenTxEntry(tokenTx, false);
             }
@@ -196,42 +194,13 @@ private Q_SLOTS:
     void updateType(QString hash, QString contractAddress)
     {
         tokenAbi.setAddress(contractAddress.toStdString());
-        std::string strType;
-	int error;
-	QString resultJson;
-        if(tokenAbi.tokenURI(strType, resultJson))
-        {
-	    if(resultJson.size() != 0)
-	    {
-		QJsonParseError errorPtr;
-		QJsonDocument jsonDoc = QJsonDocument::fromJson(resultJson.toUtf8(), &errorPtr);
-		QJsonObject jsonObject = jsonDoc.object();
-		QJsonValue executionResult = jsonObject["executionResult"];
-		QJsonObject exceptedObject = executionResult.toObject();
-		QJsonValue excepted = exceptedObject["excepted"];
-		QJsonValue exceptedMessage = exceptedObject["exceptedMessage"];
-
-		if(excepted.toString() == "BadInstruction")
-		{
-		    error = 1;
-		}
-		else if(exceptedMessage.toString().size() > 0)
-		{
-		    error = 1;
-		}
-		else
-		{
-		    error = 0;
-		}
-	    }
-	    else
-	    {
-		error = 1;
-	    }
-
-            QString contractType = QString::fromStdString(strType);
-            Q_EMIT typeChanged(hash, contractType, error);
+        if (tokenAbi.isNFT()) {
+            Q_EMIT typeChanged(hash, QStringLiteral("ZRC721"), 0);
+            return;
         }
+        std::string decimals;
+        const bool fungible = tokenAbi.decimals(decimals);
+        Q_EMIT typeChanged(hash, QString(), fungible ? 0 : 1);
     }
 
 Q_SIGNALS:

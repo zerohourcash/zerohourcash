@@ -44,7 +44,7 @@ public:
 	QString labelTypeText;
 	if(tokenTypeError == "1")
 	{
-	    labelTypeText = " ( loading... )";
+	    labelTypeText = ""; // Metadata failures must not masquerade as endless loading.
 	}
 	else
 	{
@@ -63,11 +63,11 @@ public:
         bool selected = option.state & QStyle::State_Selected;
         if(selected)
         {
-            painter->fillRect(mainRect,QColor("#009ee5"));
+            painter->fillRect(mainRect,QColor("#353835"));
         }
         else
         {
-            painter->fillRect(mainRect,QColor("#383938"));
+            painter->fillRect(mainRect,QColor("#181818"));
         }
 
         QRect hLineRect(mainRect.left(), mainRect.bottom(), mainRect.width(), 1);
@@ -78,29 +78,30 @@ public:
 
         QFont font = option.font;
         font.setPointSizeF(option.font.pointSizeF() * 1.1);
-        font.setBold(true);
+        font.setWeight(QFont::DemiBold);
         painter->setFont(font);
         QColor amountColor("#ffffff");
         painter->setPen(amountColor);
 
-        QFontMetrics fmName(option.font);
+        QFontMetrics fmName(font);
+        const int symbolWidth = qMax(50, mainRect.width() / 2 - 2 * MARGIN);
 
-        QString clippedSymbol = fmName.elidedText(tokenSymbol + labelTypeText, Qt::ElideRight, SYMBOL_WIDTH);
-        QRect tokenSymbolRect(mainRect.left() + MARGIN, mainRect.top() + MARGIN, SYMBOL_WIDTH, mainRect.height() / 2 - MARGIN);
+        QString clippedSymbol = fmName.elidedText(tokenSymbol + labelTypeText, Qt::ElideRight, symbolWidth);
+        QRect tokenSymbolRect(mainRect.left() + MARGIN, mainRect.top() + MARGIN, symbolWidth, mainRect.height() / 2 - MARGIN);
         painter->drawText(tokenSymbolRect, Qt::AlignLeft|Qt::AlignVCenter, clippedSymbol);
 
         int amountWidth = (mainRect.width() - 4 * MARGIN - tokenSymbolRect.width());
         QFontMetrics fmAmount(font);
         QString clippedAmount = fmAmount.elidedText(tokenBalance, Qt::ElideRight, amountWidth);
         QRect tokenBalanceRect(tokenSymbolRect.right() + 2 * MARGIN, tokenSymbolRect.top(), amountWidth, tokenSymbolRect.height());
-        painter->drawText(tokenBalanceRect, Qt::AlignLeft|Qt::AlignVCenter, clippedAmount);
+        painter->drawText(tokenBalanceRect, Qt::AlignRight|Qt::AlignVCenter, clippedAmount);
 
         QFont addressFont = option.font;
         addressFont.setPointSizeF(option.font.pointSizeF() * 0.8);
         painter->setFont(addressFont);
         painter->setPen(foreground);
         QRect receiveAddressRect(mainRect.left() + MARGIN, tokenSymbolRect.bottom(), mainRect.width() - 2 * MARGIN, mainRect.height() / 2 - 2 * MARGIN);
-        painter->drawText(receiveAddressRect, Qt::AlignLeft|Qt::AlignVCenter, receiveAddress);
+        painter->drawText(receiveAddressRect, Qt::AlignLeft|Qt::AlignVCenter, QFontMetrics(addressFont).elidedText(receiveAddress, Qt::ElideMiddle, receiveAddressRect.width()));
 
         painter->restore();
     }

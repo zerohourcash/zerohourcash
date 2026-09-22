@@ -6,11 +6,22 @@ staking, contracts and ZRC token operations remain in the original implementatio
 
 ## Appearance
 
-The palette uses deep graphite surfaces, softly contrasting charcoal panels,
-muted steel actions and silver highlights. The overview shows balances and
+The palette follows the supplied macOS desktop reference: neutral `#181818`
+canvas, `#292c29` sidebar/panels, `#353535` inputs, `#3b3e3b` selection
+and soft `#e3e3e3` text. Legacy light menus, tables and tooltip surfaces also
+use the dark palette; transaction status/error colors retain their meaning. The overview shows balances and
 transactions directly; the planet banner and its Evolution heading have been
 removed. Available-balance figures are enlarged by 50%; the total uses 1.9×
 the base font size, with unchanged caption sizing.
+
+Overview balances, tokens and recent transactions share the dark canvas without
+contrasting card backgrounds or outlines.
+
+The navigation dock fills the available window height with a flat dark surface.
+Buttons use quiet flat hover/selection states, without glass highlights or gradients.
+Overview sections are separated by thin #2c2c2c horizontal rules with inset edges.
+UI icons, including status indicators and QSS arrows, use light glyphs; disabled
+controls remain visible in gray and transaction statuses retain light semantic colors.
 
 The Cocoa layer-backed renderer is selected before QApplication initialization to avoid
 partial-repaint artifacts observed on macOS 26 with this legacy Qt build.
@@ -88,3 +99,18 @@ Finder and the Qt runtime use the same current red ZHC Wallet brand asset,
 red circle with transparent outer corners. The macOS bundle includes normal and Retina sizes.
 On macOS the app icon is not hue-shifted for test networks; the window title
 continues to identify testnet/regtest.
+
+## Minimal theme verification (2026-09-22)
+
+Inspected overview, send, receive, history, all three contract pages, token pages,
+all four settings tabs and diagnostic tabs in an isolated offline regtest wallet.
+Diagnostic resize now schedules a full background/child repaint on macOS, where
+old tab positions could remain in the backing store. Peer headings receive widths
+based on translated text; overflowing columns remain horizontally scrollable.
+Empty peer details hide their scroll container. Table scrollbars use the same
+compact dark treatment as the rest of the application. No live transactions were
+performed during these appearance checks.
+
+Typography uses the native macOS general UI font at 13 pt, including console,
+addresses and signatures. Buttons retain normal capitalization; large balances
+use semibold weight. No monospaced override is applied.

@@ -534,6 +534,22 @@
     </layout>
    </item>
    <item>
+    <widget class="QWidget" name="overviewSectionDivider">
+     <layout class="QVBoxLayout" name="overviewDividerLayout">
+      <property name="leftMargin"><number>10</number></property>
+      <property name="rightMargin"><number>10</number></property>
+      <property name="topMargin"><number>12</number></property>
+      <property name="bottomMargin"><number>2</number></property>
+      <item>
+       <widget class="QFrame" name="overviewDividerLine">
+        <property name="minimumSize"><size><width>0</width><height>1</height></size></property>
+        <property name="maximumSize"><size><width>16777215</width><height>1</height></size></property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer_4">
      <property name="orientation">
       <enum>Qt::Vertical</enum>

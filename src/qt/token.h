@@ -64,6 +64,7 @@ public:
     bool burn(const std::string& _value, bool& success, bool sendTo = false);
     bool balanceOf(std::string& result, bool sendTo = false);
     bool balanceOf(const std::string& spender, std::string& result, bool sendTo = false);
+    bool isNFT();
     bool tokenURI(std::string &result, QString &jsonResult, std::string tokenId = "1");
     bool burnFrom(const std::string& _from, const std::string& _value, bool& success, bool sendTo = false);
     bool symbol(std::string& result, bool sendTo = false);
@@ -80,6 +81,7 @@ public:
     QString resultJsonOut;
 
 private:
+    bool queryInterface(const std::string& interfaceId, bool& supported);
     bool exec(const std::vector<std::string>& input, int func, std::vector<std::string>& output, bool sendTo);
     bool execEvents(int64_t fromBlock, int64_t toBlock, int func, std::vector<TokenEvent> &tokenEvents);
 

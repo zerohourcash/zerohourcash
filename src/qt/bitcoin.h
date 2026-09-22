@@ -10,6 +10,7 @@
 #endif
 
 #include <QApplication>
+#include <QElapsedTimer>
 #include <memory>
 #include <vector>
 
@@ -111,6 +112,7 @@ private:
     ClientModel *clientModel;
     BitcoinGUI *window;
     QTimer *pollShutdownTimer;
+    QElapsedTimer splashDisplayTime;
 #ifdef ENABLE_WALLET
     PaymentServer* paymentServer{nullptr};
     WalletController* m_wallet_controller{nullptr};

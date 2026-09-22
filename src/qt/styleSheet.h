@@ -35,6 +35,8 @@ class StyleSheet
 {
 public:
     static StyleSheet& instance();
+    static QString scaleFontSizes(const QString& style, double factor);
+    static void applyFontScale(int percent);
     void setStyleSheet(QWidget* widget, const QString& style_name);
     void setStyleSheet(QApplication* app, const QString& style_name);
 

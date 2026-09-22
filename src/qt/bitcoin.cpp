@@ -282,7 +282,9 @@ void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
     SplashScreen *splash = new SplashScreen(m_node, nullptr, networkStyle);
     // We don't hold a direct pointer to the splash screen after creation, but the splash
     // screen will take care of deleting itself when finish() happens.
-    splash->show();
+    // A maximized native window keeps the macOS traffic-light controls visible.
+    splash->showMaximized();
+    splashDisplayTime.start();
     connect(this, &BitcoinApplication::splashFinished, splash, &SplashScreen::finish);
     connect(this, &BitcoinApplication::requestedShutdown, splash, &QWidget::close);
 }
@@ -389,16 +391,21 @@ void BitcoinApplication::initializeResult(bool success)
         window->setWalletController(m_wallet_controller);
 #endif
 
-        // If -min option passed, start window minimized (iconified) or minimized to tray
-        if (!gArgs.GetBoolArg("-min", false)) {
-            window->show();
-        } else if (clientModel->getOptionsModel()->getMinimizeToTray() && window->hasTrayIcon()) {
-            // do nothing as the window is managed by the tray icon
-        } else {
-            window->showMinimized();
-        }
-        Q_EMIT splashFinished();
-        Q_EMIT windowShown(window);
+        // Keep the animated splash visible for ten seconds without blocking initialization.
+        const int splashRemaining = splashDisplayTime.isValid()
+            ? qMax(0, 10000 - int(splashDisplayTime.elapsed())) : 0;
+        auto showReadyWindow = [this] {
+            if (m_node.shutdownRequested()) return;
+            Q_EMIT splashFinished();
+            if (!gArgs.GetBoolArg("-min", false)) {
+                window->showMaximized();
+            } else if (!(clientModel->getOptionsModel()->getMinimizeToTray() && window->hasTrayIcon())) {
+                window->showMinimized();
+            }
+            Q_EMIT windowShown(window);
+        };
+        if (splashRemaining > 0) QTimer::singleShot(splashRemaining, this, showReadyWindow);
+        else showReadyWindow();
 
 #ifdef ENABLE_WALLET
         // Now that initialization/startup is done, process any command-line

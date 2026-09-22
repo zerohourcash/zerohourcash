@@ -33,6 +33,9 @@
      </property>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <property name="spacing">
+        <number>24</number>
+       </property>
        <property name="leftMargin">
         <number>10</number>
        </property>
@@ -101,7 +104,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QTextEdit" name="outUri">
+          <widget class="QLabel" name="outUri">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -120,8 +123,11 @@
            <property name="frameShadow">
             <enum>QFrame::Plain</enum>
            </property>
-           <property name="tabChangesFocus">
+           <property name="wordWrap">
             <bool>true</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeft|Qt::AlignTop</set>
            </property>
            <property name="textInteractionFlags">
             <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>

@@ -22,3 +22,20 @@ QPushButton::disabled {
     background: rgba(87, 87, 87, 40%);
     border: 1px solid rgba(45, 45, 46, 40%);
 }
+
+/* Neutral dark surfaces matching the desktop reference. */
+QPushButton { background: #353535; color: #e3e3e3; border-color: #3f423f; }
+QPushButton:hover { background: #3b3e3b; color: #ededed; border-color: #505350; }
+QPushButton:pressed { background: #454845; color: #ededed; }
+QPushButton:disabled { background: #292c29; color: #777a77; border-color: #3f423f; }
+
+/* Subtle glass edge, without reducing label contrast. */
+QPushButton { background: qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #424542,stop:1 #343734); border: 1px solid #585b58; color: #ededed; }
+QPushButton:hover { background: qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #505350,stop:1 #3e413e); border-color: #777a77; color: #ffffff; }
+QPushButton:pressed { background: #303330; border-color: #777a77; color: #ffffff; }
+QPushButton:disabled { background: #292c29; border-color: #3f423f; color: #939693; }
+
+QPushButton { background: #292c29; border: 1px solid #3b3e3b; color: #ededed; }
+QPushButton:hover { background: #353835; border-color: #505350; color: #ffffff; }
+QPushButton:pressed { background: #232523; border-color: #505350; }
+QPushButton:disabled { background: #232523; border-color: #303230; color: #939693; }

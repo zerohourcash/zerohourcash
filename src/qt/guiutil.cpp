@@ -76,9 +76,9 @@ QString dateTimeStr(qint64 nTime)
     return dateTimeStr(QDateTime::fromTime_t((qint32)nTime));
 }
 
-QFont fixedPitchFont()
+QFont contentFont()
 {
-    return QFontDatabase::systemFont(QFontDatabase::FixedFont);
+    return QApplication::font();
 }
 
 // Just some dummy data to generate a convincing random-looking (but consistent) address
@@ -103,7 +103,7 @@ void setupAddressWidget(QValidatedLineEdit *widget, QWidget *parent)
 {
     parent->setFocusProxy(widget);
 
-    widget->setFont(fixedPitchFont());
+    widget->setFont(contentFont());
     // We don't want translators to use own addresses in translations
     // and this is the only place, where this address is supplied.
     widget->setPlaceholderText(QObject::tr("Enter a ZHCASH address (e.g. %1)").arg(

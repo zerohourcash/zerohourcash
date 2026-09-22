@@ -21,6 +21,7 @@ EditContractInfoDialog::EditContractInfoDialog(Mode _mode, QWidget *parent) :
     m_contractABI = new ContractABI();
 
     ui->setupUi(this);
+    ui->ABIEdit->setMinimumHeight(ui->ABIEdit->sizeHint().height() * 2);
 
     SetObjectStyleSheet(ui->buttonBox->button(QDialogButtonBox::Cancel), StyleSheetNames::ButtonWhite);
     SetObjectStyleSheet(ui->buttonBox->button(QDialogButtonBox::Ok), StyleSheetNames::ButtonBlue);

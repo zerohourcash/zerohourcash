@@ -27,6 +27,10 @@
 #include <QMessageBox>
 #include <QSystemTrayIcon>
 #include <QTimer>
+#include <QResizeEvent>
+#include <QSettings>
+#include <QSpinBox>
+#include <QHBoxLayout>
 
 OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     QDialog(parent),
@@ -35,6 +39,36 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     mapper(nullptr)
 {
     ui->setupUi(this);
+    setAutoFillBackground(true);
+    setAttribute(Qt::WA_StyledBackground, true);
+    ui->buttonsContainerWhite->setAutoFillBackground(true);
+    ui->buttonsContainerWhite->setAttribute(Qt::WA_StyledBackground, true);
+
+    auto fontRow = new QHBoxLayout();
+    auto fontLabel = new QLabel(tr("Interface font size"), this);
+    auto smaller = new QPushButton(QStringLiteral("A−"), this);
+    auto larger = new QPushButton(QStringLiteral("A+"), this);
+    auto scale = new QSpinBox(this);
+    scale->setObjectName("interfaceFontScale");
+    scale->setRange(80, 160);
+    scale->setSingleStep(10);
+    scale->setSuffix(" %");
+    scale->setValue(qBound(80, QSettings().value("uiFontScale", 100).toInt(), 160));
+    scale->setAccessibleName(tr("Interface font size"));
+    fontLabel->setBuddy(scale);
+    smaller->setToolTip(tr("Decrease all interface fonts"));
+    larger->setToolTip(tr("Increase all interface fonts"));
+    smaller->setAccessibleName(smaller->toolTip());
+    larger->setAccessibleName(larger->toolTip());
+    connect(smaller, &QPushButton::clicked, scale, &QSpinBox::stepDown);
+    connect(larger, &QPushButton::clicked, scale, &QSpinBox::stepUp);
+    fontRow->addWidget(fontLabel);
+    fontRow->addStretch();
+    fontRow->addWidget(smaller);
+    fontRow->addWidget(scale);
+    fontRow->addWidget(larger);
+    ui->verticalLayout_Display->insertLayout(0, fontRow);
+
 
     ui->logEvents->setEnabled(false);
     SetObjectStyleSheet(ui->resetButton, StyleSheetNames::ButtonWhite);
@@ -299,6 +333,9 @@ void OptionsDialog::on_openBitcoinConfButton_clicked()
 void OptionsDialog::on_okButton_clicked()
 {
     mapper->submit();
+    const int scale = findChild<QSpinBox*>("interfaceFontScale")->value();
+    QSettings().setValue("uiFontScale", scale);
+    StyleSheet::applyFontScale(scale);
     accept();
     updateDefaultProxyNets();
 }
@@ -405,4 +442,16 @@ QValidator::State ProxyAddressValidator::validate(QString &input, int &pos) cons
         return QValidator::Acceptable;
 
     return QValidator::Invalid;
+}
+
+void OptionsDialog::resizeEvent(QResizeEvent *event)
+{
+    QDialog::resizeEvent(event);
+#ifdef Q_OS_MAC
+    // Clear the old button positions after Cocoa relayouts a scaled dialog.
+    QTimer::singleShot(0, this, [this] {
+        update();
+        for (QWidget* child : findChildren<QWidget*>()) child->update();
+    });
+#endif
 }

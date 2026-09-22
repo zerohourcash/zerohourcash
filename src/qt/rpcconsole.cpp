@@ -454,6 +454,8 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
     platformStyle(_platformStyle)
 {
     ui->setupUi(this);
+    setAutoFillBackground(true);
+    setAttribute(Qt::WA_StyledBackground, true);
     QSettings settings;
     if (!restoreGeometry(settings.value("RPCConsoleWindowGeometry").toByteArray())) {
         // Restore failed (perhaps missing setting), center the window
@@ -513,6 +515,7 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
     setTrafficGraphRange(INITIAL_TRAFFIC_GRAPH_MINS);
 
     ui->detailWidget->hide();
+    ui->scrollArea->hide();
     ui->peerHeading->setText(tr("Select a peer to view detailed information."));
 
     consoleFontSize = settings.value(fontSizeSettingsKey, QFontInfo(QFont()).pointSize()).toInt();
@@ -604,7 +607,15 @@ void RPCConsole::setClientModel(ClientModel *model)
         ui->peerWidget->setColumnWidth(PeerTableModel::Address, ADDRESS_COLUMN_WIDTH);
         ui->peerWidget->setColumnWidth(PeerTableModel::Subversion, SUBVERSION_COLUMN_WIDTH);
         ui->peerWidget->setColumnWidth(PeerTableModel::Ping, PING_COLUMN_WIDTH);
-        ui->peerWidget->horizontalHeader()->setStretchLastSection(true);
+        // Leave room for translated headings; retain user-resizable columns.
+        auto* peerHeader = ui->peerWidget->horizontalHeader();
+        peerHeader->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        for (int column = 0; column < model->getPeerTableModel()->columnCount(QModelIndex()); ++column) {
+            const QString title = model->getPeerTableModel()->headerData(column, Qt::Horizontal, Qt::DisplayRole).toString();
+            const int width = peerHeader->fontMetrics().width(title) + 40;
+            ui->peerWidget->setColumnWidth(column, qMax(width, ui->peerWidget->columnWidth(column)));
+        }
+        peerHeader->setStretchLastSection(true);
 
         // create peer table context menu actions
         QAction* disconnectAction = new QAction(tr("&Disconnect"), this);
@@ -806,16 +817,15 @@ void RPCConsole::clear(bool clearHistory)
     }
 
     // Set default style sheet
-    QFontInfo fixedFontInfo(GUIUtil::fixedPitchFont());
+    QFontInfo fixedFontInfo(GUIUtil::contentFont());
     ui->messagesWidget->document()->setDefaultStyleSheet(
         QString(
                 "table { }"
                 "td.time { color: #808080; font-size: %2; padding-top: 3px; } "
                 "td.message { font-family: %1; font-size: %2; white-space:pre-wrap; } "
-                "td.cmd-request { color: #006060; } "
-                "td.cmd-error { color: red; } "
-                ".secwarning { color: red; }"
-                "b { color: #006060; } "
+                "td.cmd-request { color: #9acaca; } "
+                "td.cmd-error { color: #ff9da9; } "
+                "b { color: #9acaca; } "
             ).arg(fixedFontInfo.family(), QString("%1pt").arg(consoleFontSize))
         );
 
@@ -828,10 +838,7 @@ void RPCConsole::clear(bool clearHistory)
     message(CMD_REPLY, (tr("Welcome to the %1 RPC console.").arg(tr(PACKAGE_NAME)) + "<br>" +
                         tr("Use up and down arrows to navigate history, and %1 to clear screen.").arg("<b>"+clsKey+"</b>") + "<br>" +
                         tr("Type %1 for an overview of available commands.").arg("<b>help</b>") + "<br>" +
-                        tr("For more information on using this console type %1.").arg("<b>help-console</b>") +
-                        "<br><span class=\"secwarning\"><br>" +
-                        tr("WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.") +
-                        "</span>"),
+                        tr("For more information on using this console type %1.").arg("<b>help-console</b>")),
                         true);
 }
 
@@ -932,14 +939,8 @@ void RPCConsole::on_lineEdit_returnPressed()
             wallet_model = ui->WalletSelector->itemData(wallet_index).value<WalletModel*>();
         }
 
-        if (m_last_wallet_model != wallet_model) {
-            if (wallet_model) {
-                message(CMD_REQUEST, tr("Executing command using \"%1\" wallet").arg(wallet_model->getWalletName()));
-            } else {
-                message(CMD_REQUEST, tr("Executing command without any wallet"));
-            }
-            m_last_wallet_model = wallet_model;
-        }
+        m_last_wallet_model = wallet_model;
+
 #endif
 
         message(CMD_REQUEST, QString::fromStdString(strFilteredCmd));
@@ -1163,11 +1164,19 @@ void RPCConsole::updateNodeDetail(const CNodeCombinedStats *stats)
     }
 
     ui->detailWidget->show();
+    ui->scrollArea->show();
 }
 
 void RPCConsole::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
+#ifdef Q_OS_MAC
+    // Cocoa may retain the old tab positions while resizing the backing store.
+    QTimer::singleShot(0, this, [this] {
+        update();
+        for (QWidget* child : findChildren<QWidget*>()) child->update();
+    });
+#endif
 }
 
 void RPCConsole::showEvent(QShowEvent *event)
@@ -1273,6 +1282,7 @@ void RPCConsole::clearSelectedNode()
     ui->peerWidget->selectionModel()->clearSelection();
     cachedNodeids.clear();
     ui->detailWidget->hide();
+    ui->scrollArea->hide();
     ui->peerHeading->setText(tr("Select a peer to view detailed information."));
 }
 

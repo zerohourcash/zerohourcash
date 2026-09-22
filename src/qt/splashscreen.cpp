@@ -22,86 +22,68 @@
 #include <QCloseEvent>
 #include <QDesktopWidget>
 #include <QPainter>
+#include <QFile>
+#include <QTimer>
+#include <cmath>
+#include <random>
+#include <QFontDatabase>
+#include <QFontMetricsF>
 #include <QRadialGradient>
 
 
 SplashScreen::SplashScreen(interfaces::Node& node, Qt::WindowFlags f, const NetworkStyle *networkStyle) :
     QWidget(nullptr, f), curAlignment(0), m_node(node)
 {
-    // set sizes
-    int versionTextHeight       = 30;
-    int statusHeight            = 30;
-    int titleAddTextHeight      = 20;
-    float fontFactor            = 1.0;
-    float devicePixelRatio      = 1.0;
-    devicePixelRatio = static_cast<QGuiApplication*>(QCoreApplication::instance())->devicePixelRatio();
-
-    // define text to place
-    QString titleText       = tr(PACKAGE_NAME);
-    QString versionText     = QString("Version %1").arg(QString::fromStdString(FormatFullVersion()));
-    QString copyrightText   = QString::fromUtf8(CopyrightHolders(strprintf("\xc2\xA9 %u ", COPYRIGHT_YEAR)).c_str());
-    QString titleAddText    = networkStyle->getTitleAddText();
-
-    QString font            = QApplication::font().toString();
-
-    // create a bitmap according to device pixelratio
-    QSize splashSize(712,411);
-    pixmap = QPixmap(712*devicePixelRatio,411*devicePixelRatio);
-
-    // change to HiDPI if it makes sense
-    pixmap.setDevicePixelRatio(devicePixelRatio);
-
-    QPainter pixPaint(&pixmap);
-    pixPaint.setPen(QColor("#FFFFFF"));
-
-    QRect mainRect(QPoint(0,0), splashSize);
-    pixPaint.fillRect(mainRect, QColor("#030509"));
-
-    // draw background
-    QRect rectBg(QPoint(0, 0), QSize(splashSize.width(), splashSize.height()));
-    QPixmap bg(":/styles/app-icons/splash_bg");
-    pixPaint.drawPixmap(rectBg, bg);
-
-    pixPaint.setFont(QFont(font, 32*fontFactor, QFont::Bold));
-    QRect rectTitle(QPoint(0,0), QSize(splashSize.width(), (splashSize.height() / 2)));
-    //pixPaint.drawText(rectTitle, Qt::AlignHCenter | Qt::AlignBottom, titleText);
-
-    QPoint versionPoint(rectTitle.bottomLeft());
-
-    // draw additional text if special network
-    if(!titleAddText.isEmpty())
-    {
-        QRect titleAddRect(rectTitle.bottomLeft(), QSize(rectTitle.width(), titleAddTextHeight));
-        versionPoint = titleAddRect.bottomLeft();
-        pixPaint.setFont(QFont(font, 8*fontFactor, QFont::Bold));
-        pixPaint.drawText(titleAddRect, Qt::AlignHCenter | Qt::AlignVCenter, titleAddText);
+    // Layout and random trajectories are immutable during the animation.
+    artFont = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+    artFont.setPixelSize(16);
+    const QFontMetricsF metrics(artFont);
+    auto loadArt = [&](const QString& path, ArtLayout& art) {
+        QFile file(path);
+        if (!file.open(QIODevice::ReadOnly)) return;
+        art.lines = QString::fromUtf8(file.readAll()).split('\n');
+        while (!art.lines.isEmpty() && art.lines.last().trimmed().isEmpty()) art.lines.removeLast();
+        while (!art.lines.isEmpty() && art.lines.first().trimmed().isEmpty()) art.lines.removeFirst();
+        for (int i = 0; i < art.lines.size(); ++i) {
+            if (art.lines[i].trimmed().isEmpty()) continue;
+            const QRectF ink = metrics.tightBoundingRect(art.lines[i]).translated(
+                0, metrics.ascent() + i * metrics.lineSpacing());
+            art.bounds = art.bounds.isNull() ? ink : art.bounds.united(ink);
+        }
+    };
+    loadArt(":/splash/art.txt", artwork);
+    loadArt(":/splash/logo.txt", logo);
+    const quint32 particleSeed = std::random_device{}();
+    auto randomUnit = [](quint32 value) {
+        value ^= value >> 16; value *= 0x7feb352dU;
+        value ^= value >> 15; value *= 0x846ca68bU;
+        value ^= value >> 16;
+        return qreal(value) / qreal(0xffffffffU);
+    };
+    for (int i = 0; i < artwork.lines.size(); ++i) {
+        qreal x = 0;
+        for (int j = 0; j < artwork.lines[i].size(); ++j) {
+            const QString glyph(artwork.lines[i][j]);
+            if (!artwork.lines[i][j].isSpace()) {
+                const quint32 id = particleSeed ^ (quint32(i) * 65537U + quint32(j));
+                particles.append({glyph, QPointF(x, metrics.ascent() + i * metrics.lineSpacing()),
+                    metrics.tightBoundingRect(glyph), randomUnit(id ^ 0x174b9321U),
+                    randomUnit(id ^ 0x62ac84f1U), randomUnit(id ^ 0x35ab192dU) * 1.8,
+                    2.8 + randomUnit(id ^ 0x814239abU) * 1.2});
+            }
+            x += metrics.width(glyph);
+        }
     }
+    setWindowTitle(tr(PACKAGE_NAME) + " " + networkStyle->getTitleAddText());
+    setAutoFillBackground(true);
+    setAttribute(Qt::WA_StyledBackground, true);
 
-    pixPaint.setFont(QFont(font, 12*fontFactor));
-    //QRect versionRect(versionPoint, QSize(rectTitle.width(), versionTextHeight));
-    //pixPaint.drawText(versionRect, Qt::AlignHCenter | Qt::AlignTop, versionText);
-
-    // draw copyright stuff
-    QFont statusFont = QApplication::font();
-    statusFont.setPointSizeF(statusFont.pointSizeF() * 0.9);
-    pixPaint.setFont(statusFont);
-    QRect statusRect(mainRect.left(), mainRect.height() - statusHeight, mainRect.width(), statusHeight);
-    QColor statusColor(255, 255, 255);
-    statusColor.setAlphaF(0.1);
-    pixPaint.fillRect(statusRect, statusColor);
-    pixPaint.drawText(statusRect.adjusted(10, 0, -10, 0), Qt::AlignLeft | Qt::AlignVCenter, copyrightText);
-
-    pixPaint.end();
-
-    // Set window title
-    setWindowTitle(titleText + " " + titleAddText);
-
-    // Resize window and move to center of desktop, disallow resizing
-    QRect r(QPoint(), QSize(pixmap.size().width()/devicePixelRatio,pixmap.size().height()/devicePixelRatio));
-    resize(r.size());
-    setFixedSize(r.size());
-    move(QApplication::desktop()->screenGeometry().center() - r.center());
-
+    animationClock.start();
+    auto animationTimer = new QTimer(this);
+    animationTimer->setTimerType(Qt::PreciseTimer);
+    animationTimer->setInterval(16);
+    connect(animationTimer, &QTimer::timeout, this, [this] { if (isVisible()) update(); });
+    animationTimer->start();
     subscribeToCoreSignals();
     installEventFilter(this);
 }
@@ -114,7 +96,7 @@ SplashScreen::~SplashScreen()
 bool SplashScreen::eventFilter(QObject * obj, QEvent * ev) {
     if (ev->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(ev);
-        if(keyEvent->text()[0] == 'q') {
+        if(keyEvent->key() == Qt::Key_Q) {
             m_node.startShutdown();
         }
     }
@@ -188,8 +170,71 @@ void SplashScreen::showMessage(const QString &message, int alignment, const QCol
 void SplashScreen::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
-    painter.drawPixmap(0, 0, pixmap);
-    QRect r = rect().adjusted(10, 10, -10, -10);
+    painter.fillRect(rect(), QColor("#181818"));
+    // Fixed character cells are essential to preserve this text illustration.
+    const QFontMetricsF metrics(artFont);
+    const qreal seconds = animationClock.elapsed() / 1000.0;
+    const qreal fade = qMin(qreal(1), seconds / 0.65);
+    const qreal drift = 3.0 * std::sin(seconds * 0.75);
+    painter.setOpacity(fade * (0.98 + 0.02 * std::cos(seconds * 0.6)));
+    auto drawArt = [&](const ArtLayout& art, const QRectF& area, bool primary = false) {
+        const QRectF& bounds = art.bounds;
+        if (bounds.isEmpty() || area.isEmpty()) return QRectF();
+        const qreal pulse = primary ? 1.0 : 0.94 + 0.06 * std::sin(seconds * 2.8);
+        const qreal scale = qMin(area.width() / bounds.width(),
+                                 area.height() / bounds.height()) * pulse;
+        const QPointF origin = area.center() - bounds.center() * scale;
+        painter.save();
+        painter.translate(origin);
+        painter.scale(scale, scale);
+        painter.setFont(artFont);
+        painter.setPen(QColor("#c8cac8"));
+        if (!primary || seconds >= 6.0) {
+            for (int i = 0; i < art.lines.size(); ++i)
+                painter.drawText(QPointF(0, metrics.ascent() + i * metrics.lineSpacing()), art.lines[i]);
+        } else {
+            for (const Particle& particle : particles) {
+                const qreal t = qBound(qreal(0), (seconds - particle.delay) / particle.duration, qreal(1));
+                const qreal eased = t * t * t * (t * (t * 6 - 15) + 10);
+                const QRectF& ink = particle.ink;
+                const QPointF startScreen(
+                    particle.randomX * qMax(qreal(0), width() - ink.width() * scale) - ink.left() * scale,
+                    particle.randomY * qMax(qreal(0), height() - ink.height() * scale) - ink.top() * scale);
+                const QPointF start = (startScreen - origin) / scale;
+                painter.drawText(start * (1 - eased) + particle.destination * eased, particle.glyph);
+            }
+        }
+        painter.restore();
+        return QRectF(origin + bounds.topLeft() * scale, bounds.size() * scale);
+    };
+    const QRectF content(rect());
+    QRectF logoBounds;
+    // Fit the completed artwork edge to edge; particles assemble in screen space.
+    if (content.width() > content.height()) {
+        const QRectF artArea(content.left(), content.top(), content.width() * 0.72, content.height());
+        drawArt(artwork, artArea, true);
+        const qreal side = qMin(content.width() * 0.25, content.height() * 0.32);
+        const QRectF brand(content.center().x() - side / 2,
+                           content.center().y() - side / 2, side, side);
+        logoBounds = drawArt(logo, brand.adjusted(4, 4, -4, -4).translated(0, -drift));
+    } else {
+        const qreal headerHeight = content.height() * 0.22;
+        logoBounds = drawArt(logo, QRectF(content.left() + 4, content.top() + 4 - drift,
+            content.width() - 8, qMax(qreal(1), headerHeight - 54)));
+        const QRectF artArea(content.left(), content.top() + headerHeight,
+                             content.width(), content.height() - headerHeight);
+        drawArt(artwork, artArea, true);
+    }
+    QFont brandFont = QApplication::font();
+    brandFont.setPixelSize(qBound(18, height() / 40, 30));
+    painter.setFont(brandFont);
+    painter.setPen(QColor("#e3e3e3"));
+    const QFontMetricsF brandMetrics(brandFont);
+    const QRectF labelInk = brandMetrics.tightBoundingRect("ZHCASH");
+    painter.drawText(QPointF(logoBounds.center().x() - labelInk.center().x() + 20,
+                            logoBounds.bottom() + 12 - labelInk.top()), "ZHCASH");
+    painter.setOpacity(1.0);
+    QRect r = rect().adjusted(24, 24, -24, -24);
     painter.setPen(curColor);
     QFont font = QApplication::font();
     font.setPointSizeF(font.pointSizeF() * 0.9);

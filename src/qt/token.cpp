@@ -431,8 +431,39 @@ bool Token::balanceOf(const std::string &spender, std::string &result, bool send
 }
 
 
+// ERC-165 responses must be successful calls containing a canonical ABI bool.
+bool Token::queryInterface(const std::string& interfaceId, bool& supported)
+{
+    supported = false;
+    if (!d->model) return false;
+    auto params = d->lstParams;
+    params[PARAM_DATAHEX] = QString::fromStdString("01ffc9a7" + interfaceId + std::string(56, '0'));
+    QVariant result;
+    QString json, error;
+    if (!d->call->exec(d->model->node(), d->model, params, result, json, error)) return false;
+    const auto execution = result.toMap().value("executionResult").toMap();
+    if (execution.value("excepted").toString() != "None") return false;
+    const std::string output = execution.value("output").toString().toStdString();
+    if (output == std::string(64, '0')) return true;
+    if (output != std::string(63, '0') + "1") return false;
+    supported = true;
+    return true;
+}
+
+bool Token::isNFT()
+{
+    bool supported;
+    return queryInterface("01ffc9a7", supported) && supported
+        && queryInterface("ffffffff", supported) && !supported
+        && queryInterface("80ac58cd", supported) && supported;
+}
+
 bool Token::tokenURI(std::string &result, QString &jsonResult, std::string tokenId)
 {
+    result.clear();
+    jsonResult.clear();
+    bool metadata = false;
+    if (!isNFT() || !queryInterface("5b5e139f", metadata) || !metadata) return false;
     std::vector<std::string> input;
     input.push_back(tokenId);
     std::vector<std::string> output;

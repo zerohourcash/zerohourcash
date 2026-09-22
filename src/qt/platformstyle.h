@@ -51,7 +51,7 @@ public:
         PushButton = 1
     };
     /** Get multi-states icon*/
-    QIcon MultiStatesIcon(const QString& resourcename, StateType type = NavBar, QColor color = Qt::white, QColor colorAlt = 0x2d2d2d) const;
+    QIcon MultiStatesIcon(const QString& resourcename, StateType type = NavBar, QColor color = Qt::white, QColor colorAlt = 0xededed) const;
 
     enum TableColorType{
         Normal = 0,

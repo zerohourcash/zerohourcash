@@ -3,13 +3,13 @@ Tree view CSS
 --------------------------------------------*/
 QTreeWidget {
 	background-color:rgba(0,0,0,0);
-	selection-background-color: #1c536c;
+	selection-background-color: #3b3e3b;
 	show-decoration-selected:0;
 }
 QTreeView{
     color: #C5C5C5;
-    background-color: #23272c;
-    alternate-background-color: #30363d;
+    background-color: #292c29;
+    alternate-background-color: #2e302e;
     border: none;
     font: normal;
     qproperty-showGrid: false;
@@ -21,7 +21,7 @@ QTreeView::item{
 }
 QTreeView::item:selected{
     qproperty-showGrid: false;
-    background: #1c536c;
+    background: #3b3e3b;
     color: white;
 }
 QTreeView::disabled{
@@ -37,7 +37,7 @@ QScrollBar:vertical {
 }
 QScrollBar::handle:vertical {
     border: none;
-    background: #23272c;
+    background: #292c29;
     border-radius: 0px;
     min-height: 35px;
 }
@@ -52,7 +52,7 @@ QScrollBar:horizontal {
 }
 QScrollBar::handle:horizontal {
     border: none;
-    background: #23272c;
+    background: #292c29;
     border-radius: 0px;
     min-width: 35px;
 }
@@ -93,3 +93,9 @@ QTreeView:indicator:checked:disabled {
 QTreeView:indicator:indeterminate:disabled {
     image: url(:/styles/app-icons/checkbox_indeterminate_disabled);
 }
+
+QTableView, QTreeView { background: #181818; alternate-background-color: #202020; color: #e3e3e3; border: none; }
+QTableView::item, QTreeView::item { color: #e3e3e3; }
+QTableView::item:selected, QTreeView::item:selected { background: #353835; color: #ffffff; }
+QHeaderView, QHeaderView::section { background: #181818; color: #bcbcbc; border: none; border-bottom: 1px solid #2c2c2c; }
+QAbstractScrollArea::corner { background: #181818; }

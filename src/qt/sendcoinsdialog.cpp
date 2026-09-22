@@ -286,8 +286,8 @@ void SendCoinsDialog::on_sendButton_clicked()
             amount.append(" <u>"+tr("from wallet %1").arg(GUIUtil::HtmlEscape(model->getWalletName()))+"</u> ");
         }
         amount.append("</b>");
-        // generate monospace address string
-        QString address = "<span style='font-family: monospace;'>" + rcp.address;
+        // Use the surrounding application font for the address
+        QString address = "<span>" + rcp.address;
         address.append("</span>");
 
         QString recipientElement;

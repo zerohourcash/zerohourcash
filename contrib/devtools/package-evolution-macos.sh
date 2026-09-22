@@ -5,6 +5,10 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 [[ "$(uname -s)/$(uname -m)" == Darwin/arm64 ]] || { echo 'Requires an Apple Silicon Mac.' >&2; exit 1; }
 : "${ZHC_DEPENDS_PREFIX:?Set ZHC_DEPENDS_PREFIX to the staged ARM64 depends prefix used by configure}"
 OUT="${ZHC_RELEASE_DIR:-$ROOT/release-macos}"
+APP_NAME="${ZHC_APP_NAME:-ZHCASH Evolution}"
+BUNDLE_ID="${ZHC_BUNDLE_ID:-org.zhcash.evolution}"
+BUNDLE_VERSION="${ZHC_BUNDLE_VERSION:-1.0.1}"
+DMG_NAME="${ZHC_DMG_NAME:-ZHCASH-Evolution-1.0.0-macos.1-arm64.dmg}"
 for item in include/db_cxx.h lib/libQt5Core.a plugins/platforms/libqcocoa.a; do
   [[ -f "$ZHC_DEPENDS_PREFIX/$item" ]] || { echo "Missing dependency: $item" >&2; exit 1; }
 done
@@ -19,11 +23,11 @@ make -C "$ROOT/src" -j"${JOBS:-4}" -W qt/bitcoin.cpp qt/zerohour-qt \
 mkdir -p "$OUT"
 STAGE="$(mktemp -d "$OUT/.package.XXXXXX")"
 trap 'rm -rf "$STAGE"' EXIT
-APP="$STAGE/ZHCASH Evolution.app"
+APP="$STAGE/$APP_NAME.app"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$ROOT/src/qt/zerohour-qt" "$APP/Contents/MacOS/zerohour-qt"
 cp "$ROOT/src/qt/res/icons/bitcoin.icns" "$APP/Contents/Resources/bitcoin.icns"
-python3 - "$APP" <<'PY'
+python3 - "$APP" "$APP_NAME" "$BUNDLE_ID" "$BUNDLE_VERSION" <<'PY'
 import pathlib, plistlib, re, subprocess, sys
 app = pathlib.Path(sys.argv[1])
 load_commands = subprocess.check_output(['otool', '-l', str(app/'Contents/MacOS/zerohour-qt')], text=True)
@@ -32,9 +36,9 @@ if not versions:
     raise SystemExit('Cannot determine executable minimum macOS version')
 minimum = max(['14.0', *versions], key=lambda v: tuple(map(int, v.split('.'))))
 print(f'Executable requires macOS {minimum} or later')
-info = dict(CFBundleName='ZHCASH Evolution', CFBundleDisplayName='ZHCASH Evolution',
-    CFBundleIdentifier='org.zhcash.evolution', CFBundleExecutable='zerohour-qt',
-    CFBundlePackageType='APPL', CFBundleShortVersionString='1.0.0', CFBundleVersion='1.0.1',
+info = dict(CFBundleName=sys.argv[2], CFBundleDisplayName=sys.argv[2],
+    CFBundleIdentifier=sys.argv[3], CFBundleExecutable='zerohour-qt',
+    CFBundlePackageType='APPL', CFBundleShortVersionString='1.0.0', CFBundleVersion=sys.argv[4],
     CFBundleIconFile='bitcoin.icns', NSHighResolutionCapable=True,
     LSMinimumSystemVersion=minimum, LSArchitecturePriority=['arm64'],
     CFBundleURLTypes=[dict(CFBundleURLName='ZHCASH payment', CFBundleURLSchemes=['zerohour'])])
@@ -47,11 +51,11 @@ if otool -L "$APP/Contents/MacOS/zerohour-qt" | tail -n +2 | grep -E '/Users/|/o
   echo 'Executable still depends on local non-system libraries.' >&2
   exit 1
 fi
-[[ ! -e "$OUT/ZHCASH Evolution.app" ]] || { echo 'Output app already exists; select a new ZHC_RELEASE_DIR.' >&2; exit 1; }
-mv "$APP" "$OUT/ZHCASH Evolution.app"
-hdiutil create -volname 'ZHCASH Evolution 1.0.0' -srcfolder "$OUT/ZHCASH Evolution.app" \
-  -format UDZO "$OUT/ZHCASH-Evolution-1.0.0-macos.1-arm64.dmg"
-(cd "$OUT" && shasum -a 256 ZHCASH-Evolution-1.0.0-macos.1-arm64.dmg > SHA256SUMS)
+[[ ! -e "$OUT/$APP_NAME.app" ]] || { echo 'Output app already exists; select a new ZHC_RELEASE_DIR.' >&2; exit 1; }
+mv "$APP" "$OUT/$APP_NAME.app"
+hdiutil create -volname "$APP_NAME" -srcfolder "$OUT/$APP_NAME.app" \
+  -format UDZO "$OUT/$DMG_NAME"
+(cd "$OUT" && shasum -a 256 "$DMG_NAME" > SHA256SUMS)
 git -C "$ROOT" rev-parse HEAD > "$OUT/SOURCE_COMMIT"
 git -C "$ROOT" diff --stat > "$OUT/SOURCE_CHANGES"
 echo "Created $OUT. Default signature is ad-hoc; notarization is a separate release step."

@@ -19,3 +19,14 @@ QTextEdit QScrollBar::handle:vertical {
 QTextEdit QScrollBar::handle:vertical:disabled {
     background: rgba(76, 76, 76, 40%);
 }
+
+/* Compact neutral scrollbars, including per-widget table overrides. */
+QScrollBar:horizontal { background: #181818; height: 10px; padding: 2px; margin: 0px; border: none; }
+QScrollBar:vertical { background: #181818; width: 10px; padding: 2px; margin: 0px; border: none; }
+QScrollBar::handle { background: #454545; border: none; border-radius: 3px; }
+QScrollBar::handle:horizontal { min-width: 24px; }
+QScrollBar::handle:vertical { min-height: 24px; }
+QScrollBar::handle:hover { background: #666666; }
+QScrollBar::add-line, QScrollBar::sub-line { width: 0px; height: 0px; border: none; background: transparent; }
+QScrollBar::add-page, QScrollBar::sub-page { background: transparent; }
+QAbstractScrollArea::corner { background: #181818; border: none; }

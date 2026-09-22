@@ -116,10 +116,11 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize"><size><width>0</width><height>130</height></size></property>
               <property name="maximumSize">
                <size>
                 <width>16777215</width>
-                <height>65</height>
+                <height>130</height>
                </size>
               </property>
               <property name="horizontalScrollBarPolicy">
@@ -171,10 +172,11 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize"><size><width>0</width><height>130</height></size></property>
               <property name="maximumSize">
                <size>
                 <width>16777215</width>
-                <height>65</height>
+                <height>130</height>
                </size>
               </property>
               <property name="horizontalScrollBarPolicy">

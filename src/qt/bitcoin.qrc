@@ -1,4 +1,5 @@
 <!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/splash"><file alias="art.txt">res/splash-art.txt</file><file alias="logo.txt">res/splash-logo.txt</file></qresource>
     <qresource prefix="/icons">
         <file alias="bitcoin">res/icons/bitcoin.png</file>
         <file alias="address-book">res/icons/address-book.png</file>

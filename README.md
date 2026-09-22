@@ -1,3 +1,20 @@
+# ZHCASH OnlyFans Edition — macOS
+
+**Подарок от разработчиков ZHCASH сообществу.** Отдельная экспериментальная
+версия полной Qt-ноды с графитовым интерфейсом, анимированной ASCII-заставкой
+и синим неоновым значком с белой серединой.
+
+- Ветка: `macos_onlyfans_version`.
+- Публикуется только как **Pre-release**, без **Latest**; основную версию не заменяет.
+- Сборка: Apple Silicon (ARM64), **macOS 26.0 и новее**.
+- Отдельное имя приложения: **ZHCASH OnlyFans Edition**.
+- Подпись ad-hoc; Developer ID и нотарификация Apple отсутствуют.
+- Имя издания не означает связи с платформой OnlyFans.
+
+[Описание издания, установка и сборка](doc/macos-onlyfans-edition.md).
+
+---
+
 What is ZHCASH?
 -------------
 
@@ -20,6 +37,96 @@ ZHCASH Core currently implements the following:
 * Testnet mode, using the public ZHCASH Testnet, with faucet available
 * Compatibility with the Bitcoin Core set of RPC commands and APIs
 * Full SegWit capability with p2sh-segwit (legacy) and bech32 (native) addresses
+
+Implementation Status — 2026-09-17
+----------------------------------
+
+A local implementation review covered the `zerohourcash-modern-build` checkout
+on branch `modern-build-with-depends-cache`, baseline commit `3f84eeb6`
+(`Release Evolution 1.0.0`). The existing macOS node passed a basic isolated
+regtest smoke check. **Release readiness has not been established.**
+
+The detailed remediation and release plan, including task dependencies, test
+commands, acceptance criteria, and compatibility boundaries, is available in
+[the modern-build implementation plan](docs/superpowers/plans/2026-09-17-modern-build-release-readiness.md)
+(in Russian).
+
+### Architecture
+
+| Area | Main source locations | Responsibility |
+| --- | --- | --- |
+| Validation and consensus | `src/validation.cpp`, `src/consensus/`, `src/chainparams.cpp` | Block/transaction validation, rewards, activation parameters |
+| Peer networking | `src/net_processing.cpp`, `src/net.cpp`, `src/version.h` | P2P messages, peer lifecycle, protocol upgrade gate |
+| EVM integration | `src/zerohour/`, `src/cpp-ethereum/` | UTXO/account bridge, contract execution, EVM state |
+| Wallet and GUI | `src/wallet/`, `src/qt/` | Wallet persistence, keys, transactions, Qt interface |
+| RPC | `src/rpc/`, `src/httprpc.cpp`, `src/httpserver.cpp` | Node/wallet API, authentication, HTTP transport |
+| Build and verification | `configure.ac`, `depends/`, `src/test/`, `test/functional/` | Autotools build, pinned dependencies, unit and functional tests |
+
+### Verified locally
+
+* `zerohourd` and `zerohour-cli` started and reported version `1.0.0`.
+* The inspected daemon and Qt executables are native macOS ARM64 binaries.
+* In a temporary regtest datadir with no peer connections, RPC responded, the
+  wallet created an address, two blocks were mined, and the node stopped with
+  exit code `0`. The advertised protocol version was `70018`.
+* All 191 Python files found under `test/functional/` passed syntax parsing;
+  several invalid-escape warnings remain. This was not a functional test run.
+* `contrib/devtools/build-macos-arm64.sh` passed `bash -n`.
+
+These checks used existing binaries; they do not prove a clean rebuild or an
+exact source-to-binary match. Full unit/functional suites, mainnet sync, PoS,
+EVM execution, old encrypted-wallet compatibility, and GUI workflows remain
+unverified by this review. Temporary regtest data was removed after shutdown.
+
+### Findings and release work
+
+1. **Test build blocker:** `src/Makefile.test.include` lists
+   `test/evm_state_cache_tests.cpp`, but that source is absent from the checkout
+   and tracked files. Restore meaningful regression coverage and verify a
+   tests-enabled build. The inspected local configuration used
+   `--disable-tests`, and `src/test/test_zerohour` was absent.
+2. **Consensus-sensitive verification:** the subsidy schedule and peer gate
+   are implemented, with boundary assertions in `src/test/main_tests.cpp` and
+   `src/test/net_tests.cpp`. Their execution was not verified. Test both reward
+   enforcement and actual P2P disconnection before release.
+3. **Wallet compatibility guard:** the macOS helper and manual instructions
+   use `--with-incompatible-bdb`, although the maintenance policy requires BDB
+   4.8. Remove the default bypass and verify the selected headers and library.
+   This finding does not establish corruption or incompatibility of existing
+   wallets.
+4. **Build isolation:** the inspected local `config.status` points at libraries
+   in the sibling `zerohourcash/depends` tree. Demonstrate a clean build without
+   that checkout and record dependency/toolchain provenance.
+5. **macOS packaging:** the inspected `bin-new/ZHCASH-Qt.app` has an ad-hoc
+   signature, no TeamIdentifier, and no sealed resources. Developer ID signing,
+   notarization, package validation, and release checksums remain release gates.
+
+The local workspace also contains a separate `zerohourcash` checkout with many
+tracked modifications. Do not treat the two directories as interchangeable
+build inputs or infer that their binaries represent the same source revision.
+The reviewed modern-build tracked tree was clean before this documentation
+update; local build outputs and logs were present as untracked files.
+
+### Implemented subsidy schedule
+
+For chains selecting `nSubsidyHalvingInterval == 5256000`,
+`GetBlockSubsidy()` currently applies the following schedule after the PoW
+phase. Heights at or below `nLastPOWBlock` retain the earlier function branch
+with a subsidy of `320000 ZHC`.
+
+| PoS height | Subsidy per block |
+| --- | ---: |
+| After the PoW phase through 1,699,999 | 800 ZHC |
+| 1,700,000–2,499,999 | 400 ZHC |
+| 2,500,000–3,499,999 | 200 ZHC |
+| 3,500,000–4,499,999 | 100 ZHC |
+| 4,500,000–5,499,999 | 50 ZHC |
+| 5,500,000–6,499,999 | 25 ZHC |
+| From 6,500,000 | 10 ZHC |
+
+This describes the inspected implementation, not current network activation
+or a newly authorized consensus change. Other halving intervals use the
+separate interval-based branch in `GetBlockSubsidy()`.
 
 Consensus Change Policy
 -----------------------

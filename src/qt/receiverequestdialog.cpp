@@ -146,26 +146,29 @@ bool ReceiveRequestDialog::createQRCode(QLabel *label, SendCoinsRecipient _info,
                 return false;
             }
             QImage qrImage = QImage(code->width + 8, code->width + 8, QImage::Format_ARGB32);
-            qrImage.fill(qRgba(0, 0, 0, 0));
+            // Keep a solid four-module quiet zone for reliable scanning.
+            const QRgb qrBackground = qRgb(184, 184, 184);
+            const QRgb qrForeground = qRgb(24, 24, 24);
+            qrImage.fill(qrBackground);
             unsigned char *p = code->data;
             for (int y = 0; y < code->width; y++)
             {
                 for (int x = 0; x < code->width; x++)
                 {
-                    qrImage.setPixel(x + 4, y + 4, ((*p & 1) ? qRgba(0, 0, 0, 255) : qRgba(255, 255, 255, 255)));
+                    qrImage.setPixel(x + 4, y + 4, ((*p & 1) ? qrForeground : qrBackground));
                     p++;
                 }
             }
             QRcode_free(code);
 
             QImage qrAddrImage = QImage(QR_IMAGE_SIZE, QR_IMAGE_SIZE+20, QImage::Format_ARGB32);
-            qrAddrImage.fill(qRgba(0, 0, 0, 0));
+            qrAddrImage.fill(qRgb(24, 24, 24));
             QPainter painter(&qrAddrImage);
             painter.drawImage(0, 0, qrImage.scaled(QR_IMAGE_SIZE, QR_IMAGE_SIZE));
 
             if(showAddress)
             {
-                QFont font = GUIUtil::fixedPitchFont();
+                QFont font = GUIUtil::contentFont();
                 QRect paddedRect = qrAddrImage.rect();
 
                 // calculate ideal font size
@@ -173,6 +176,7 @@ bool ReceiveRequestDialog::createQRCode(QLabel *label, SendCoinsRecipient _info,
                 font.setPointSizeF(font_size);
 
                 painter.setFont(font);
+                painter.setPen(QColor("#e3e3e3"));
                 paddedRect.setHeight(QR_IMAGE_SIZE+12);
                 painter.drawText(paddedRect, Qt::AlignBottom|Qt::AlignCenter, _info.address);
                 painter.end();
@@ -201,7 +205,7 @@ void ReceiveRequestDialog::update()
     QString uri = GUIUtil::formatBitcoinURI(info);
     ui->btnSaveAs->setEnabled(false);
     QString html;
-    html += "<html><font face='verdana, arial, helvetica, sans-serif'>";
+    html += "<html><body>";
     html += "<font color='#ffffff'>" + tr("PAYMENT INFORMATION")+"</font><br><br>";
     html += tr("URI")+": ";
     html += "<a href=\""+uri+"\">" + GUIUtil::HtmlEscape(uri) + "</a><br>";
@@ -215,6 +219,7 @@ void ReceiveRequestDialog::update()
     if(model->isMultiwallet()) {
         html += tr("Wallet")+": <font color='#ffffff'>" + GUIUtil::HtmlEscape(model->getWalletName()) + "</font><br>";
     }
+    html += "</body></html>";
     ui->outUri->setText(html);
 
 #ifdef USE_QRCODE

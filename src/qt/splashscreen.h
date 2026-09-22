@@ -6,6 +6,9 @@
 #define BITCOIN_QT_SPLASHSCREEN_H
 
 #include <QWidget>
+#include <QElapsedTimer>
+#include <QStringList>
+#include <QVector>
 
 #include <memory>
 
@@ -53,7 +56,21 @@ private:
     /** Connect wallet signals to splash screen */
     void ConnectWallet(std::unique_ptr<interfaces::Wallet> wallet);
 
-    QPixmap pixmap;
+    QElapsedTimer animationClock;
+    struct ArtLayout {
+        QStringList lines;
+        QRectF bounds;
+    };
+    struct Particle {
+        QString glyph;
+        QPointF destination;
+        QRectF ink;
+        qreal randomX, randomY, delay, duration;
+    };
+    QFont artFont;
+    ArtLayout artwork;
+    ArtLayout logo;
+    QVector<Particle> particles;
     QString curMessage;
     QColor curColor;
     int curAlignment;

@@ -181,7 +181,7 @@ QVariant ContractTableModel::data(const QModelIndex &index, int role) const
         QFont font;
         if(index.column() == Address)
         {
-            font = GUIUtil::fixedPitchFont();
+            font = GUIUtil::contentFont();
         }
         return font;
     }

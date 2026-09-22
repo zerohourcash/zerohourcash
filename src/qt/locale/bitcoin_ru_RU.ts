@@ -101,6 +101,10 @@
         <source>There was an error trying to save the address list to %1. Please try again.</source>
         <translation>Произошла ошибка сохранения списка адресов в %1. Пожалуйста, повторите попытку.</translation>
     </message>
+    <message>
+        <source>These are your ZHCASH addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Ваши адреса ZHCASH для получения платежей. Рекомендуется использовать новый адрес для каждой транзакции.</translation>
+    </message>
 </context>
 <context>
     <name>AddressTableModel</name>
@@ -238,6 +242,34 @@
     <message>
         <source>Warning: The Caps Lock key is on!</source>
         <translation>Внимание: Caps Lock включен!</translation>
+    </message>
+    <message>
+        <source>Show password</source>
+        <translation>Показать пароль</translation>
+    </message>
+    <message>
+        <source>Serves to disable the trivial sendmoney when OS account compromised. Provides no real security.</source>
+        <translation>Блокирует простую отправку средств при компрометации учётной записи ОС, но не обеспечивает полноценной защиты.</translation>
+    </message>
+    <message>
+        <source>For staking only.</source>
+        <translation>Только для стейкинга.</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Введите новый пароль кошелька.&lt;br/&gt;Используйте &lt;b&gt;не менее десяти случайных символов&lt;/b&gt; или &lt;b&gt;не менее восьми слов&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase to the wallet.</source>
+        <translation>Введите старый и новый пароли кошелька.</translation>
+    </message>
+    <message>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR ZHCS&lt;/b&gt;!</source>
+        <translation>Внимание: если вы зашифруете кошелёк и потеряете пароль, вы &lt;b&gt;ПОТЕРЯЕТЕ ВСЕ СВОИ ZHC&lt;/b&gt;!</translation>
+    </message>
+    <message>
+        <source>Your wallet is now encrypted. Remember that encrypting your wallet cannot fully protect your zerohours from being stolen by malware infecting your computer.</source>
+        <translation>Кошелёк зашифрован. Шифрование не обеспечивает полной защиты средств от вредоносного ПО на компьютере.</translation>
     </message>
 </context>
 <context>
@@ -443,7 +475,7 @@
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to ZHCASH network</source>
-        <translation><numerusform>%n активное подключение к сети ZHCASH</numerusform><numerusform>%n активных подключения к сети ZHCASH</numerusform><numerusform>%n активных подключений к сети ZHCASH</numerusform><numerusform>%n активных подключений к сети ZHCASH</numerusform></translation>
+        <translation><numerusform>%n активное подключение к сети ZHCASH</numerusform><numerusform>%n активных подключения к сети ZHCASH</numerusform><numerusform>%n активных подключений к сети ZHCASH</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -455,7 +487,7 @@
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
-        <translation><numerusform>Обработан %n блок истории транзакций.</numerusform><numerusform>Обработано %n блока истории транзакций.</numerusform><numerusform>Обработано %n блоков истории транзакций.</numerusform><numerusform>Обработано %n блоков истории транзакций.</numerusform></translation>
+        <translation><numerusform>Обработан %n блок истории транзакций.</numerusform><numerusform>Обработано %n блока истории транзакций.</numerusform><numerusform>Обработано %n блоков истории транзакций.</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -672,6 +704,166 @@
     <message>
         <source>Add Token</source>
         <translation>Добавить токен</translation>
+    </message>
+    <message>
+        <source>Request payments (generates QR codes and zerohour: URIs)</source>
+        <translation>Запросить платёж (создать QR-код и URI zerohour:)</translation>
+    </message>
+    <message>
+        <source>Smart contracts</source>
+        <translation>Смарт-контракты</translation>
+    </message>
+    <message>
+        <source>ZRC Tokens (send, receive or add Tokens in list)</source>
+        <translation>Токены ZRC: отправка, получение и добавление в список</translation>
+    </message>
+    <message>
+        <source>Restore wallet from another location</source>
+        <translation>Восстановить кошелёк из другого расположения</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock Wallet...</source>
+        <translation>&amp;Разблокировать кошелёк...</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Разблокировать кошелёк</translation>
+    </message>
+    <message>
+        <source>&amp;Lock Wallet</source>
+        <translation>За&amp;блокировать кошелёк</translation>
+    </message>
+    <message>
+        <source>Lock wallet</source>
+        <translation>Заблокировать кошелёк</translation>
+    </message>
+    <message>
+        <source>&amp;Debug window</source>
+        <translation>Окно &amp;диагностики</translation>
+    </message>
+    <message>
+        <source>Open debugging and diagnostic console</source>
+        <translation>Открыть консоль диагностики</translation>
+    </message>
+    <message>
+        <source>Open a zerohour: URI or payment request</source>
+        <translation>Открыть URI zerohour: или запрос платежа</translation>
+    </message>
+    <message>
+        <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <translation>Кошелёк открывается &lt;b&gt;%1&lt;/b&gt;...</translation>
+    </message>
+    <message>
+        <source>Open Wallet Failed</source>
+        <translation>Не удалось открыть кошелёк</translation>
+    </message>
+    <message>
+        <source>New version of ZHCASH wallet is available on the ZHCASH source code repository: &lt;br /&gt; %1. &lt;br /&gt;It is recommended to download it and update this application</source>
+        <translation>В репозитории ZHCASH доступна новая версия кошелька: &lt;br /&gt; %1. &lt;br /&gt;Рекомендуется скачать её и обновить приложение</translation>
+    </message>
+    <message>
+        <source>Check for updates</source>
+        <translation>Проверять обновления</translation>
+    </message>
+    <message>
+        <source>ZHCASH</source>
+        <translation>ZHCASH Core</translation>
+    </message>
+    <message>
+        <source>Date: %1
+</source>
+        <translation>Дата: %1
+</translation>
+    </message>
+    <message>
+        <source>Amount: %1
+</source>
+        <translation>Сумма: %1
+</translation>
+    </message>
+    <message>
+        <source>Wallet: %1
+</source>
+        <translation>Кошелёк: %1
+</translation>
+    </message>
+    <message>
+        <source>Type: %1
+</source>
+        <translation>Тип: %1
+</translation>
+    </message>
+    <message>
+        <source>Label: %1
+</source>
+        <translation>Метка: %1
+</translation>
+    </message>
+    <message>
+        <source>Address: %1
+</source>
+        <translation>Адрес: %1
+</translation>
+    </message>
+    <message>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked for staking only&lt;/b&gt;</source>
+        <translation>Кошелёк &lt;b&gt;зашифрован&lt;/b&gt; и &lt;b&gt;разблокирован только для стейкинга&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Not staking</source>
+        <translation>Стейкинг не активен</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation>
+            <numerusform>%n секунда</numerusform>
+            <numerusform>%n секунды</numerusform>
+            <numerusform>%n секунд</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n минута</numerusform>
+            <numerusform>%n минуты</numerusform>
+            <numerusform>%n минут</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n час</numerusform>
+            <numerusform>%n часа</numerusform>
+            <numerusform>%n часов</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n день</numerusform>
+            <numerusform>%n дня</numerusform>
+            <numerusform>%n дней</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Staking.&lt;br&gt;Your weight is %1&lt;br&gt;Network weight is %2&lt;br&gt;Expected time to earn reward is %3</source>
+        <translation>Стейкинг активен.&lt;br&gt;Ваш вес: %1&lt;br&gt;Вес сети: %2&lt;br&gt;Ожидаемое время до награды: %3</translation>
+    </message>
+    <message>
+        <source>Not staking because wallet is offline</source>
+        <translation>Стейкинг не активен: нет подключения к сети</translation>
+    </message>
+    <message>
+        <source>Not staking because wallet is syncing</source>
+        <translation>Стейкинг не активен: идёт синхронизация</translation>
+    </message>
+    <message>
+        <source>Not staking because you don't have mature coins</source>
+        <translation>Стейкинг не активен: нет созревших монет</translation>
+    </message>
+    <message>
+        <source>Not staking because wallet is locked</source>
+        <translation>Стейкинг не активен: кошелёк заблокирован</translation>
     </message>
 </context>
 <context>
@@ -975,6 +1167,10 @@
         <source>Command-line options</source>
         <translation>Опции командной строки</translation>
     </message>
+    <message>
+        <source>(%1-bit)</source>
+        <translation>(%1-разрядная версия)</translation>
+    </message>
 </context>
 <context>
     <name>Intro</name>
@@ -1048,15 +1244,15 @@
     </message>
     <message numerus="yes">
         <source>%n GB of free space available</source>
-        <translation><numerusform>%n ГБ свободного места</numerusform><numerusform>%n ГБ свободного места</numerusform><numerusform>%n ГБ свободного места</numerusform><numerusform>%n ГБ свободного места</numerusform></translation>
+        <translation><numerusform>%n ГБ свободного места</numerusform><numerusform>%n ГБ свободного места</numerusform><numerusform>%n ГБ свободного места</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
-        <translation><numerusform>(требуется %n ГБ)</numerusform><numerusform>(%n ГБ требуется)</numerusform><numerusform>(%n ГБ требуется)</numerusform><numerusform>(%n ГБ требуется)</numerusform></translation>
+        <translation><numerusform>(требуется %n ГБ)</numerusform><numerusform>(%n ГБ требуется)</numerusform><numerusform>(%n ГБ требуется)</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>(%n GB needed for full chain)</source>
-        <translation><numerusform>(%n ГБ необходимо для полного блокчейна)</numerusform><numerusform>(%n ГБ необходимо для полного блокчейна)</numerusform><numerusform>(%n ГБ необходимо для полного блокчейна)</numerusform><numerusform>(%n ГБ необходимо для полного блокчейна)</numerusform></translation>
+        <translation><numerusform>(%n ГБ необходимо для полного блокчейна)</numerusform><numerusform>(%n ГБ необходимо для полного блокчейна)</numerusform><numerusform>(%n ГБ необходимо для полного блокчейна)</numerusform></translation>
     </message>
 </context>
 <context>
@@ -1117,6 +1313,18 @@
         <source>Unknown. Syncing Headers (%1, %2%)...</source>
         <translation>Неизвестно. Синхронизация заголовков (%1, %2%)...</translation>
     </message>
+    <message>
+        <source>IMPORTANT NOTE!</source>
+        <translation>ВАЖНО!</translation>
+    </message>
+    <message>
+        <source>Making a backup of your wallet helps ensure you can always maintain access to your funds. Please backup your wallet in order to avoid losing funds.</source>
+        <translation>Резервная копия кошелька помогает сохранить доступ к средствам. Создайте её, чтобы избежать потери средств.</translation>
+    </message>
+    <message>
+        <source>Wallet backup</source>
+        <translation>Резервная копия кошелька</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
@@ -1127,6 +1335,22 @@
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Open URI</source>
+        <translation>Открыть URI</translation>
+    </message>
+    <message>
+        <source>Open payment request from URI or file</source>
+        <translation>Открыть запрос платежа из URI или файла</translation>
+    </message>
+    <message>
+        <source>Select payment request file</source>
+        <translation>Выберите файл запроса платежа</translation>
+    </message>
+    <message>
+        <source>Select payment request file to open</source>
+        <translation>Выберите файл запроса платежа для открытия</translation>
     </message>
 </context>
 <context>
@@ -1150,6 +1374,9 @@
 </context>
 <context>
     <name>OptionsDialog</name>
+    <message><source>Interface font size</source><translation>Размер шрифта интерфейса</translation></message>
+    <message><source>Decrease all interface fonts</source><translation>Уменьшить все шрифты интерфейса</translation></message>
+    <message><source>Increase all interface fonts</source><translation>Увеличить все шрифты интерфейса</translation></message>
     <message>
         <source>Options</source>
         <translation>Опции</translation>
@@ -1434,6 +1661,26 @@
         <source>The supplied proxy address is invalid.</source>
         <translation>Указанный прокси-адрес недействителен.</translation>
     </message>
+    <message>
+        <source>Reserve</source>
+        <translation>Резерв</translation>
+    </message>
+    <message>
+        <source>Reserve amount that will not be used for staking</source>
+        <translation>Сумма резерва, не участвующая в стейкинге</translation>
+    </message>
+    <message>
+        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Автоматически открывать порт ноды на маршрутизаторе. Требуется поддержка и включение UPnP на маршрутизаторе.</translation>
+    </message>
+    <message>
+        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
+        <translation>Подключаться к сети через прокси SOCKS5.</translation>
+    </message>
+    <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor hidden services.</source>
+        <translation>Использовать отдельный прокси SOCKS5 для подключения к скрытым сервисам Tor.</translation>
+    </message>
 </context>
 <context>
     <name>OverviewPage</name>
@@ -1537,6 +1784,24 @@
         <source>Add</source>
         <translation>Добавить</translation>
     </message>
+    <message>
+        <source>Stake:</source>
+        <translation>В стейкинге:</translation>
+    </message>
+    <message>
+        <source>0.000 000 00 ZHC</source>
+        <translation>0.000 000 00 ZHC</translation>
+    </message>
+    <message>
+        <source>The %1 address "%2" is not yours, please change it to new one.
+</source>
+        <translation>Адрес %1 «%2» не принадлежит вам. Укажите свой адрес.
+</translation>
+    </message>
+    <message>
+        <source>Invalid token address</source>
+        <translation>Некорректный адрес токена</translation>
+    </message>
 </context>
 <context>
     <name>PaymentServer</name>
@@ -1579,6 +1844,86 @@
     <message>
         <source>Payment request file handling</source>
         <translation>Обработка запроса платежа</translation>
+    </message>
+    <message>
+        <source>Cannot start zerohour: click-to-pay handler</source>
+        <translation>Не удалось запустить обработчик платёжных ссылок zerohour:</translation>
+    </message>
+    <message>
+        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
+        <translation>Недопустимый URI «bitcoin://». Используйте «bitcoin:».</translation>
+    </message>
+    <message>
+        <source>You are using a BIP70 URL which will be unsupported in the future.</source>
+        <translation>Используется URL BIP70, поддержка которого в будущем будет прекращена.</translation>
+    </message>
+    <message>
+        <source>Payment request fetch URL is invalid: %1</source>
+        <translation>Некорректный URL запроса платежа: %1</translation>
+    </message>
+    <message>
+        <source>Cannot process payment request because BIP70 support was not compiled in.</source>
+        <translation>Не удалось обработать запрос платежа: эта сборка не поддерживает BIP70.</translation>
+    </message>
+    <message>
+        <source>Payment request file cannot be read! This can be caused by an invalid payment request file.</source>
+        <translation>Не удалось прочитать файл запроса платежа. Возможно, файл повреждён или имеет неверный формат.</translation>
+    </message>
+    <message>
+        <source>Payment request rejected</source>
+        <translation>Запрос платежа отклонён</translation>
+    </message>
+    <message>
+        <source>Payment request network doesn't match client network.</source>
+        <translation>Сеть запроса платежа не совпадает с сетью клиента.</translation>
+    </message>
+    <message>
+        <source>Payment request expired.</source>
+        <translation>Истекло время ожидания запроса платежа</translation>
+    </message>
+    <message>
+        <source>Payment request is not initialized.</source>
+        <translation>Запрос платежа не инициализирован.</translation>
+    </message>
+    <message>
+        <source>Unverified payment requests to custom payment scripts are unsupported.</source>
+        <translation>Непроверенные запросы платежа с нестандартными платёжными скриптами не поддерживаются.</translation>
+    </message>
+    <message>
+        <source>Invalid payment request.</source>
+        <translation>Некорректный запрос платежа.</translation>
+    </message>
+    <message>
+        <source>Requested payment amount of %1 is too small (considered dust).</source>
+        <translation>Запрошенная сумма %1 слишком мала (считается пылью).</translation>
+    </message>
+    <message>
+        <source>Refund from %1</source>
+        <translation>Возврат от %1</translation>
+    </message>
+    <message>
+        <source>Payment request %1 is too large (%2 bytes, allowed %3 bytes).</source>
+        <translation>Запрос платежа %1 слишком велик (%2 байт, разрешено %3 байт).</translation>
+    </message>
+    <message>
+        <source>Error communicating with %1: %2</source>
+        <translation>Ошибка связи с %1: %2</translation>
+    </message>
+    <message>
+        <source>Payment request cannot be parsed!</source>
+        <translation>Не удалось разобрать запрос платежа!</translation>
+    </message>
+    <message>
+        <source>Bad response from server %1</source>
+        <translation>Некорректный ответ сервера %1</translation>
+    </message>
+    <message>
+        <source>Network request error</source>
+        <translation>Ошибка сетевого запроса</translation>
+    </message>
+    <message>
+        <source>Payment acknowledged</source>
+        <translation>Платёж принят</translation>
     </message>
 </context>
 <context>
@@ -1652,23 +1997,23 @@
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
-        <translation><numerusform>%n секунда</numerusform><numerusform>%n секунд</numerusform><numerusform>%n секунд</numerusform><numerusform>%n секунд</numerusform></translation>
+        <translation><numerusform>%n секунда</numerusform><numerusform>%n секунды</numerusform><numerusform>%n секунд</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
-        <translation><numerusform>%n минута</numerusform><numerusform>%n минут</numerusform><numerusform>%n минут</numerusform><numerusform>%n минут</numerusform></translation>
+        <translation><numerusform>%n минута</numerusform><numerusform>%n минуты</numerusform><numerusform>%n минут</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation><numerusform>%n час</numerusform><numerusform>%n часа</numerusform><numerusform>%n часов</numerusform><numerusform>%n часов</numerusform></translation>
+        <translation><numerusform>%n час</numerusform><numerusform>%n часа</numerusform><numerusform>%n часов</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation><numerusform>%n день</numerusform><numerusform>%n дней</numerusform><numerusform>%n дней</numerusform><numerusform>%n дней</numerusform></translation>
+        <translation><numerusform>%n день</numerusform><numerusform>%n дня</numerusform><numerusform>%n дней</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation><numerusform>%n недели</numerusform><numerusform>%n недель</numerusform><numerusform>%n недель</numerusform><numerusform>%n недель</numerusform></translation>
+        <translation><numerusform>%n неделя</numerusform><numerusform>%n недели</numerusform><numerusform>%n недель</numerusform></translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -1676,7 +2021,7 @@
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation><numerusform>%n год</numerusform><numerusform>%n лет</numerusform><numerusform>%n лет</numerusform><numerusform>%n лет</numerusform></translation>
+        <translation><numerusform>%n год</numerusform><numerusform>%n года</numerusform><numerusform>%n лет</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1713,6 +2058,22 @@
     <message>
         <source>unknown</source>
         <translation>неизвестно</translation>
+    </message>
+    <message>
+        <source>ABI parsing error:</source>
+        <translation>Ошибка разбора ABI:</translation>
+    </message>
+    <message>
+        <source>Unsupported type %1 %2.</source>
+        <translation>Неподдерживаемый тип %1 %2.</translation>
+    </message>
+    <message>
+        <source>Error encoding parameter %1 %2.</source>
+        <translation>Ошибка кодирования параметра %1 %2.</translation>
+    </message>
+    <message>
+        <source>Error decoding parameter %1 %2.</source>
+        <translation>Ошибка декодирования параметра %1 %2.</translation>
     </message>
 </context>
 <context>
@@ -1878,11 +2239,11 @@
     </message>
     <message>
         <source>The mapped Autonomous System used for diversifying peer selection.</source>
-        <translation>The mapped Autonomous System used for diversifying peer selection.</translation>
+        <translation>Автономная система, используемая для разнообразия подключений к узлам.</translation>
     </message>
     <message>
         <source>Mapped AS</source>
-        <translation>Mapped AS</translation>
+        <translation>Автономная система</translation>
     </message>
     <message>
         <source>User Agent</source>
@@ -2072,6 +2433,10 @@
         <source>Unknown</source>
         <translation>Неизвестно</translation>
     </message>
+    <message>
+        <source>Debug window</source>
+        <translation>Диагностика</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2179,6 +2544,10 @@
         <source>Copy amount</source>
         <translation>Копировать сумму</translation>
     </message>
+    <message>
+        <source>Request data</source>
+        <translation>Данные запроса</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -2233,6 +2602,18 @@
     <message>
         <source>Wallet</source>
         <translation>Кошелёк</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Получившийся URI слишком длинный, попробуйте сократить текст метки / сообщения.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Ошибка преобразования URI в QR-код.</translation>
+    </message>
+    <message>
+        <source>PAYMENT INFORMATION</source>
+        <translation>СВЕДЕНИЯ О ПЛАТЕЖЕ</translation>
     </message>
 </context>
 <context>
@@ -2462,7 +2843,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</translation>
+        <translation>Создаёт частично подписанную транзакцию (PSBT) для автономного кошелька %1 или аппаратного кошелька с поддержкой PSBT.</translation>
     </message>
     <message>
         <source> from wallet '%1'</source>
@@ -2486,7 +2867,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</translation>
+        <translation>Проверьте параметры транзакции. Будет создана частично подписанная транзакция (PSBT), которую можно скопировать и подписать в автономном кошельке %1 или аппаратном кошельке с поддержкой PSBT.</translation>
     </message>
     <message>
         <source>or</source>
@@ -2538,7 +2919,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Watch-only balance:</source>
-        <translation>Watch-only balance:</translation>
+        <translation>Баланс только для наблюдения:</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -2574,7 +2955,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Предполагаемое подтверждение в течение %n блока.</numerusform><numerusform>Предполагаемое подтверждение в течение %n блоков.</numerusform><numerusform>Предполагаемое подтверждение в течение %n блоков.</numerusform><numerusform>Предполагаемое подтверждение в течение %n блоков.</numerusform></translation>
+        <translation><numerusform>Предполагаемое подтверждение в течение %n блока.</numerusform><numerusform>Предполагаемое подтверждение в течение %n блоков.</numerusform><numerusform>Предполагаемое подтверждение в течение %n блоков.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid ZHCASH address</source>
@@ -2603,6 +2984,26 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Custom</source>
         <translation>Настраиваемые</translation>
+    </message>
+    <message>
+        <source>Recipients</source>
+        <translation>Получатели</translation>
+    </message>
+    <message>
+        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
+        <translation>При комиссии 1000 сатоши и размере транзакции 250 байт режим «за килобайт» даст комиссию 250 сатоши, а режим «не менее» — 1000 сатоши. Для транзакций больше килобайта оба режима рассчитывают комиссию за килобайт.</translation>
+    </message>
+    <message>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
+        <translation>При небольшой загрузке сети достаточно минимальной комиссии, установленной узлами. Если число транзакций превысит пропускную способность сети, транзакция с минимальной комиссией может остаться неподтверждённой.</translation>
+    </message>
+    <message>
+        <source>from wallet %1</source>
+        <translation>из кошелька %1</translation>
+    </message>
+    <message>
+        <source>The transaction was rejected with the following reason: %1</source>
+        <translation>Транзакция отклонена по причине: %1</translation>
     </message>
 </context>
 <context>
@@ -2649,7 +3050,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>The amount to send in the selected unit</source>
-        <translation>The amount to send in the selected unit</translation>
+        <translation>Сумма отправки в выбранных единицах</translation>
     </message>
     <message>
         <source>The fee will be deducted from the amount being sent. The recipient will receive less ZHCASH than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
@@ -2690,6 +3091,26 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Memo:</source>
         <translation>Примечание:</translation>
+    </message>
+    <message>
+        <source>This is a normal payment.</source>
+        <translation>Обычный платёж.</translation>
+    </message>
+    <message>
+        <source>A message that was attached to the zerohour: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ZHCASH network.</source>
+        <translation>Сообщение из URI zerohour: будет сохранено вместе с транзакцией для вашей справки. Оно не передаётся в сеть ZHCASH.</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less zerohours than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>Комиссия вычитается из суммы отправки. Получатель получит меньше ZHC, чем указано в поле суммы. При нескольких получателях комиссия делится поровну.</translation>
+    </message>
+    <message>
+        <source>Enter a label for this address to add it to your address book</source>
+        <translation>Введите метку адреса для адресной книги</translation>
+    </message>
+    <message>
+        <source>Max</source>
+        <translation>Макс.</translation>
     </message>
 </context>
 <context>
@@ -2783,7 +3204,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>The signature given when the message was signed</source>
-        <translation>The signature given when the message was signed</translation>
+        <translation>Подпись, полученная при подписании сообщения</translation>
     </message>
     <message>
         <source>Verify the message to ensure it was signed with the specified ZHCASH address</source>
@@ -2853,6 +3274,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Message verified.</source>
         <translation>Сообщение проверено.</translation>
     </message>
+    <message>
+        <source>You can sign messages/agreements with your addresses to prove you can receive zerohours sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>Вы можете подписывать сообщения своими адресами, подтверждая право получать на них ZHC. Не подписывайте непонятные или случайные сообщения: их могут использовать для мошенничества. Подписывайте только ясные утверждения, с которыми согласны.</translation>
+    </message>
 </context>
 <context>
     <name>TrafficGraphWidget</name>
@@ -2865,7 +3290,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <name>TransactionDesc</name>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Открыть еще на %n блок</numerusform><numerusform>Открыть еще на %n блоков</numerusform><numerusform>Открыть еще на %n блоков</numerusform><numerusform>Открыть еще на %n блоков</numerusform></translation>
+        <translation><numerusform>Открыть еще на %n блок</numerusform><numerusform>Открыть еще на %n блоков</numerusform><numerusform>Открыть еще на %n блоков</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2945,7 +3370,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>созревает еще в %n блоках</numerusform><numerusform>созревает еще в %n блоках</numerusform><numerusform>созревает еще в %n блоках</numerusform><numerusform>созревает еще в %n блоках</numerusform></translation>
+        <translation><numerusform>созревает еще в %n блоках</numerusform><numerusform>созревает еще в %n блоках</numerusform><numerusform>созревает еще в %n блоках</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -3063,7 +3488,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Открыть еще на %n блок</numerusform><numerusform>Открыть еще на %n блоков</numerusform><numerusform>Открыть еще на %n блоков</numerusform><numerusform>Открыть еще на %n блоков</numerusform></translation>
+        <translation><numerusform>Открыть еще на %n блок</numerusform><numerusform>Открыть еще на %n блоков</numerusform><numerusform>Открыть еще на %n блоков</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -3156,6 +3581,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation>Снятая или добавленная к балансу сумма.</translation>
+    </message>
+    <message>
+        <source>Contract receive</source>
+        <translation>Получение из контракта</translation>
     </message>
 </context>
 <context>
@@ -3346,6 +3775,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
         <translation>Слишком длительное закрытие кошелька может привести к необходимости повторной синхронизации всей цепочки, если включено сокращение.</translation>
     </message>
+    <message>
+        <source>Are you sure you wish to close wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>Закрыть кошелёк &lt;i&gt;%1&lt;/i&gt;?</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -3374,7 +3807,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Do you want to draft a transaction with fee increase?</source>
-        <translation>Do you want to draft a transaction with fee increase?</translation>
+        <translation>Создать черновик транзакции с повышенной комиссией?</translation>
     </message>
     <message>
         <source>Current fee:</source>
@@ -3450,6 +3883,14 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Cancel</source>
         <translation>Отмена</translation>
+    </message>
+    <message>
+        <source>Incoming transaction</source>
+        <translation>Входящая транзакция</translation>
+    </message>
+    <message>
+        <source>Sent transaction</source>
+        <translation>Отправленная транзакция</translation>
     </message>
 </context>
 <context>
@@ -3950,6 +4391,56 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Done loading</source>
         <translation>Загрузка завершена</translation>
     </message>
+    <message>
+        <source>ZHCASH Core</source>
+        <translation>ZHCASH Core</translation>
+    </message>
+    <message>
+        <source>Rescans are not possible in pruned mode. You will need to use -reindex which will download the whole blockchain again.</source>
+        <translation>Повторное сканирование недоступно в режиме сокращённого хранения. Используйте -reindex: блокчейн будет загружен заново целиком.</translation>
+    </message>
+    <message>
+        <source>This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit %s and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard.</source>
+        <translation>Этот продукт включает ПО проекта OpenSSL для OpenSSL Toolkit %s, криптографическое ПО Эрика Янга и ПО UPnP Томаса Бернара.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Ошибка</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is low!</source>
+        <translation>Ошибка: недостаточно места на диске!</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>Информация</translation>
+    </message>
+    <message>
+        <source>Invalid amount for -reservebalance=&lt;amount&gt;</source>
+        <translation>Недопустимая сумма в параметре -reservebalance=&lt;amount&gt;</translation>
+    </message>
+    <message>
+        <source>Keypool ran out, please call keypoolrefill first</source>
+        <translation>Пул ключей исчерпан. Сначала выполните keypoolrefill</translation>
+    </message>
+    <message>
+        <source>The specified config file %s does not exist
+</source>
+        <translation>Указанный файл конфигурации %s не существует
+</translation>
+    </message>
+    <message>
+        <source>Transaction too large for fee policy</source>
+        <translation>Размер транзакции превышает ограничение политики комиссий</translation>
+    </message>
+    <message>
+        <source>Wallet %s resides outside wallet directory %s</source>
+        <translation>Кошелёк %s находится вне каталога кошельков %s</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Предупреждение</translation>
+    </message>
 </context>
 <context>
     <name>CreateContract</name>
@@ -3996,6 +4487,54 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Sender Address</source>
         <translation>Адрес отправителя</translation>
+    </message>
+    <message>
+        <source>Form</source>
+        <translation>Форма</translation>
+    </message>
+    <message>
+        <source>Solidity</source>
+        <translation>Solidity</translation>
+    </message>
+    <message>
+        <source>The bytecode of the contract</source>
+        <translation>Байткод контракта</translation>
+    </message>
+    <message>
+        <source>The zerohour address that will be used to create the contract.</source>
+        <translation>Адрес ZHCASH, используемый для создания контракта.</translation>
+    </message>
+    <message>
+        <source>The Gas Price is too high, are you sure you want to possibly spend a max of %1 for this transaction?</source>
+        <translation>Цена газа слишком высока. Вы согласны потратить на эту транзакцию до %1?</translation>
+    </message>
+    <message>
+        <source>High Gas price</source>
+        <translation>Высокая цена газа</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to create contract? &lt;br /&gt;</source>
+        <translation>Вы действительно хотите создать контракт? &lt;br /&gt;</translation>
+    </message>
+    <message>
+        <source>Confirm contract creation.</source>
+        <translation>Подтвердите создание контракта.</translation>
+    </message>
+    <message>
+        <source>Result %1</source>
+        <translation>Результат %1</translation>
+    </message>
+    <message>
+        <source>Create contract</source>
+        <translation>Создать контракт</translation>
+    </message>
+    <message>
+        <source>Gas limit. Default = %1, Max = %2</source>
+        <translation>Лимит газа. По умолчанию: %1, максимум: %2</translation>
+    </message>
+    <message>
+        <source>Gas price: ZHC price per gas unit. Default = %1, Min = %2</source>
+        <translation>Цена единицы газа в ZHC. По умолчанию: %1, минимум: %2</translation>
     </message>
 </context>
 <context>
@@ -4048,6 +4587,82 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Send To Contract</source>
         <translation>Отправить контракт</translation>
     </message>
+    <message>
+        <source>Form</source>
+        <translation>Форма</translation>
+    </message>
+    <message>
+        <source>Choose from contract book page</source>
+        <translation>Выбрать из списка контрактов</translation>
+    </message>
+    <message>
+        <source>Paste contract address from clipboard</source>
+        <translation>Вставить адрес контракта из буфера обмена</translation>
+    </message>
+    <message>
+        <source>Save contract info</source>
+        <translation>Сохранить сведения о контракте</translation>
+    </message>
+    <message>
+        <source>The contract address that will receive the funds and data.</source>
+        <translation>Адрес контракта, который получит средства и данные.</translation>
+    </message>
+    <message>
+        <source>The amount in ZHC to send. Default = 0.</source>
+        <translation>Сумма отправки в ZHC. По умолчанию: 0.</translation>
+    </message>
+    <message>
+        <source>The zerohour address that will be used as sender.</source>
+        <translation>Адрес ZHCASH, используемый для отправки.</translation>
+    </message>
+    <message>
+        <source>The Gas Price is too high, are you sure you want to possibly spend a max of %1 for this transaction?</source>
+        <translation>Цена газа слишком высока. Вы согласны потратить на эту транзакцию до %1?</translation>
+    </message>
+    <message>
+        <source>High Gas price</source>
+        <translation>Высокая цена газа</translation>
+    </message>
+    <message>
+        <source>The selected ABI function is marked non-payable. Sending an amount may make the EVM execution revert. Continue?</source>
+        <translation>Выбранная функция ABI не принимает средства. Отправка ненулевой суммы может привести к откату выполнения в EVM. Продолжить?</translation>
+    </message>
+    <message>
+        <source>Non-payable function amount</source>
+        <translation>Сумма для функции без приёма средств</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to send to the contract: &lt;br /&gt;&lt;br /&gt;</source>
+        <translation>Подтвердите отправку в контракт: &lt;br /&gt;&lt;br /&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;%1&lt;/b&gt;?</source>
+        <translation>&lt;b&gt;%1&lt;/b&gt;?</translation>
+    </message>
+    <message>
+        <source>Confirm sending to contract.</source>
+        <translation>Подтвердите отправку в контракт.</translation>
+    </message>
+    <message>
+        <source>Result %1</source>
+        <translation>Результат %1</translation>
+    </message>
+    <message>
+        <source>Send to contract</source>
+        <translation>Отправить в контракт</translation>
+    </message>
+    <message>
+        <source>Gas limit. Default = %1, Max = %2</source>
+        <translation>Лимит газа. По умолчанию: %1, максимум: %2</translation>
+    </message>
+    <message>
+        <source>Gas price: ZHC price per gas unit. Default = %1, Min = %2</source>
+        <translation>Цена единицы газа в ZHC. По умолчанию: %1, минимум: %2</translation>
+    </message>
+    <message>
+        <source>The selected function is non-payable; sending a non-zero amount may revert.</source>
+        <translation>Выбранная функция не принимает средства: отправка ненулевой суммы может быть отменена.</translation>
+    </message>
 </context>
 <context>
     <name>CallContract</name>
@@ -4081,6 +4696,38 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Call Contract</source>
+        <translation>Вызвать контракт</translation>
+    </message>
+    <message>
+        <source>Form</source>
+        <translation>Форма</translation>
+    </message>
+    <message>
+        <source>Choose from contract book page</source>
+        <translation>Выбрать из списка контрактов</translation>
+    </message>
+    <message>
+        <source>Paste contract address from clipboard</source>
+        <translation>Вставить адрес контракта из буфера обмена</translation>
+    </message>
+    <message>
+        <source>Save contract info</source>
+        <translation>Сохранить сведения о контракте</translation>
+    </message>
+    <message>
+        <source>The account address.</source>
+        <translation>Адрес учётной записи.</translation>
+    </message>
+    <message>
+        <source>The sender address hex string.</source>
+        <translation>Адрес отправителя в шестнадцатеричном формате.</translation>
+    </message>
+    <message>
+        <source>Result %1</source>
+        <translation>Результат %1</translation>
+    </message>
+    <message>
+        <source>Call contract</source>
         <translation>Вызвать контракт</translation>
     </message>
 </context>
@@ -4122,12 +4769,60 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Enter address</source>
         <translation>Введите адрес</translation>
     </message>
+    <message>
+        <source>Form</source>
+        <translation>Форма</translation>
+    </message>
+    <message>
+        <source>The address that will receive the tokens.</source>
+        <translation>Адрес получателя токенов.</translation>
+    </message>
+    <message>
+        <source>The amount in Token to send.</source>
+        <translation>Количество токенов для отправки.</translation>
+    </message>
+    <message>
+        <source>Optional description for transaction.</source>
+        <translation>Необязательное описание транзакции.</translation>
+    </message>
+    <message>
+        <source>Gas limit. Default = %1, Max = %2</source>
+        <translation>Лимит газа. По умолчанию: %1, максимум: %2</translation>
+    </message>
+    <message>
+        <source>Gas price: ZHC price per gas unit. Default = %1, Min = %2</source>
+        <translation>Цена единицы газа в ZHC. По умолчанию: %1, минимум: %2</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to send? &lt;br /&gt;&lt;br /&gt;</source>
+        <translation>Подтвердите отправку: &lt;br /&gt;&lt;br /&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;%1 %2 &lt;/b&gt; to </source>
+        <translation>&lt;b&gt;%1 %2 &lt;/b&gt; получателю </translation>
+    </message>
+    <message>
+        <source>&lt;br /&gt;%3 &lt;br /&gt;</source>
+        <translation>&lt;br /&gt;%3 &lt;br /&gt;</translation>
+    </message>
+    <message>
+        <source>Confirm send token.</source>
+        <translation>Подтвердите отправку токенов.</translation>
+    </message>
+    <message>
+        <source>Send token</source>
+        <translation>Отправить токены</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveTokenPage</name>
     <message>
         <source>Address</source>
         <translation>адрес</translation>
+    </message>
+    <message>
+        <source>Form</source>
+        <translation>Форма</translation>
     </message>
 </context>
 <context>
@@ -4164,6 +4859,36 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>(This is your wallet address which will be tied to the token for send/receive operations)</source>
         <translation>(Это адрес вашего кошелька, который будет привязан к токену для операций отправки/получения)</translation>
     </message>
+    <message>
+        <source>Form</source>
+        <translation>Форма</translation>
+    </message>
+    <message>
+        <source>The %1 address "%2" is not yours, please change it to new one.
+</source>
+        <translation>Адрес %1 «%2» не принадлежит вам. Укажите свой адрес.
+</translation>
+    </message>
+    <message>
+        <source>Invalid token address</source>
+        <translation>Некорректный адрес токена</translation>
+    </message>
+    <message>
+        <source>Token exist</source>
+        <translation>Токен уже добавлен</translation>
+    </message>
+    <message>
+        <source>The token already exist with the specified contract and sender addresses.</source>
+        <translation>Токен с указанными адресами контракта и отправителя уже добавлен.</translation>
+    </message>
+    <message>
+        <source>Log events</source>
+        <translation>Журнал событий</translation>
+    </message>
+    <message>
+        <source>Enable log events from the option menu in order to receive token transactions.</source>
+        <translation>Включите журнал событий в настройках для получения транзакций токенов.</translation>
+    </message>
 </context>
 <context>
     <name>ZRCToken</name>
@@ -4190,6 +4915,18 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Amount</source>
         <translation>Количество</translation>
+    </message>
+    <message>
+        <source>Form</source>
+        <translation>Форма</translation>
+    </message>
+    <message>
+        <source>Confirm token remove</source>
+        <translation>Подтверждение удаления токена</translation>
+    </message>
+    <message>
+        <source>The selected token will be removed from the list. Are you sure?</source>
+        <translation>Выбранный токен будет удалён из списка. Продолжить?</translation>
     </message>
 </context>
 <context>
@@ -4262,12 +4999,543 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Enter address</source>
         <translation>Введите адрес</translation>
     </message>
+    <message>
+        <source>Enter address to search</source>
+        <translation>Введите адрес для поиска</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Копировать адрес</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Копировать сумму</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Копировать ID транзакции</translation>
+    </message>
+    <message>
+        <source>Copy full transaction details</source>
+        <translation>Копировать все детали транзакции</translation>
+    </message>
+    <message>
+        <source>Show transaction details</source>
+        <translation>Отобразить детали транзакции</translation>
+    </message>
+    <message>
+        <source>Range:</source>
+        <translation>Диапазон:</translation>
+    </message>
+    <message>
+        <source>to</source>
+        <translation>для</translation>
+    </message>
 </context>
 <context>
     <name>OptionsDialog</name>
+    <message><source>Interface font size</source><translation>Размер шрифта интерфейса</translation></message>
+    <message><source>Decrease all interface fonts</source><translation>Уменьшить все шрифты интерфейса</translation></message>
+    <message><source>Increase all interface fonts</source><translation>Увеличить все шрифты интерфейса</translation></message>
     <message>
         <source>Enable log events</source>
         <translation>Включить аудит событий</translation>
+    </message>
+</context>
+<context>
+    <name>ABIFunctionField</name>
+    <message>
+        <source>Function</source>
+        <translation>Функции</translation>
+    </message>
+</context>
+<context>
+    <name>ABIParam</name>
+    <message>
+        <source>%1 %2</source>
+        <translation>%1 %2</translation>
+    </message>
+</context>
+<context>
+    <name>ContractBookPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Форма</translation>
+    </message>
+    <message>
+        <source>Create a new contract info</source>
+        <translation>Добавить сведения о контракте</translation>
+    </message>
+    <message>
+        <source>New</source>
+        <translation>Добавить</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected contract address to the system clipboard</source>
+        <translation>Скопировать выбранный адрес контракта в буфер обмена</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Копировать</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected contract info from the list</source>
+        <translation>Удалить выбранный контракт из списка</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Export the data to a file</source>
+        <translation>Экспортировать данные в файл</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>Экспорт</translation>
+    </message>
+    <message>
+        <source>Choose</source>
+        <translation>Выбрать</translation>
+    </message>
+    <message>
+        <source>Choose the contract for send/call</source>
+        <translation>Выберите контракт для отправки или вызова</translation>
+    </message>
+    <message>
+        <source>These are your saved contracts. Always check the contract address and the ABI before sending/calling.</source>
+        <translation>Ваши сохранённые контракты. Перед отправкой или вызовом проверяйте адрес контракта и ABI.</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Копировать &amp;Адрес</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Name</source>
+        <translation>Копировать &amp;название</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Interface</source>
+        <translation>Копировать &amp;интерфейс</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;Правка</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Удалить</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete the address "%1" from your contract address list?</source>
+        <translation>Удалить адрес «%1» из списка контрактов?</translation>
+    </message>
+    <message>
+        <source>Delete contact address</source>
+        <translation>Удаление адреса контракта</translation>
+    </message>
+    <message>
+        <source>Export Contract List</source>
+        <translation>Экспорт списка контрактов</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Текст, разделённый запятыми (*.csv)</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Экспорт не удался</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the address list to %1. Please try again.</source>
+        <translation>Произошла ошибка сохранения списка адресов в %1. Пожалуйста, повторите попытку.</translation>
+    </message>
+</context>
+<context>
+    <name>ContractResult</name>
+    <message>
+        <source>StackedWidget</source>
+        <translation>Панель</translation>
+    </message>
+    <message>
+        <source>Contract Summary</source>
+        <translation>Сведения о контракте</translation>
+    </message>
+    <message>
+        <source>ContractAddress</source>
+        <translation>Адрес контракта</translation>
+    </message>
+    <message>
+        <source>Hash160</source>
+        <translation>Hash160</translation>
+    </message>
+    <message>
+        <source>SenderAddress</source>
+        <translation>Адрес отправителя</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>ID транзакции</translation>
+    </message>
+    <message>
+        <source>Function</source>
+        <translation>Функции</translation>
+    </message>
+    <message>
+        <source>Result</source>
+        <translation>Результат</translation>
+    </message>
+    <message>
+        <source>Create contract</source>
+        <translation>Создать контракт</translation>
+    </message>
+</context>
+<context>
+    <name>ContractTableModel</name>
+    <message>
+        <source>Label</source>
+        <translation>Метка</translation>
+    </message>
+    <message>
+        <source>Contract Address</source>
+        <translation>Адрес контракта</translation>
+    </message>
+    <message>
+        <source>Interface (ABI)</source>
+        <translation>Интерфейс (ABI)</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(нет метки)</translation>
+    </message>
+</context>
+<context>
+    <name>EditContractInfoDialog</name>
+    <message>
+        <source>Dialog</source>
+        <translation>Диалог</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Метка</translation>
+    </message>
+    <message>
+        <source>Contract Address</source>
+        <translation>Адрес контракта</translation>
+    </message>
+    <message>
+        <source>Interface (ABI)</source>
+        <translation>Интерфейс (ABI)</translation>
+    </message>
+    <message>
+        <source>New contract info</source>
+        <translation>Новый контракт</translation>
+    </message>
+    <message>
+        <source>Edit contract info</source>
+        <translation>Изменить сведения о контракте</translation>
+    </message>
+    <message>
+        <source>The entered address "%1" is already in the contract book.</source>
+        <translation>Адрес «%1» уже есть в списке контрактов.</translation>
+    </message>
+</context>
+<context>
+    <name>ExecRPCCommand</name>
+    <message>
+        <source>Mandatory fields are not present:
+%1</source>
+        <translation>Не заполнены обязательные поля:
+%1</translation>
+    </message>
+    <message>
+        <source>Optional fields are not present:
+%1</source>
+        <translation>Не заполнены необязательные поля:
+%1</translation>
+    </message>
+    <message>
+        <source>Parse error: unbalanced ' or "</source>
+        <translation>Ошибка разбора: незакрытые кавычки ' или "</translation>
+    </message>
+</context>
+<context>
+    <name>QObject::QObject</name>
+    <message>
+        <source>Error parsing command line arguments: %1.</source>
+        <translation>Ошибка разбора аргументов командной строки: %1.</translation>
+    </message>
+    <message>
+        <source>Error: Specified data directory "%1" does not exist.</source>
+        <translation>Ошибка: указанная директория данных "%1" не существует.</translation>
+    </message>
+    <message>
+        <source>Error: Cannot parse configuration file: %1.</source>
+        <translation>Ошибка : Не возможно разобрать файл конфигурации: %1.</translation>
+    </message>
+    <message>
+        <source>Error: %1</source>
+        <translation>Ошибка: %1</translation>
+    </message>
+</context>
+<context>
+    <name>RestoreDialog</name>
+    <message>
+        <source>Restore Wallet</source>
+        <translation>Восстановить кошелёк</translation>
+    </message>
+    <message>
+        <source>Select wallet file to restore from</source>
+        <translation>Выберите файл кошелька для восстановления</translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
+        <source>Choose wallet restore option</source>
+        <translation>Выберите способ восстановления кошелька</translation>
+    </message>
+    <message>
+        <source>Restore file</source>
+        <translation>Восстановить файл</translation>
+    </message>
+    <message>
+        <source>Rebuild blockchain index</source>
+        <translation>Перестроить индекс блокчейна</translation>
+    </message>
+    <message>
+        <source>Recover transactions without metadata</source>
+        <translation>Восстановить транзакции без метаданных</translation>
+    </message>
+    <message>
+        <source>Delete the local copy of the block chain</source>
+        <translation>Удалить локальную копию блокчейна</translation>
+    </message>
+    <message>
+        <source>The wallet.dat will be restored from the selected location and the Qt Wallet will be restarted with the -reindex, -zapwallettxes=2 or -deleteblockchaindata option.</source>
+        <translation>Файл wallet.dat будет восстановлен из выбранного расположения. Кошелёк перезапустится с параметром -reindex, -zapwallettxes=2 или -deleteblockchaindata.</translation>
+    </message>
+    <message>
+        <source>&amp;Reset</source>
+        <translation>&amp;Сбросить</translation>
+    </message>
+    <message>
+        <source>File not selected</source>
+        <translation>Файл не выбран</translation>
+    </message>
+    <message>
+        <source>Please select a file to restore your wallet.</source>
+        <translation>Выберите файл для восстановления кошелька.</translation>
+    </message>
+    <message>
+        <source>Confirm wallet restoration</source>
+        <translation>Подтверждение восстановления кошелька</translation>
+    </message>
+    <message>
+        <source>Warning: The wallet will be restored from location &lt;b&gt;%1&lt;/b&gt; and restarted with parameter &lt;b&gt;%2&lt;/b&gt;.</source>
+        <translation>Внимание: кошелёк будет восстановлен из &lt;b&gt;%1&lt;/b&gt; и перезапущен с параметром &lt;b&gt;%2&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>&lt;br&gt;&lt;br&gt;Are you sure you wish to restore your wallet?</source>
+        <translation>&lt;br&gt;&lt;br&gt;Вы действительно хотите восстановить кошелёк?</translation>
+    </message>
+    <message>
+        <source>Wallet Data (*.dat)</source>
+        <translation>Данные кошелька (*.dat)</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Да</translation>
+    </message>
+</context>
+<context>
+    <name>SplashScreen</name>
+    <message>
+        <source>[testnet]</source>
+        <translation>[тестовая сеть]</translation>
+    </message>
+</context>
+<context>
+    <name>TitleBar</name>
+    <message>
+        <source>Form</source>
+        <translation>Форма</translation>
+    </message>
+</context>
+<context>
+    <name>TokenDescDialog</name>
+    <message>
+        <source>Dialog</source>
+        <translation>Диалог</translation>
+    </message>
+    <message>
+        <source>Details for %1</source>
+        <translation>Детальная информация по %1</translation>
+    </message>
+</context>
+<context>
+    <name>TokenItemModel</name>
+    <message>
+        <source>Token Name</source>
+        <translation>Имя токена</translation>
+    </message>
+    <message>
+        <source>Token Symbol</source>
+        <translation>Символ токена</translation>
+    </message>
+    <message>
+        <source>Balance</source>
+        <translation>Баланс</translation>
+    </message>
+</context>
+<context>
+    <name>TokenTransactionDesc</name>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <translation>конфликт с транзакцией с %1 подтверждений</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, in memory pool</source>
+        <translation>0/не подтверждена, в пуле памяти</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, not in memory pool</source>
+        <translation>0/не подтверждена, отсутствует в пуле памяти</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1/не подтверждено</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>%1 подтверждений</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Статус</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>ID транзакции</translation>
+    </message>
+    <message>
+        <source>Token Address</source>
+        <translation>Адрес токена</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>От</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Для</translation>
+    </message>
+    <message>
+        <source>Credit</source>
+        <translation>Кредит</translation>
+    </message>
+    <message>
+        <source>Token ID</source>
+        <translation>ID токена</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Дебет</translation>
+    </message>
+    <message>
+        <source>Net Amount</source>
+        <translation>Итоговая сумма</translation>
+    </message>
+</context>
+<context>
+    <name>TokenTransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Тип</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Метка</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Имя</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Количество</translation>
+    </message>
+    <message>
+        <source>Unconfirmed</source>
+        <translation>Неподтвержденный</translation>
+    </message>
+    <message>
+        <source>Confirming (%1 of %2 recommended confirmations)</source>
+        <translation>Подтверждается (%1 из %2 рекомендуемых подтверждений)</translation>
+    </message>
+    <message>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation>Подтверждено (%1 подтверждений)</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>Получено на</translation>
+    </message>
+    <message>
+        <source>Received from</source>
+        <translation>Получено от</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>Отправлено на</translation>
+    </message>
+    <message>
+        <source>Payment to yourself</source>
+        <translation>Отправлено себе</translation>
+    </message>
+    <message>
+        <source>(n/a)</source>
+        <translation>(недоступно)</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(нет метки)</translation>
+    </message>
+    <message>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation>Статус транзакции. Для отображения количества подтверждений необходимо навести курсор на это поле.</translation>
+    </message>
+    <message>
+        <source>Date and time that the transaction was received.</source>
+        <translation>Дата и время получения транзакции.</translation>
+    </message>
+    <message>
+        <source>Type of transaction.</source>
+        <translation>Тип транзакции.</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction.</source>
+        <translation>Определяемое пользователем намерение/цель транзакции.</translation>
+    </message>
+    <message>
+        <source>Token name.</source>
+        <translation>Название токена.</translation>
+    </message>
+    <message>
+        <source>Amount removed from or added to balance.</source>
+        <translation>Снятая или добавленная к балансу сумма.</translation>
     </message>
 </context>
 </TS>

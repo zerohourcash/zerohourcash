@@ -3,24 +3,35 @@ Tool Button Black CSS
 --------------------------------------------*/
 QToolButton {
     color: rgba(255, 255, 255, 60%);
-    background: rgba(39, 44, 50, 85%);
+    background: rgba(41, 44, 41, 85%);
     border: 0px solid transparent;
     border-radius: 6px;
     padding: 10px 30px 10px 10px;
 }
 QToolButton:pressed, QToolButton:hover:pressed, QToolButton:checked {
     color: rgba(255, 255, 255, 85%);
-    background: #53606d;
+    background: #454845;
     padding: 3px 30px 5px 10px;
     background-image: url(":/styles/app-icons/toolbutton_down_arrow");
     background-position: center right;
     background-repeat: no-repeat;
 }
 QToolButton:hover:!checked {
-    color: rgba(39, 44, 50, 85%);
-    background: rgba(215, 221, 227, 85%);
+    color: #ededed;
+    background: rgba(59, 62, 59, 85%);
 }
 QToolButton:disabled {
     color: rgba(255, 255, 255, 10%);
-    background: rgba(39, 44, 50, 40%);
+    background: rgba(41, 44, 41, 40%);
 }
+
+/* Matte glass: restrained sheen with a stable high-contrast selection. */
+QToolButton { background: transparent; color: #e3e3e3; border: 1px solid transparent; border-radius: 8px; }
+QToolButton:hover:!checked { background: qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 rgba(255,255,255,12%),stop:1 rgba(255,255,255,5%)); border: 1px solid rgba(255,255,255,14%); color: #f4f4f4; }
+QToolButton:checked, QToolButton:pressed { background: qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #505350,stop:1 #3b3e3b); border: 1px solid #666966; color: #ffffff; }
+QToolButton:disabled { background: transparent; color: #939693; border-color: transparent; }
+
+QToolButton { background: transparent; border: 1px solid transparent; color: #e3e3e3; }
+QToolButton:hover:!checked { background: #2d302d; border-color: transparent; color: #ffffff; }
+QToolButton:checked, QToolButton:pressed { background: #353835; border-color: transparent; color: #ffffff; }
+QToolButton:disabled { background: transparent; color: #939693; }

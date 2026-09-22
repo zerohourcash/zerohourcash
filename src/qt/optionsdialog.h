@@ -49,6 +49,9 @@ public:
     void setMapper();
     void setCurrentTab(OptionsDialog::Tab tab);
 
+protected:
+    void resizeEvent(QResizeEvent *event) override;
+
 private Q_SLOTS:
     /* set OK button state (enabled / disabled) */
     void setOkButtonState(bool fState);

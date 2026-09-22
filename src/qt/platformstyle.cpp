@@ -33,7 +33,7 @@ namespace {
 void MakeSingleColorImage(QImage& img, const QColor& colorbase, double opacity = 1)
 {
     //Opacity representation in percentage (0, 1) i.e. (0%, 100%)
-    if(opacity > 1 && opacity < 0) opacity = 1;
+    if(opacity > 1 || opacity < 0) opacity = 1;
 
     img = img.convertToFormat(QImage::Format_ARGB32);
     for (int x = img.width(); x--; )
@@ -89,11 +89,11 @@ PlatformStyle::PlatformStyle(const QString &_name, bool _imagesOnButtons, bool _
 {
     // Determine icon highlighting color
     if (colorizeIcons) {
-        singleColor = 0xcbd2d9;
+        singleColor = 0xe3e3e3;
     }
     // Determine text color
-    textColor = 0xe6f0f0;
-    menuColor = QColor(QApplication::palette().color(QPalette::WindowText));
+    textColor = 0xe3e3e3;
+    menuColor = singleColor;
 }
 
 QImage PlatformStyle::SingleColorImage(const QString& filename) const
@@ -119,22 +119,22 @@ QIcon PlatformStyle::SingleColorIcon(const QIcon& icon) const
 
 QIcon PlatformStyle::TextColorIcon(const QString& filename) const
 {
-    return ColorizeIcon(filename, TextColor(), 0.6);
+    return ColorizeIcon(filename, TextColor(), 1);
 }
 
 QIcon PlatformStyle::TextColorIcon(const QIcon& icon) const
 {
-    return ColorizeIcon(icon, TextColor(), 0.6);
+    return ColorizeIcon(icon, TextColor(), 1);
 }
 
 QIcon PlatformStyle::MenuColorIcon(const QString &filename) const
 {
-    return ColorizeIcon(filename, MenuColor(), 0.8);
+    return ColorizeIcon(filename, MenuColor(), 1);
 }
 
 QIcon PlatformStyle::MenuColorIcon(const QIcon &icon) const
 {
-    return ColorizeIcon(icon, MenuColor(), 0.8);
+    return ColorizeIcon(icon, MenuColor(), 1);
 }
 
 QIcon PlatformStyle::MultiStatesIcon(const QString &resourcename, StateType type, QColor color, QColor colorAlt) const
@@ -159,7 +159,7 @@ QIcon PlatformStyle::MultiStatesIcon(const QString &resourcename, StateType type
         QImage img1(resourcename);
         QImage img2(img1);
         QPixmap pix1 = MakeSingleColorPixmap(img1, color, 1);
-        QPixmap pix2 = MakeSingleColorPixmap(img2, color, 0.2);
+        QPixmap pix2 = MakeSingleColorPixmap(img2, color, 0.5);
         icon.addPixmap(pix1, QIcon::Normal, QIcon::Off);
         icon.addPixmap(pix2, QIcon::Disabled, QIcon::On);
         icon.addPixmap(pix2, QIcon::Disabled, QIcon::Off);
@@ -223,24 +223,24 @@ void PlatformStyle::TableColor(PlatformStyle::TableColorType type, int &color, d
     // Choose color
     switch (type) {
     case Normal:
-        opacity = 0.3;
+        opacity = 0.85;
         color = 0xffffff;
         break;
     case Input:
         opacity = 0.8;
-        color = 0x2fa5df;
+        color = 0x9ed9f5;
         break;
     case Inout:
         opacity = 0.8;
-        color = 0x40bb00;
+        color = 0xb8e69d;
         break;
     case Output:
         opacity = 0.8;
-        color = 0x40bb00;
+        color = 0xb8e69d;
         break;
     case Error:
         opacity = 0.8;
-        color = 0xd02e49;
+        color = 0xff9da9;
         break;
     default:
         break;
