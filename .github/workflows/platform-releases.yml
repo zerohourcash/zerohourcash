@@ -65,21 +65,29 @@ jobs:
           submodules: recursive
       - name: Install macOS build dependencies
         run: |
+          set -euxo pipefail
           brew update
-          brew install automake berkeley-db@4 boost miniupnpc openssl@3 pkg-config protobuf qt@5 libevent qrencode gmp
-          brew link --force --overwrite qt@5 berkeley-db@4
+          brew install automake boost miniupnpc openssl@3 pkg-config protobuf qt@5 libevent qrencode gmp
+          brew link --force --overwrite qt@5
+          # Homebrew removed berkeley-db@4 in 2026. Build the wallet-compatible
+          # Berkeley DB 4.8 release with the source tree's pinned, hash-checked
+          # installer instead of silently switching wallet.dat to a newer DB.
+          bash ./contrib/install_db4.sh "$PWD"
       - name: Configure and build Qt wallet
         run: |
           set -euxo pipefail
           find . -type f \( -name '*.sh' -o -name 'genbuild.sh' \) -exec chmod +x {} +
-          export PATH="$(brew --prefix qt@5)/bin:$(brew --prefix berkeley-db@4)/bin:$PATH"
-          export CPPFLAGS="-I$(brew --prefix berkeley-db@4)/include -I$(brew --prefix openssl@3)/include"
-          export LDFLAGS="-L$(brew --prefix berkeley-db@4)/lib -L$(brew --prefix openssl@3)/lib"
+          export BDB_PREFIX="$PWD/db4"
+          export PATH="$(brew --prefix qt@5)/bin:$PATH"
+          export CPPFLAGS="-I${BDB_PREFIX}/include -I$(brew --prefix openssl@3)/include"
+          export LDFLAGS="-L${BDB_PREFIX}/lib -L$(brew --prefix openssl@3)/lib"
           bash ./autogen.sh
           ac_cv_lib_gmp___gmpn_sub_n=yes \
+          BDB_CFLAGS="-I${BDB_PREFIX}/include" \
+          BDB_LIBS="-L${BDB_PREFIX}/lib -ldb_cxx-4.8" \
           GMP_LIBS="$(brew --prefix gmp)/lib/libgmp.a" \
           GMPXX_LIBS="$(brew --prefix gmp)/lib/libgmpxx.a" \
-          bash ./configure --with-gui=qt5 --with-incompatible-bdb --disable-tests --disable-bench
+          bash ./configure --with-gui=qt5 --disable-tests --disable-bench
           make -j"$(sysctl -n hw.ncpu)"
       - name: Build macOS app and DMG
         run: |
